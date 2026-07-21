@@ -4,14 +4,14 @@
 #include "VehiclesFile/VehiclesFile.h"
 
 #include <QWidget>
-#include <QGridLayout>
+#include <QTableWidget>
 
 class VehiclesFileView : public QWidget {
 
     private:
 
         VehiclesFile& vehiclesFile;
-        QGridLayout* gridLayout;
+        QTableWidget* table;
 
     public:
 
@@ -19,5 +19,11 @@ class VehiclesFileView : public QWidget {
             VehiclesFile& vehiclesFileRef,
             QWidget* parent = nullptr
         );
+
+        ~VehiclesFileView();
+
+        void destroyTable();
+
+        void refresh();
 
 };

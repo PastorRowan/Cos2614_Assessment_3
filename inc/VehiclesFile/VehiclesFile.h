@@ -23,18 +23,15 @@ class VehiclesFile : public QObject {
         // File path used to store the current vehicle ID counter
         QString currentVehicleIdFileLocation = "Not initialised";
 
+        // Internal container storing all vehicle objects
+        VehiclesQVector vehiclesQVector;
+
         // Ensures a file path exists
         static void ensurePathAndFileExist(
             const QString& path,
             const QString& initialContents,
             bool& ok
         );
-
-        // Internal container storing all vehicle objects
-        VehiclesQVector vehiclesQVector;
-
-        // Gets the internal vehicle collection
-        const VehiclesQVector& getVehiclesQVector() const;
 
         // Sets the vehicle data file location
         void setVehiclesFileLocation(const QString vehiclesFileLocationP);
@@ -105,6 +102,9 @@ class VehiclesFile : public QObject {
 
         // Gets the current vehicle ID file location
         const QString& getCurrentIdFileLocation() const;
+
+        // Gets the internal vehicle collection
+        const VehiclesQVector& getVehiclesQVector() const;
 
         /**
          * Adds a new car to the collection
