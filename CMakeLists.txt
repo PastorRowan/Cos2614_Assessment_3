@@ -11,8 +11,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(HEADERS
 
-    inc/MainWindow.h
-
     inc/VehiclesFile/VehiclesFileView.h
     inc/VehiclesFile/VehiclesFile.h
 
@@ -20,17 +18,20 @@ set(HEADERS
     inc/dialogues/AddMotorcycleDialogue.h
     inc/dialogues/RentVehicleDialogue.h
     inc/dialogues/ReturnVehicleDialogue.h
+    inc/dialogues/dialogues.h
 
     inc/vehicles/Car.h
     inc/vehicles/Motorcycle.h
     inc/vehicles/Vehicle.h
     inc/vehicles/vehicles.h
 
+    inc/ApplicationContext.h
+
+    inc/MainWindow.h
+
 )
 
 set(SOURCES
-
-    src/MainWindow.cpp
 
     src/dialogues/AddCarDialogue.cpp
     src/dialogues/AddMotorcycleDialogue.cpp
@@ -50,13 +51,17 @@ set(SOURCES
     src/VehiclesFile/returnVehicleById.cpp
     src/VehiclesFile/searchVehicleById.cpp
 
+    src/ApplicationContext.cpp
+
+    src/MainWindow.cpp
+
 )
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
-add_executable(VehicleRentalSystem
-    main.cpp
-)
+qt_standard_project_setup()
+
+add_executable(VehicleRentalSystem)
 
 target_include_directories(VehicleRentalSystem PRIVATE
     inc

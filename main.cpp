@@ -1,9 +1,12 @@
 
 // Entry point for the Vehicle Rental Management application
 
-#include <QApplication>
-
 #include "MainWindow.h"
+#include "ApplicationContext.h"
+#include "VehiclesFile/VehiclesFile.h"
+
+#include <QApplication>
+#include <QDebug>
 
 // Application entry point
 int main(int argc, char *argv[]) {
@@ -11,7 +14,9 @@ int main(int argc, char *argv[]) {
     // Qt core application object required for Qt-based applications
     QApplication app(argc, argv);
 
-    MainWindow win;
+    ApplicationContext context;
+
+    MainWindow win(context);
     win.resize(320, 240);
     win.setVisible(true);
 

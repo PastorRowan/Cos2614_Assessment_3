@@ -1,16 +1,24 @@
 
 #pragma once
 
+#include "ApplicationContext.h" 
+
 #include <QMainWindow>
 #include <QPushButton>
 
 class MainWindow : public QMainWindow {
 
-    public:
-        MainWindow();
-        ~MainWindow();
-
     private:
+
+        ApplicationContext& context;
         QPushButton *button;
+
+    public:
+
+        MainWindow(
+            ApplicationContext& contextP
+        );
+
+        ~MainWindow();
 
 };

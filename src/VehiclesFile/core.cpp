@@ -3,6 +3,7 @@
 
 #include "VehiclesFile/VehiclesFile.h"
 
+#include <QObject>
 #include <QString>
 #include <QRegularExpression>
 #include <QDebug>
@@ -12,8 +13,10 @@
 VehiclesFile::VehiclesFile(
     const QString vehiclesFileLocationParameter,
     const QString currentVehicleIdFileLocationParameter,
-    bool& ok
+    bool& ok,
+    QObject* parent
 ):
+    QObject(parent),
     vehiclesFileLocation(QCoreApplication::applicationDirPath() + vehiclesFileLocationParameter),
     currentVehicleIdFileLocation(QCoreApplication::applicationDirPath() + currentVehicleIdFileLocationParameter) {
 
@@ -39,19 +42,6 @@ VehiclesFile::VehiclesFile(
 
 };
 
-// Copy constructor for VehiclesFile
-VehiclesFile::VehiclesFile(
-    const VehiclesFile& other,
-    bool& ok
-):
-    VehiclesFile(
-        other.getVehiclesFileLocation(),
-        other.getCurrentIdFileLocation(),
-        ok
-    ) {
-
-};
-
 /**
  * Destructor for VehiclesFile.
  *
@@ -60,41 +50,6 @@ VehiclesFile::VehiclesFile(
  */
 VehiclesFile::~VehiclesFile() {
     destroyVehiclesQVector();
-};
-
-/**
- * Assignment operator for VehiclesFile
- *
- * Performs a deep copy of another VehiclesFile object by cloning all stored
- * vehicle objects
- *
- * Existing vehicle objects owned by this instance are destroyed before copying
- */
-VehiclesFile& VehiclesFile::operator=(const VehiclesFile& rightVehicleFile) {
-
-    if (this == &rightVehicleFile) {
-        return *this;
-    };
-
-    bool ok;
-
-    setVehiclesFileLocation(rightVehicleFile.getVehiclesFileLocation());
-    setCurrentIdFileLocation(rightVehicleFile.getCurrentIdFileLocation());
-    setCurrentVehicleId(rightVehicleFile.getCurrentVehicleId());
-
-    destroyVehiclesQVector();
-
-    VehiclesFile::VehiclesQVector& leftVehiclesQVector = vehiclesQVector;
-    const VehiclesFile::VehiclesQVector& rightVehiclesQVector = rightVehicleFile.getVehiclesQVector();
-
-    leftVehiclesQVector.reserve(rightVehiclesQVector.size() + 50);
-
-    for (unsigned int i = 0; i < rightVehiclesQVector.size(); i++) {
-        leftVehiclesQVector.push_back(rightVehiclesQVector[i]->clone());
-    };
-
-    return *this;
-
 };
 
 // Validates a numeric vehicle ID

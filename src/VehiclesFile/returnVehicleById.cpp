@@ -23,34 +23,41 @@ void VehiclesFile::returnVehicleById(
 
     for (unsigned int i = 0; i < vehiclesQVector.size(); i++) {
 
-        if (vehiclesQVector[i]->getVehicleId() != vehicleId) {
-            continue;
-        };
+        if (vehiclesQVector[i]->getVehicleId() == vehicleId) {
 
-        if (!vehiclesQVector[i]->getIsRented()) {
-            message = QString("Vehicle '%1' is not rented out").arg(vehicleId);
-        } else {
+            if (!vehiclesQVector[i]->getIsRented()) {
+                message = QString("Vehicle '%1' is not rented out").arg(vehicleId);
+            } else {
 
-            bool newIsRented = false;
+                bool newIsRented = false;
 
-            vehiclesQVector[i]->setIsRented(newIsRented);
+                vehiclesQVector[i]->setIsRented(newIsRented);
 
-            bool ok;
+                bool ok;
 
-            saveVehiclesQVector(ok);
+                saveVehiclesQVector(ok);
 
-            if (!ok) {
-                message = QString("Failed to rent vehicle '%1'").arg(vehicleId);
-                vehiclesQVector[i]->setIsRented(!newIsRented);
-                return;
+                if (!ok) {
+                    message = QString("Failed to rent vehicle '%1'").arg(vehicleId);
+                    vehiclesQVector[i]->setIsRented(!newIsRented);
+                    return;
+                };
+
+                emit vehicleReturned(vehicleId);
+                emit vehicleUpdated(vehicleId);
+
+                message = QString("Successfully returned vehicle '%1'").arg(vehicleId);
+
             };
 
-            message = QString("Successfully returned vehicle '%1'").arg(vehicleId);
+            emit vehiclesChanged();
+
+            return;
 
         };
 
-        return;
-
     };
+
+    message = "Vehicle with vehicle id does not exist";
 
 };

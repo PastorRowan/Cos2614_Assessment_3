@@ -3,11 +3,14 @@
 
 #include "vehicles/vehicles.h"
 
+#include <QObject>
 #include <QString>
 #include <QVector>
 
 // Manages vehicle storage, persistence, and rental operations
-class VehiclesFile {
+class VehiclesFile : public QObject {
+
+    Q_OBJECT
 
     private:
 
@@ -87,11 +90,9 @@ class VehiclesFile {
         VehiclesFile(
             const QString vehiclesFileLocationParameter,
             const QString currentVehicleIdFileLocationParameter,
-            bool& ok
+            bool& ok,
+            QObject* parent = nullptr
         );
-
-        // Copy constructor
-        VehiclesFile(const VehiclesFile& other, bool& ok);
 
         /**
          * Destructor
@@ -99,23 +100,11 @@ class VehiclesFile {
          */
         ~VehiclesFile();
 
-        /**
-         * Assignment operator
-         * Performs deep-copy assignment from another VehiclesFile object
-         */
-        VehiclesFile& operator=(const VehiclesFile& rightVehicleFile);
-
         // Gets the vehicle data file location
         const QString& getVehiclesFileLocation() const;
 
         // Gets the current vehicle ID file location
         const QString& getCurrentIdFileLocation() const;
-
-        // Converts the vehicle collection into a formatted QString
-        QString composeAllVehicles() const;
-
-        // Creates a formatted list of available (not rented) vehicles
-        QString composeAvailableVehiclesOnly() const;
 
         /**
          * Adds a new car to the collection
@@ -170,5 +159,25 @@ class VehiclesFile {
             const QString& vehicleId,
             QString& message
         );
+
+    signals:
+
+        /// Emitted whenever the vehicle collection changes.
+        void vehiclesChanged();
+
+        /// Emitted after a vehicle is added.
+        void vehicleAdded(const vehicles::Vehicle* vehicle);
+
+        /// Emitted after a vehicle is removed.
+        void vehicleRemoved(const QString& vehicleId);
+
+        /// Emitted after a vehicle's data changes.
+        void vehicleUpdated(const QString& vehicleId);
+
+        /// Emitted after a vehicle is rented.
+        void vehicleRented(const QString& vehicleId);
+
+        /// Emitted after a vehicle is returned.
+        void vehicleReturned(const QString& vehicleId);
 
 };

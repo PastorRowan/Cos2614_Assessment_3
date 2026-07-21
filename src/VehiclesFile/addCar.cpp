@@ -69,4 +69,7 @@ void VehiclesFile::addCar(
 
     message = QString("Successfully added vehicle:\n%1").arg(newVehicle->toQString());
 
+    emit vehicleAdded(newVehicle);
+    emit vehiclesChanged();
+
 };

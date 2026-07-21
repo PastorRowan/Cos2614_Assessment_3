@@ -55,4 +55,8 @@ void VehiclesFile::rentVehicleById(
 
     message = QString("Vehicle with id '%1' does not exist").arg(vehicleId);
 
+    emit vehicleRented(vehicleId);
+    emit vehicleUpdated(vehicleId);
+    emit vehiclesChanged();
+
 };
