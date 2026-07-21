@@ -1,11 +1,11 @@
 
-# ConsoleCarRental
+# VehicleRentalSystem
 
 > **Important:** For the best viewing experience, it is recommended to read this `README.md` directly on the GitHub repository where all Markdown formatting, screenshots, and rendered content are displayed correctly.
 
-https://github.com/PastorRowan/Cos2614-Assessment-1
+https://github.com/PastorRowan/Cos2614_Assessment_3
 
-A console based application that allows you to enter cars and motorcycles into the system and have the systems state persist between application executions.
+A Qt GUI based vehicle rental management system that allows you to enter cars and motorcycles into the system with persistent state.
 
 ---
 
@@ -35,7 +35,7 @@ project-root/
 ├── CMakeLists.txt             # CMake build configuration
 ├── CMakePresets.json          # Optional CMake configuration presets
 ├── Cos2614_Assignment_1.pdf   # Assingment pdf
-├── LICENSE.md                 # Project license
+├── LICENSE                    # Project license
 ├── main.cpp                   # Application entry point
 ├── README.md                  # Project documentation
 └── walkthrough.mp4            # Showcase how to use the app
@@ -49,8 +49,8 @@ project-root/
 
 Ensure the following are installed:
 
-- [ ] C++ compiler (GCC, Clang, MSVC, etc)
-- [ ] Qt 6.11.1 for specific toolchain you installed
+- [ ] Qt compatible toolchain with C and C++ compiler (GCC, Clang, MSVC, etc)
+- [ ] Qt 6.11.1 for specific toolchain installed
 - [ ] CMake (3.16+ recommended)
 - [ ] Ninja (Any build executor that CMake supports is fine)
 
