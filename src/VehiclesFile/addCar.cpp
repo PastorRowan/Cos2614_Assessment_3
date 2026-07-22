@@ -4,6 +4,7 @@
 #include "VehiclesFile/VehiclesFile.h"
 
 #include <QString>
+#include <QDebug>
 
 /**
  * Adds a new Car object to the vehicle collection and saves it to storage
@@ -27,10 +28,7 @@ void VehiclesFile::addCar(
 
     // Car attributes
     const int numberOfDoorsP,
-    const int numberOfSeatsP,
-
-    // Output message indicating success or failure
-    QString& message
+    const int numberOfSeatsP
 
 ) {
 
@@ -52,7 +50,7 @@ void VehiclesFile::addCar(
     saveVehiclesQVector(ok);
 
     if (!ok) {
-        message = QString("Failed to add vehicle because failed to save vehiclesQVector:\n%1").arg(newVehicle->toQString());
+        qDebug() << QString("Failed to add vehicle because failed to save vehiclesQVector:\n%1").arg(newVehicle->toQString());
         delete vehiclesQVector.last();
         vehiclesQVector.pop_back();
         return;
@@ -61,15 +59,15 @@ void VehiclesFile::addCar(
     incrementAndSaveCurrentVehicleId(ok);
 
     if (!ok) {
-        message = QString("Failed to add vehicle because failed to increment and save current vehicle id:\n%1").arg(newVehicle->toQString());
+        qDebug() << QString("Failed to add vehicle because failed to increment and save current vehicle id:\n%1").arg(newVehicle->toQString());
         delete vehiclesQVector.last();
         vehiclesQVector.pop_back();
         return;
     };
 
-    message = QString("Successfully added vehicle:\n%1").arg(newVehicle->toQString());
+    qDebug() << QString("Successfully added vehicle:\n%1").arg(newVehicle->toQString());
 
-    emit vehicleAdded(newVehicle);
     emit vehiclesChanged();
+    emit vehicleAdded(newVehicle->getVehicleId());
 
 };

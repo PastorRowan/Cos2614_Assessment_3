@@ -13,7 +13,9 @@
  *
  * This function does not modify the vehicle collection
  */
-const vehicles::Vehicle* VehiclesFile::searchVehicleById(const QString& vehicleId) const {
+const vehicles::Vehicle* VehiclesFile::searchVehicleById(
+    const QString& vehicleId
+) const {
 
     for (unsigned int i = 0; i < vehiclesQVector.size(); i++) {
         if (vehiclesQVector[i]->getVehicleId() == vehicleId) {

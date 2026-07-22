@@ -4,6 +4,7 @@
 #include "VehiclesFile/VehiclesFile.h"
 
 #include <QString>
+#include <QDebug>
 
 /**
  * Rents a vehicle by its ID
@@ -17,8 +18,7 @@
  * If saving fails, the rental change is reverted
  */
 void VehiclesFile::rentVehicleById(
-    const QString& vehicleId,
-    QString& message
+    const QString& vehicleId
 ) {
 
     for (unsigned int i = 0; i < vehiclesQVector.size(); i++) {
@@ -28,7 +28,7 @@ void VehiclesFile::rentVehicleById(
         };
 
         if (vehiclesQVector[i]->getIsRented()) {
-            message = QString("Vehicle '%1' is already rented").arg(vehicleId);
+            qDebug() << QString("Vehicle '%1' is already rented").arg(vehicleId);
         } else {
 
             bool newIsRented = true;
@@ -40,12 +40,16 @@ void VehiclesFile::rentVehicleById(
             saveVehiclesQVector(ok);
 
             if (!ok) {
-                message = QString("Failed to rent vehicle '%1'").arg(vehicleId);
+                qDebug() << QString("Failed to rent vehicle '%1'").arg(vehicleId);
                 vehiclesQVector[i]->setIsRented(!newIsRented);
                 return;
             };
 
-            message = QString("Successfully rented vehicle '%1'").arg(vehicleId);
+            qDebug() << QString("Successfully rented vehicle '%1'").arg(vehicleId);
+
+            emit vehiclesChanged();
+            emit vehicleUpdated(vehicleId);
+            emit vehicleRented(vehicleId);
 
         };
 
@@ -53,10 +57,6 @@ void VehiclesFile::rentVehicleById(
 
     };
 
-    message = QString("Vehicle with id '%1' does not exist").arg(vehicleId);
-
-    emit vehicleRented(vehicleId);
-    emit vehicleUpdated(vehicleId);
-    emit vehiclesChanged();
+    qDebug() << QString("Vehicle with id '%1' does not exist").arg(vehicleId);
 
 };

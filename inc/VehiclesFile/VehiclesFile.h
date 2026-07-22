@@ -118,10 +118,7 @@ class VehiclesFile : public QObject {
 
             // Car attributes
             const int numberOfDoorsP,
-            const int numberOfSeatsP,
-
-            // Success or error message
-            QString& message
+            const int numberOfSeatsP
 
         );
 
@@ -135,9 +132,7 @@ class VehiclesFile : public QObject {
             const QString modelP,
             const double pricePerDayP,
 
-            const int engineCapacityCCP,
-
-            QString& message
+            const int engineCapacityCCP
 
         );
 
@@ -149,14 +144,12 @@ class VehiclesFile : public QObject {
 
         // Marks a vehicle as rented using its ID
         void rentVehicleById(
-            const QString& vehicleId,
-            QString& message
+            const QString& vehicleId
         );
 
         // Marks a rented vehicle as returned (not rented)
         void returnVehicleById(
-            const QString& vehicleId,
-            QString& message
+            const QString& vehicleId
         );
 
     signals:
@@ -165,18 +158,18 @@ class VehiclesFile : public QObject {
         void vehiclesChanged();
 
         /// Emitted after a vehicle is added.
-        void vehicleAdded(const vehicles::Vehicle* vehicle);
+        void vehicleAdded(const QString vehicleId);
 
         /// Emitted after a vehicle is removed.
-        void vehicleRemoved(const QString& vehicleId);
+        void vehicleRemoved(const QString vehicleId);
 
         /// Emitted after a vehicle's data changes.
-        void vehicleUpdated(const QString& vehicleId);
+        void vehicleUpdated(const QString vehicleId);
 
         /// Emitted after a vehicle is rented.
-        void vehicleRented(const QString& vehicleId);
+        void vehicleRented(const QString vehicleId);
 
         /// Emitted after a vehicle is returned.
-        void vehicleReturned(const QString& vehicleId);
+        void vehicleReturned(const QString vehicleId);
 
 };

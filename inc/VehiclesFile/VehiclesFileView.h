@@ -30,4 +30,16 @@ class VehiclesFileView : public QWidget {
 
         void refreshTable();
 
+        void handleVehiclesChanged();
+
+        void handleVehicleAdded(const QString vehicleId);
+
+        void handleVehicleRemoved(const QString vehicleId);
+
+        void handleVehicleUpdated(const QString vehicleId);
+
+        void handleVehicleRented(const QString vehicleId);
+
+        void handleVehicleReturned(const QString vehicleId);
+
 };

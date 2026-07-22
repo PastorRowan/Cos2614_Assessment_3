@@ -3,6 +3,13 @@ cmake_minimum_required(VERSION 3.16...3.27)
 
 project(VehicleRentalSystem)
 
+configure_file(
+    ${CMAKE_SOURCE_DIR}/Config.h.in
+    ${CMAKE_BINARY_DIR}/generated/Config.h
+)
+
+option(POPULATE_VEHICLES_FILE "Populate vehicles with mock data" ON)
+
 set(CMAKE_AUTOMOC ON)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -11,6 +18,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(HEADERS
 
+    inc/VehiclesFile/populateVehiclesFile.h
     inc/VehiclesFile/VehiclesFileView.h
     inc/VehiclesFile/VehiclesFile.h
 
@@ -41,6 +49,8 @@ set(SOURCES
     src/vehicles/Car.cpp
     src/vehicles/Motorcycle.cpp
     src/vehicles/Vehicle.cpp
+
+    src/VehiclesFile/populateVehiclesFile.cpp
 
     src/VehiclesFile/VehiclesFileView.cpp
     src/VehiclesFile/addCar.cpp

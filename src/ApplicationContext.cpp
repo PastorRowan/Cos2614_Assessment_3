@@ -1,5 +1,8 @@
 
+#include "Config.h"
+
 #include "ApplicationContext.h"
+#include "VehiclesFile/populateVehiclesFile.h"
 
 #include <QObject>
 #include <QWidget>
@@ -14,6 +17,10 @@ ApplicationContext::ApplicationContext(
         this
     )
 {
+
+    #if POPULATE_VEHICLES_FILE
+        populateVehicles(vehiclesFile);
+    #endif
 
 };
 

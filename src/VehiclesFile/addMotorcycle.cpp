@@ -25,10 +25,7 @@
     const double pricePerDayP,
 
     // Car attributes
-    const int engineCapacityCCP,
-
-    // Output message indicating success or failure
-    QString& message
+    const int engineCapacityCCP
 
 ) {
 
@@ -52,7 +49,7 @@
     );
 
     if (!ok) {
-        message = QString("Failed to add vehicle:\n%1").arg(newVehicle->toQString());
+        qDebug() << QString("Failed to add vehicle:\n%1").arg(newVehicle->toQString());
         delete vehiclesQVector.last();
         vehiclesQVector.pop_back();
         return;
@@ -61,13 +58,13 @@
     incrementAndSaveCurrentVehicleId(ok);
 
     if (!ok) {
-        message = QString("Failed to save currentVehicleId vehicle:\n%1").arg(currentVehicleId);
+        qDebug() << QString("Failed to save currentVehicleId vehicle: %1").arg(currentVehicleId);
         return;
     };
 
-    message = QString("Successfully added vehicle:\n%1").arg(newVehicle->toQString());
+    qDebug() << QString("Successfully added vehicle:\n%1").arg(newVehicle->toQString());
 
-    emit vehicleAdded(newVehicle);
     emit vehiclesChanged();
+    emit vehicleAdded(newVehicle->getVehicleId());
 
 };

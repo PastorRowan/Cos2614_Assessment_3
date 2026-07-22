@@ -1,5 +1,6 @@
 
 #include "VehiclesFile/VehiclesFileView.h"
+#include "VehiclesFile/VehiclesFile.h"
 
 #include <QObject>
 #include <QWidget>
@@ -7,11 +8,56 @@
 #include <QVBoxLayout>
 #include <QTableWidget>
 #include <QHeaderView>
+#include <QDebug>
 
 VehiclesFileView::VehiclesFileView(
     VehiclesFile& vehiclesFileRef,
     QWidget* parent
-): QWidget(parent), vehiclesFile(vehiclesFileRef) {
+):
+    QWidget(parent),
+    vehiclesFile(vehiclesFileRef) {
+
+    QObject::connect(
+        &vehiclesFile,
+        &VehiclesFile::vehiclesChanged,
+        this,
+        &VehiclesFileView::handleVehiclesChanged
+    );
+
+    QObject::connect(
+        &vehiclesFile,
+        &VehiclesFile::vehicleAdded,
+        this,
+        &VehiclesFileView::handleVehicleAdded
+    );
+
+    QObject::connect(
+        &vehiclesFile,
+        &VehiclesFile::vehicleRemoved,
+        this,
+        &VehiclesFileView::handleVehicleRemoved
+    );
+
+    QObject::connect(
+        &vehiclesFile,
+        &VehiclesFile::vehicleUpdated,
+        this,
+        &VehiclesFileView::handleVehicleUpdated
+    );
+
+    QObject::connect(
+        &vehiclesFile,
+        &VehiclesFile::vehicleRented,
+        this,
+        &VehiclesFileView::handleVehicleRented
+    );
+
+    QObject::connect(
+        &vehiclesFile,
+        &VehiclesFile::vehicleReturned,
+        this,
+        &VehiclesFileView::handleVehicleReturned
+    );
 
     // QObject::connect();
     centralHBox = new QHBoxLayout(this);
@@ -86,4 +132,28 @@ void VehiclesFileView::refreshTable() {
 
     table->setFixedWidth(width);
 
+};
+
+void VehiclesFileView::handleVehiclesChanged() {
+    qDebug() << "handleVehiclesChanged called";
+};
+
+void VehiclesFileView::handleVehicleAdded(const QString vehicleId) {
+    qDebug() << "handleVehicleAdded called with: " << vehicleId;
+};
+
+void VehiclesFileView::handleVehicleRemoved(const QString vehicleId) {
+    qDebug() << "handleVehicleRemoved called with: " << vehicleId;
+};
+
+void VehiclesFileView::handleVehicleUpdated(const QString vehicleId) {
+    qDebug() << "handleVehicleUpdated called with: " << vehicleId;
+};
+
+void VehiclesFileView::handleVehicleRented(const QString vehicleId) {
+    qDebug() << "handleVehicleRented called with: " << vehicleId;
+};
+
+void VehiclesFileView::handleVehicleReturned(const QString vehicleId) {
+    qDebug() << "handleVehicleReturned called with: " << vehicleId;
 };
