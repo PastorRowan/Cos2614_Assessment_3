@@ -6,19 +6,15 @@
 
 ApplicationContext::ApplicationContext(
     QWidget* parent
-): QObject(parent) {
-
-    bool ok = false;
-
-    vehiclesFile = new VehiclesFile(
+):
+    QObject(parent),
+    vehiclesFile(
         QString("/files/vehiclesQVector.txt"),
         QString("/files/currentVehicleId.txt"),
-        ok,
         this
-    );
-
-    if (!ok) {
-
-    };
+    )
+{
 
 };
+
+ApplicationContext::~ApplicationContext() {};

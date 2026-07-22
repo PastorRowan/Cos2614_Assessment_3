@@ -87,7 +87,6 @@ class VehiclesFile : public QObject {
         VehiclesFile(
             const QString vehiclesFileLocationParameter,
             const QString currentVehicleIdFileLocationParameter,
-            bool& ok,
             QObject* parent = nullptr
         );
 

@@ -11,13 +11,13 @@
 // Application entry point
 int main(int argc, char *argv[]) {
 
-    // Qt core application object required for Qt-based applications
+    // Qt application object required for Qt-based applications
     QApplication app(argc, argv);
 
     ApplicationContext context;
 
     MainWindow win(context);
-    win.resize(320, 240);
+    win.resize(500, 400);
     win.setVisible(true);
 
     // Terminate the application

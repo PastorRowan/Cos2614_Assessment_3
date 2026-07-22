@@ -12,12 +12,12 @@ class ApplicationContext : public QObject {
 
     private:
 
-        VehiclesFile* vehiclesFile;
-
     public:
 
+        VehiclesFile vehiclesFile;
+
         explicit ApplicationContext(
-            QWidget* parent = nullptr
+            QWidget *parent = nullptr
         );
 
         ~ApplicationContext();

@@ -13,18 +13,18 @@
 VehiclesFile::VehiclesFile(
     const QString vehiclesFileLocationParameter,
     const QString currentVehicleIdFileLocationParameter,
-    bool& ok,
     QObject* parent
 ):
     QObject(parent),
     vehiclesFileLocation(QCoreApplication::applicationDirPath() + vehiclesFileLocationParameter),
     currentVehicleIdFileLocation(QCoreApplication::applicationDirPath() + currentVehicleIdFileLocationParameter) {
 
+    bool ok = false;
+
     loadCurrentVehicleId(ok);
 
     if (!ok) {
-        qDebug() << "Failed to load current vehicle id";
-        ok = false;
+        qFatal() << "Failed to load current vehicle id";
         return;
     };
 
@@ -33,12 +33,9 @@ VehiclesFile::VehiclesFile(
     loadVehiclesQVector(ok);
 
     if (!ok) {
-        qDebug() << "Failed to load vehiclesQVector";
-        ok = false;
+        qFatal() << "Failed to load vehiclesQVector";
         return;
     };
-
-    ok = true;
 
 };
 

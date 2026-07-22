@@ -4,6 +4,7 @@
 #include "VehiclesFile/VehiclesFile.h"
 
 #include <QWidget>
+#include <QVBoxLayout>
 #include <QTableWidget>
 
 class VehiclesFileView : public QWidget {
@@ -11,7 +12,10 @@ class VehiclesFileView : public QWidget {
     private:
 
         VehiclesFile& vehiclesFile;
-        QTableWidget* table;
+        QHBoxLayout *centralHBox;
+        QWidget *content;
+        QVBoxLayout *contentVBox;
+        QTableWidget *table;
 
     public:
 
@@ -24,6 +28,6 @@ class VehiclesFileView : public QWidget {
 
         void destroyTable();
 
-        void refresh();
+        void refreshTable();
 
 };
