@@ -4,6 +4,7 @@
 #include "VehiclesFile/VehiclesFile.h"
 
 #include <QString>
+#include <QDebug>
 
 /**
  * Adds a new Motorcycle object to the vehicle collection and saves it to storage
@@ -49,7 +50,7 @@
     );
 
     if (!ok) {
-        qDebug() << QString("Failed to add vehicle:\n%1").arg(newVehicle->toQString());
+        qDebug() << QString("Failed to add vehicle: %1").arg(newVehicle->toQString());
         delete vehiclesQVector.last();
         vehiclesQVector.pop_back();
         return;
@@ -62,7 +63,7 @@
         return;
     };
 
-    qDebug() << QString("Successfully added vehicle:\n%1").arg(newVehicle->toQString());
+    qDebug() << QString("Successfully added vehicle: %1").arg(newVehicle->toQString());
 
     emit vehiclesChanged();
     emit vehicleAdded(newVehicle->getVehicleId());

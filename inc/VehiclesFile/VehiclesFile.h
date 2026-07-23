@@ -14,14 +14,14 @@ class VehiclesFile : public QObject {
 
     private:
 
-        // Alias for the internal vehicle container type
-        typedef QVector<vehicles::Vehicle*> VehiclesQVector;
-
         // File path for vehicle data storage
         QString vehiclesFileLocation = "Not initialised";
 
         // File path used to store the current vehicle ID counter
         QString currentVehicleIdFileLocation = "Not initialised";
+
+        // Alias for the internal vehicle container type
+        typedef QVector<vehicles::Vehicle*> VehiclesQVector;
 
         // Internal container storing all vehicle objects
         VehiclesQVector vehiclesQVector;
@@ -105,6 +105,8 @@ class VehiclesFile : public QObject {
         // Gets the internal vehicle collection
         const VehiclesQVector& getVehiclesQVector() const;
 
+        void clear();
+
         /**
          * Adds a new car to the collection
          * Automatically generates a unique vehicle ID
@@ -134,6 +136,13 @@ class VehiclesFile : public QObject {
 
             const int engineCapacityCCP
 
+        );
+
+        /**
+         * Removes a vehicle in the collection
+         */
+        void removeVehicle(
+            const QString& vehicleId
         );
 
         /**

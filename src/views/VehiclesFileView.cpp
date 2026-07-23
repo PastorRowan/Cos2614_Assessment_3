@@ -1,5 +1,5 @@
 
-#include "VehiclesFile/VehiclesFileView.h"
+#include "views/views.h"
 #include "VehiclesFile/VehiclesFile.h"
 
 #include <QObject>
@@ -10,12 +10,48 @@
 #include <QHeaderView>
 #include <QDebug>
 
-VehiclesFileView::VehiclesFileView(
-    VehiclesFile& vehiclesFileRef,
-    QWidget* parent
+views::VehiclesFileView::VehiclesFileView(
+    QWidget* parent,
+    VehiclesFile& vehiclesFileRef
 ):
     QWidget(parent),
     vehiclesFile(vehiclesFileRef) {
+
+    // QObject::connect();
+    centralHBox = new QHBoxLayout(this);
+    contentVBox = new QVBoxLayout();
+    table = new QTableWidget();
+
+    centralHBox->addStretch();
+    centralHBox->addLayout(contentVBox);
+    centralHBox->addStretch();
+
+    table->setFixedHeight(430);
+    table->setColumnCount(6);
+    table->setHorizontalHeaderLabels({
+        "TYPE_ID",
+        "VEHICLE_ID",
+        "BRAND",
+        "MODEL",
+        "PRICE_PER_DAY",
+        "IS_RENTED"
+    });
+
+    table->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    table->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+
+    table->horizontalHeader()->setSectionResizeMode(
+        QHeaderView::ResizeToContents
+    );
+    table->verticalHeader()->setSectionResizeMode(
+        QHeaderView::ResizeToContents
+    );
+
+    refreshTable();
+
+    contentVBox->addWidget(table, 1);
+
+    setLayout(centralHBox);
 
     QObject::connect(
         &vehiclesFile,
@@ -59,54 +95,25 @@ VehiclesFileView::VehiclesFileView(
         &VehiclesFileView::handleVehicleReturned
     );
 
-    // QObject::connect();
-    centralHBox = new QHBoxLayout(this);
-    contentVBox = new QVBoxLayout();
-    table = new QTableWidget();
-
-    centralHBox->addStretch();
-    centralHBox->addLayout(contentVBox);
-    centralHBox->addStretch();
-
-    table->setFixedHeight(430);
-    table->setColumnCount(6);
-    table->setHorizontalHeaderLabels({
-        "TYPE_ID",
-        "VEHICLE_ID",
-        "BRAND",
-        "MODEL",
-        "PRICE_PER_DAY",
-        "IS_RENTED"
-    });
-
-    table->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    table->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-
-    table->horizontalHeader()->setSectionResizeMode(
-        QHeaderView::ResizeToContents
+    QObject::connect(
+        table,
+        &QTableWidget::itemSelectionChanged,
+        this,
+        &VehiclesFileView::handleSelectionChanged
     );
-    table->verticalHeader()->setSectionResizeMode(
-        QHeaderView::ResizeToContents
-    );
-
-    refreshTable();
-
-    contentVBox->addWidget(table, 1);
-
-    setLayout(centralHBox);
 
 };
 
-VehiclesFileView::~VehiclesFileView() {
+views::VehiclesFileView::~VehiclesFileView() {
     destroyTable();
 };
 
-void VehiclesFileView::destroyTable() {
+void views::VehiclesFileView::destroyTable() {
     table->clearContents();
     table->setRowCount(0);
 };
 
-void VehiclesFileView::refreshTable() {
+void views::VehiclesFileView::refreshTable() {
 
     destroyTable();
 
@@ -134,26 +141,40 @@ void VehiclesFileView::refreshTable() {
 
 };
 
-void VehiclesFileView::handleVehiclesChanged() {
+void views::VehiclesFileView::handleVehiclesChanged() {
     qDebug() << "handleVehiclesChanged called";
 };
 
-void VehiclesFileView::handleVehicleAdded(const QString vehicleId) {
+void views::VehiclesFileView::handleVehicleAdded(const QString vehicleId) {
     qDebug() << "handleVehicleAdded called with: " << vehicleId;
 };
 
-void VehiclesFileView::handleVehicleRemoved(const QString vehicleId) {
+void views::VehiclesFileView::handleVehicleRemoved(const QString vehicleId) {
     qDebug() << "handleVehicleRemoved called with: " << vehicleId;
 };
 
-void VehiclesFileView::handleVehicleUpdated(const QString vehicleId) {
+void views::VehiclesFileView::handleVehicleUpdated(const QString vehicleId) {
     qDebug() << "handleVehicleUpdated called with: " << vehicleId;
 };
 
-void VehiclesFileView::handleVehicleRented(const QString vehicleId) {
+void views::VehiclesFileView::handleVehicleRented(const QString vehicleId) {
     qDebug() << "handleVehicleRented called with: " << vehicleId;
 };
 
-void VehiclesFileView::handleVehicleReturned(const QString vehicleId) {
+void views::VehiclesFileView::handleVehicleReturned(const QString vehicleId) {
     qDebug() << "handleVehicleReturned called with: " << vehicleId;
+};
+
+void views::VehiclesFileView::handleSelectionChanged() {
+
+    int row = table->currentRow();
+
+    if (row < 0) {
+        return;
+    };
+
+    QString vehicleId = table->item(row, 1)->text();
+
+    emit vehicleSelected(vehicleId);
+
 };

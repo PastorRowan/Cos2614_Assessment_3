@@ -106,7 +106,7 @@ namespace vehicles {
             virtual QString toQString() const = 0;
 
             // Creates a deep copy of the vehicle object
-            virtual vehicles::Vehicle* clone() const = 0;;
+            virtual vehicles::Vehicle* clone() const = 0;
 
             // Writes the vehicle data to a text stream
             virtual void writeToStream(QTextStream& out) const = 0;

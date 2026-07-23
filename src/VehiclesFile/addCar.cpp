@@ -50,7 +50,7 @@ void VehiclesFile::addCar(
     saveVehiclesQVector(ok);
 
     if (!ok) {
-        qDebug() << QString("Failed to add vehicle because failed to save vehiclesQVector:\n%1").arg(newVehicle->toQString());
+        qDebug() << QString("Failed to add vehicle because failed to save vehiclesQVector: %1").arg(newVehicle->toQString());
         delete vehiclesQVector.last();
         vehiclesQVector.pop_back();
         return;
@@ -59,13 +59,13 @@ void VehiclesFile::addCar(
     incrementAndSaveCurrentVehicleId(ok);
 
     if (!ok) {
-        qDebug() << QString("Failed to add vehicle because failed to increment and save current vehicle id:\n%1").arg(newVehicle->toQString());
+        qDebug() << QString("Failed to add vehicle because failed to increment and save current vehicle id: %1").arg(newVehicle->toQString());
         delete vehiclesQVector.last();
         vehiclesQVector.pop_back();
         return;
     };
 
-    qDebug() << QString("Successfully added vehicle:\n%1").arg(newVehicle->toQString());
+    qDebug() << QString("Successfully added vehicle: %1").arg(newVehicle->toQString());
 
     emit vehiclesChanged();
     emit vehicleAdded(newVehicle->getVehicleId());
