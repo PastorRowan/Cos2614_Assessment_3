@@ -45,10 +45,6 @@ namespace views {
 
             void handleVehicleUpdated(const QString vehicleId);
 
-            void handleVehicleRented(const QString vehicleId);
-
-            void handleVehicleReturned(const QString vehicleId);
-
             void handleSelectionChanged();
 
         signals:

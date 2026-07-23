@@ -82,20 +82,6 @@ views::VehiclesFileView::VehiclesFileView(
     );
 
     QObject::connect(
-        &vehiclesFile,
-        &VehiclesFile::vehicleRented,
-        this,
-        &VehiclesFileView::handleVehicleRented
-    );
-
-    QObject::connect(
-        &vehiclesFile,
-        &VehiclesFile::vehicleReturned,
-        this,
-        &VehiclesFileView::handleVehicleReturned
-    );
-
-    QObject::connect(
         table,
         &QTableWidget::itemSelectionChanged,
         this,
@@ -155,14 +141,6 @@ void views::VehiclesFileView::handleVehicleRemoved(const QString vehicleId) {
 
 void views::VehiclesFileView::handleVehicleUpdated(const QString vehicleId) {
     qDebug() << "handleVehicleUpdated called with: " << vehicleId;
-};
-
-void views::VehiclesFileView::handleVehicleRented(const QString vehicleId) {
-    qDebug() << "handleVehicleRented called with: " << vehicleId;
-};
-
-void views::VehiclesFileView::handleVehicleReturned(const QString vehicleId) {
-    qDebug() << "handleVehicleReturned called with: " << vehicleId;
 };
 
 void views::VehiclesFileView::handleSelectionChanged() {

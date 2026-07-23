@@ -38,8 +38,6 @@ set(HEADERS
     inc/views/VehicleView.h
     inc/views/views.h
 
-    inc/ApplicationContext.h
-
     inc/MainWindow.h
 
 )
@@ -71,8 +69,6 @@ set(SOURCES
     src/views/MotorcycleView.cpp
     src/views/VehiclesFileView.cpp
     src/views/VehicleView.cpp
-
-    src/ApplicationContext.cpp
 
     src/MainWindow.cpp
 
