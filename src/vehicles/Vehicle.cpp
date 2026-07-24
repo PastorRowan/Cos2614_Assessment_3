@@ -33,7 +33,13 @@ vehicles::TypeId vehicles::Vehicle::getTypeId() const {
 
 // Sets the vehicle type identifier
 void vehicles::Vehicle::setTypeId(const vehicles::TypeId newTypeId) {
+
+    if (typeId == newTypeId) {
+        return;
+    };
+
     typeId = newTypeId;
+    emit vehicleUpdated(getVehicleId());
 };
 
 // Converts the vehicle type ID to a QString
@@ -48,7 +54,13 @@ QString vehicles::Vehicle::getVehicleId() const {
 
 // Sets the vehicle ID
 void vehicles::Vehicle::setVehicleId(const QString& newVehicleId) {
+
+    if (vehicleId == newVehicleId) {
+        return;
+    };
+
     vehicleId = newVehicleId;
+    emit vehicleUpdated(getVehicleId());
 };
 
 // Gets the brand of the vehicle
@@ -58,7 +70,14 @@ QString vehicles::Vehicle::getBrand() const {
 
 // Sets the brand of the vehicle
 void vehicles::Vehicle::setBrand(const QString& newBrand) {
+
+    if (brand == newBrand) {
+        return;
+    };
+
     brand = newBrand;
+    emit vehicleUpdated(getVehicleId());
+
 };
 
 // Gets the model of the vehicle
@@ -69,6 +88,7 @@ QString vehicles::Vehicle::getModel() const {
 // Sets the model of the vehicle
 void vehicles::Vehicle::setModel(const QString& newModel) {
     model = newModel;
+    emit vehicleUpdated(getVehicleId());
 };
 
 // Gets the rental price per day
@@ -79,6 +99,7 @@ double vehicles::Vehicle::getPricePerDay() const {
 // Sets the rental price per day
 void vehicles::Vehicle::setPricePerDay(const double newPricePerDay) {
     pricePerDay = newPricePerDay;
+    emit vehicleUpdated(getVehicleId());
 };
 
 // Converts the price per day to QString
@@ -94,6 +115,7 @@ bool vehicles::Vehicle::getIsRented() const {
 // Sets the rental status of the vehicle
 void vehicles::Vehicle::setIsRented(const bool newIsRented) {
     isRented = newIsRented;
+    emit vehicleUpdated(getVehicleId());
 };
 
 // Converts rental status to QString

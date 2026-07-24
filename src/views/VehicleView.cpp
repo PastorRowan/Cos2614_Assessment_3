@@ -97,3 +97,7 @@ void views::VehicleView::refreshFields() {
     };
 
 };
+
+void views::VehicleView::handleVehicleSelected(vehicles::Vehicle* vehicleP) {
+    setVehicle(vehicleP);
+};

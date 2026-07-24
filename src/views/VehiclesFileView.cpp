@@ -153,6 +153,8 @@ void views::VehiclesFileView::handleSelectionChanged() {
 
     QString vehicleId = table->item(row, 1)->text();
 
-    emit vehicleSelected(vehicleId);
+    auto vehicle = vehiclesFile.searchVehicleById(vehicleId);
+
+    emit vehicleSelected(vehicle);
 
 };

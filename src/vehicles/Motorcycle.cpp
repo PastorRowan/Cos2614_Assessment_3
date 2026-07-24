@@ -40,7 +40,14 @@ int vehicles::Motorcycle::getEngineCapacityCC() const {
 
 // Sets the engine capacity
 void vehicles::Motorcycle::setEngineCapacityCC(const int newEngineCapacityCC) {
+
+    if (engineCapacityCC == newEngineCapacityCC) {
+        return;
+    };
+
     engineCapacityCC = newEngineCapacityCC;
+    emit vehicleUpdated(getVehicleId());
+
 };
 
 // Converts engine capacity to QString

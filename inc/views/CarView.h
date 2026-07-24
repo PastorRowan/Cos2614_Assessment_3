@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "VehicleView.h"
 #include "vehicles/vehicles.h"
 
 #include <QObject>

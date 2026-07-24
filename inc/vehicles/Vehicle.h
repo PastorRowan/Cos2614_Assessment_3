@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <QObject>
 #include <QString>
 #include <QStringList>
 
@@ -17,6 +18,8 @@ namespace vehicles {
 
     // Abstract base class representing a generic vehicle.
     class Vehicle {
+
+        Q_OBJECT
 
         private:
 
@@ -113,6 +116,10 @@ namespace vehicles {
 
             // Reads the vehicle data from a text stream
             virtual void readFromStream(QTextStream& in) = 0;
+
+        signals:
+
+            void vehicleUpdated(const QString vehicleId);
 
     };
 

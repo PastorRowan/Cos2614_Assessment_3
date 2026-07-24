@@ -2,6 +2,7 @@
 #pragma once
 
 #include "VehiclesFile/VehiclesFile.h"
+#include "vehicles/vehicles.h"
 
 #include <QWidget>
 #include <QObject>
@@ -25,7 +26,7 @@ namespace views {
         public:
 
             explicit VehiclesFileView(
-                QWidget *parent = nullptr,
+                QWidget *parent,
                 VehiclesFile& vehiclesFileRef
             );
 
@@ -49,7 +50,7 @@ namespace views {
 
         signals:
 
-            void vehicleSelected(const QString vehicleId);
+            void vehicleSelected(vehicles::Vehicle* vehicle);
 
     };
 

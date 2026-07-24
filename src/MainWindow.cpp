@@ -1,4 +1,6 @@
 
+#include "Config.h"
+
 #include "MainWindow.h"
 #include "VehiclesFile/VehiclesFile.h"
 #include "VehiclesFile/populateVehiclesFile.h"
@@ -40,6 +42,13 @@ MainWindow::MainWindow(QWidget *parent) {
     title->setAlignment(Qt::AlignCenter);
 
     views::VehicleView *vehicleView = new views::VehicleView(content, nullptr);
+
+    QObject::connect(
+        vehiclesFileView,
+        &views::VehiclesFileView::vehicleSelected,
+        vehicleView,
+        &views::VehicleView::handleVehicleSelected
+    );
 
     QObject::connect(
         vehicleView,

@@ -149,7 +149,7 @@ class VehiclesFile : public QObject {
          * Searches for a vehicle by its ID
          * Returns a pointer to the matching vehicle, or nullptr if not found
          */
-        const vehicles::Vehicle* searchVehicleById(const QString& vehicleId) const;
+        vehicles::Vehicle* searchVehicleById(const QString& vehicleId);
 
         // Marks a vehicle as rented using its ID
         void rentVehicleById(

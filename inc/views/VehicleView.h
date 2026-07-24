@@ -47,7 +47,7 @@ namespace views {
 
         // slots:
 
-            void handleVehicleUpdated(const QString vehicleId);
+            void handleVehicleSelected(vehicles::Vehicle* vehicleP);
 
         signals:
 

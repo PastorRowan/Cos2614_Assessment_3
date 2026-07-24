@@ -42,7 +42,14 @@ int vehicles::Car::getNumberOfDoors() const {
 
 // Sets the number of doors
 void vehicles::Car::setNumberOfDoors(const int newNumberOfDoors) {
+
+    if (numberOfDoors == newNumberOfDoors) {
+        return;
+    };
+
     numberOfDoors = newNumberOfDoors;
+    emit vehicleUpdated(getVehicleId());
+
 };
 
 // Converts number of doors to QString
@@ -57,7 +64,14 @@ int vehicles::Car::getNumberOfSeats() const {
 
 // Sets the number of seats
 void vehicles::Car::setNumberOfSeats(const int newNumberOfSeats) {
+
+    if (numberOfSeats == newNumberOfSeats) {
+        return;
+    };
+
     numberOfSeats = newNumberOfSeats;
+    emit vehicleUpdated(getVehicleId());
+
 };
 
 // Converts number of seats to QString
