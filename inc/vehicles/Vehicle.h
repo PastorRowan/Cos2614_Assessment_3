@@ -17,7 +17,7 @@ namespace vehicles {
     };
 
     // Abstract base class representing a generic vehicle.
-    class Vehicle {
+    class Vehicle : public QObject {
 
         Q_OBJECT
 
@@ -40,9 +40,10 @@ namespace vehicles {
 
             /**
              * Parameterized constructor
-             * Initializes all core properties of a vehicle
+             * Initializes QObject and all core properties of a vehicle
              */
             Vehicle(
+                QObject* parent,
                 const vehicles::TypeId typeIdP,
                 const QString vehicleIdP,
                 const QString brandP,

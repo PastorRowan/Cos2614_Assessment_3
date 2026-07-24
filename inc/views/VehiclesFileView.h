@@ -17,7 +17,7 @@ namespace views {
 
         private:
 
-            VehiclesFile& vehiclesFile;
+            VehiclesFile* vehiclesFile;
             QHBoxLayout *centralHBox;
             QWidget *content;
             QVBoxLayout *contentVBox;
@@ -27,7 +27,7 @@ namespace views {
 
             explicit VehiclesFileView(
                 QWidget *parent,
-                VehiclesFile& vehiclesFileRef
+                VehiclesFile* vehiclesFileP
             );
 
             ~VehiclesFileView();

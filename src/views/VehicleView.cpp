@@ -2,18 +2,23 @@
 #include "views/views.h"
 #include "vehicles/vehicles.h"
 
+#include <QVBoxLayout>
+#include <QWidget>
+#include <QFormLayout>
 #include <QLabel>
 #include <QLineEdit>
-#include <QVBoxLayout>
+#include <QDebug>
 
 views::VehicleView::VehicleView(
     QWidget *parent,
     vehicles::Vehicle* vehicleP
 ):
-    QWidget(parent),
-    vehicle(vehicleP) {
+    QWidget(parent) {
 
     vBoxLayout = new QVBoxLayout(this);
+
+    vehicleFormWidget = new QWidget(this);
+    vehicleFormLayout = new QFormLayout(vehicleFormWidget);
 
     typeIdLabel = new QLabel(this);
     vehicleIdLabel = new QLabel(this);
@@ -23,16 +28,21 @@ views::VehicleView::VehicleView(
     isRentedLabel = new QLabel(this);
 
     carView = new views::CarView(this, nullptr);
+    carView->hide();
     motorcycleView = new views::MotorcycleView(this, nullptr);
+    motorcycleView->hide();
 
-    vBoxLayout->addWidget(typeIdLabel);
-    vBoxLayout->addWidget(vehicleIdLabel);
-    vBoxLayout->addWidget(brandField);
-    vBoxLayout->addWidget(modelField);
-    vBoxLayout->addWidget(pricePerDayField);
-    vBoxLayout->addWidget(isRentedLabel);
+    vehicleFormWidget->setLayout(vehicleFormLayout);
+    vehicleFormLayout->addRow("TYPE_ID: ", typeIdLabel);
+    vehicleFormLayout->addRow("VEHICLE_ID: ", vehicleIdLabel);
+    vehicleFormLayout->addRow("BRAND: ", brandField);
+    vehicleFormLayout->addRow("MODEL: ", modelField);
+    vehicleFormLayout->addRow("PRICE_PER_DAY: ", pricePerDayField);
+    vehicleFormLayout->addRow("IS_RENTED: ", isRentedLabel);
 
-    setLayout(vBoxLayout);
+    vBoxLayout->addWidget(vehicleFormWidget);
+    vBoxLayout->addWidget(carView);
+    vBoxLayout->addWidget(motorcycleView);
 
     setVehicle(vehicleP);
 
@@ -65,6 +75,9 @@ void views::VehicleView::setVehicle(
         motorcycleView->setMotorcycle(motorcycle);
         motorcycleView->show();
 
+    } else {
+        carView->hide();
+        motorcycleView->hide();
     };
 
 };
@@ -73,12 +86,7 @@ void views::VehicleView::refreshFields() {
 
     bool hasVehicle = (getVehicle() != nullptr);
 
-    typeIdLabel->setVisible(hasVehicle);
-    vehicleIdLabel->setVisible(hasVehicle);
-    brandField->setVisible(hasVehicle);
-    modelField->setVisible(hasVehicle);
-    pricePerDayField->setVisible(hasVehicle);
-    isRentedLabel->setVisible(hasVehicle);
+    vehicleFormWidget->setEnabled(hasVehicle);
 
     if (!hasVehicle) {
         typeIdLabel->setText("");
@@ -99,5 +107,6 @@ void views::VehicleView::refreshFields() {
 };
 
 void views::VehicleView::handleVehicleSelected(vehicles::Vehicle* vehicleP) {
+    qDebug() << "handleVehicleSelected is running with vehicle id: " << vehicleP->getVehicleId();
     setVehicle(vehicleP);
 };

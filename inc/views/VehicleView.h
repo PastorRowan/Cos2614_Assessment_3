@@ -7,9 +7,11 @@
 
 #include <QWidget>
 #include <QObject>
+#include <QVBoxLayout>
+#include <QWidget>
+#include <QFormLayout>
 #include <QLabel>
 #include <QLineEdit>
-#include <QVBoxLayout>
 
 namespace views {
 
@@ -21,6 +23,8 @@ namespace views {
 
             vehicles::Vehicle* vehicle;
             QVBoxLayout *vBoxLayout;
+            QWidget *vehicleFormWidget;
+            QFormLayout *vehicleFormLayout;
             QLabel *typeIdLabel;
             QLabel *vehicleIdLabel;
             QLineEdit *brandField;

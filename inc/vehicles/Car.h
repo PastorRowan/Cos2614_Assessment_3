@@ -3,8 +3,8 @@
 
 #include "vehicles/Vehicle.h"
 
-#include <QString>
-#include <QStringList>
+class QObject;
+class QString;
 
 namespace vehicles {
 
@@ -31,6 +31,9 @@ namespace vehicles {
              * attributes and car-specific properties
              */
             Car(
+
+                // QObject parent
+                QObject *parent,
 
                 // Vehicle attributes
                 const QString vehicleIdP,

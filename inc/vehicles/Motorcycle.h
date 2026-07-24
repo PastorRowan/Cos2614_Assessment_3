@@ -3,8 +3,7 @@
 
 #include "vehicles/Vehicle.h"
 
-#include <QStringList>
-
+class QObject;
 class QString;
 
 namespace vehicles {
@@ -31,6 +30,9 @@ namespace vehicles {
              * and its specific engine capacity attribute
              */
             Motorcycle(
+
+                // QObject parent
+                QObject *parent,
 
                 // Vehicle attributes
                 const QString idP,

@@ -18,7 +18,8 @@
  *
  * After successfully saving the collection, the function increments and saves
  * the current vehicle ID counter to ensure future vehicles receive unique IDs
- */void VehiclesFile::addMotorcycle(
+ */
+void VehiclesFile::addMotorcycle(
 
     // Vehicle attributes
     const QString brandP,
@@ -32,12 +33,17 @@
 
     vehicles::Vehicle* newVehicle =
         new vehicles::Motorcycle(
+
+            this,
+
             vehicleIdToQString(),
             brandP,
             modelP,
             pricePerDayP,
             false,
+
             engineCapacityCCP
+
         )
     ;
 

@@ -3,12 +3,16 @@
 
 #include "vehicles/Motorcycle.h"
 
+#include <QObject>
 #include <QString>
 #include <QTextStream>
 #include <QStringList>
 
 // Constructs a Motorcycle object with full initialization
 vehicles::Motorcycle::Motorcycle(
+
+    // QObject parent
+    QObject *parent,
 
     // Vehicle attributes
     const QString idP,
@@ -22,6 +26,7 @@ vehicles::Motorcycle::Motorcycle(
 
 ):
     Vehicle(
+        parent,
         vehicles::TypeId::motorCycle,
         idP,
         brandP,
@@ -77,6 +82,8 @@ QString vehicles::Motorcycle::toQString() const {
 vehicles::Vehicle* vehicles::Motorcycle::clone() const {
 
     return new vehicles::Motorcycle(
+
+        nullptr,
 
         getVehicleId(),
         getBrand(),

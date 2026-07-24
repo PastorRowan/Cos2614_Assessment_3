@@ -5,8 +5,8 @@
 
 #include <QWidget>
 #include <QObject>
+#include <QFormLayout>
 #include <QLineEdit>
-#include <QVBoxLayout>
 
 namespace views {
 
@@ -17,7 +17,7 @@ namespace views {
         private:
 
             vehicles::Motorcycle* motorcycle;
-            QVBoxLayout *vBoxLayout;
+            QFormLayout *motorcycleFormLayout;
             QLineEdit *engineCapacityCCField;
 
         protected:

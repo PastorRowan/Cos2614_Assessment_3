@@ -34,13 +34,18 @@ void VehiclesFile::addCar(
 
     vehicles::Vehicle*
     newVehicle = new vehicles::Car(
+
+        this,
+
         vehicleIdToQString(),
         brandP,
         modelP,
         pricePerDayP,
         false,
+
         numberOfDoorsP,
         numberOfSeatsP
+
     );
 
     vehiclesQVector.push_back(newVehicle);

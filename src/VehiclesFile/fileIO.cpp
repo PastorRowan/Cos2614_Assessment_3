@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QFileInfo>
+#include <QObject>
 
 /*
  * Ensures that a file and its parent directory path exist
@@ -287,6 +288,15 @@ void VehiclesFile::loadVehiclesQVector(bool& ok) {
         QTextStream lineStream(&line, QIODevice::ReadOnly);
 
         lineStream >> *vehiclePointer;
+
+        vehiclePointer->setParent(this);
+
+        QObject::connect(
+            vehiclePointer,
+            &vehicles::Vehicle::vehicleUpdated,
+            this,
+            &VehiclesFile::handleVehicleUpdated
+        );
 
         vehiclesQVector.push_back(vehiclePointer);
 

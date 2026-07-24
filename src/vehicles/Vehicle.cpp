@@ -3,11 +3,14 @@
 
 #include "vehicles/Vehicle.h"
 
+#include <QObject>
 #include <QString>
 #include <QTextStream>
 
 // Constructs a Vehicle object with all base attributes initialized
 vehicles::Vehicle::Vehicle(
+
+    QObject *parent,
 
     const vehicles::TypeId typeIdP,
     const QString vehicleIdP,
@@ -17,6 +20,7 @@ vehicles::Vehicle::Vehicle(
     const bool isRentedP
 
 ):
+    QObject(parent),
     typeId(typeIdP),
     vehicleId(vehicleIdP),
     brand(brandP),

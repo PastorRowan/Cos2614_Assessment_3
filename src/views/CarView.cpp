@@ -2,7 +2,7 @@
 #include "views/carView.h"
 #include "vehicles/vehicles.h"
 
-#include <QVBoxLayout>
+#include <QFormLayout>
 #include <QLineEdit>
 
 const vehicles::Car* views::CarView::getCar() const {
@@ -18,8 +18,7 @@ void views::CarView::refreshFields() {
 
     bool hasVehicle = (getCar() != nullptr);
 
-    numberOfDoorsField->setVisible(hasVehicle);
-    numberOfSeatsField->setVisible(hasVehicle);
+    setEnabled(hasVehicle);
 
     if (!hasVehicle) {
         numberOfDoorsField->clear();
@@ -38,12 +37,12 @@ views::CarView::CarView(
     QWidget(parent),
     car(carP) {
 
-    vBoxLayout = new QVBoxLayout(this);
+    carFormLayout = new QFormLayout(this);
 
     numberOfDoorsField = new QLineEdit(this);
     numberOfSeatsField = new QLineEdit(this);
 
-    vBoxLayout->addWidget(numberOfDoorsField);
-    vBoxLayout->addWidget(numberOfSeatsField);
+    carFormLayout->addRow("NUMBER_OF_DOORS", numberOfDoorsField);
+    carFormLayout->addRow("NUMBER_OF_SEATS", numberOfSeatsField);
 
 };

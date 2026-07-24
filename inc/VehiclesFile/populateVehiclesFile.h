@@ -3,4 +3,4 @@
 
 #include "VehiclesFile.h"
 
-void populateVehiclesFile(VehiclesFile& vehiclesFile);
+void populateVehiclesFile(VehiclesFile* vehiclesFile);

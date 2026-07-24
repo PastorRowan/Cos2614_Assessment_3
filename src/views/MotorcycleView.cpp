@@ -2,7 +2,7 @@
 #include "views/MotorcycleView.h"
 #include "vehicles/vehicles.h"
 
-#include <QVBoxLayout>
+#include <QFormLayout>
 #include <QLineEdit>
 
 const vehicles::Motorcycle* views::MotorcycleView::getMotorcycle() const {
@@ -18,7 +18,7 @@ void views::MotorcycleView::refreshFields() {
 
     bool hasVehicle = (getMotorcycle() != nullptr);
 
-    engineCapacityCCField->setVisible(hasVehicle);
+    setEnabled(hasVehicle);
 
     if (!hasVehicle) {
         engineCapacityCCField->clear();
@@ -35,10 +35,10 @@ views::MotorcycleView::MotorcycleView(
     QWidget(parent),
     motorcycle(motorcycleP) {
 
-    vBoxLayout = new QVBoxLayout(this);
+    motorcycleFormLayout = new QFormLayout(this);
 
     engineCapacityCCField = new QLineEdit(this);
 
-    vBoxLayout->addWidget(engineCapacityCCField);
+    motorcycleFormLayout->addRow("ENGINE_CAPACITY_CC", engineCapacityCCField);
 
 };

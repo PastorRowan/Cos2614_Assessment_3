@@ -15,7 +15,7 @@
 
 MainWindow::MainWindow(QWidget *parent) {
 
-    VehiclesFile vehiclesFile = VehiclesFile(
+    VehiclesFile* vehiclesFile = new VehiclesFile(
         QString("/files/vehiclesQVector.txt"),
         QString("/files/currentVehicleId.txt"),
         this
@@ -29,17 +29,18 @@ MainWindow::MainWindow(QWidget *parent) {
     central->setContentsMargins(10, 10, 10, 10);
 
     QWidget *content = new QWidget(central);
-    content->setMinimumWidth(800);
+    content->setMaximumWidth(800);
 
     QHBoxLayout *centralHLayout = new QHBoxLayout(central);
     centralHLayout->addStretch();
     centralHLayout->addWidget(content);
     centralHLayout->addStretch();
 
-    views::VehiclesFileView *vehiclesFileView = new views::VehiclesFileView(content, vehiclesFile);
     QLabel *title = new QLabel(content);
     title->setText("Vehicle Rental System");
     title->setAlignment(Qt::AlignCenter);
+
+    views::VehiclesFileView *vehiclesFileView = new views::VehiclesFileView(content, vehiclesFile);
 
     views::VehicleView *vehicleView = new views::VehicleView(content, nullptr);
 

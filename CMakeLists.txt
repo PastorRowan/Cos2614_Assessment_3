@@ -60,6 +60,7 @@ set(SOURCES
     src/VehiclesFile/clear.cpp
     src/VehiclesFile/core.cpp
     src/VehiclesFile/fileIO.cpp
+    src/VehiclesFile/handleVehicleUpdated.cpp
     src/VehiclesFile/removeVehicle.cpp
     src/VehiclesFile/rentVehicleById.cpp
     src/VehiclesFile/returnVehicleById.cpp

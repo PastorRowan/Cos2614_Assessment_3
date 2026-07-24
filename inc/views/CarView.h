@@ -4,8 +4,8 @@
 #include "vehicles/vehicles.h"
 
 #include <QObject>
+#include <QFormLayout>
 #include <QLineEdit>
-#include <QVBoxLayout>
 
 namespace views {
 
@@ -16,7 +16,7 @@ namespace views {
         private:
 
             vehicles::Car* car;
-            QVBoxLayout *vBoxLayout;
+            QFormLayout *carFormLayout;
             QLineEdit *numberOfDoorsField;
             QLineEdit *numberOfSeatsField;
 

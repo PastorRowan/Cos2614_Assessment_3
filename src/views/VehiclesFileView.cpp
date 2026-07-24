@@ -12,15 +12,15 @@
 
 views::VehiclesFileView::VehiclesFileView(
     QWidget* parent,
-    VehiclesFile& vehiclesFileRef
+    VehiclesFile* vehiclesFileP
 ):
     QWidget(parent),
-    vehiclesFile(vehiclesFileRef) {
+    vehiclesFile(vehiclesFileP) {
 
     // QObject::connect();
     centralHBox = new QHBoxLayout(this);
     contentVBox = new QVBoxLayout();
-    table = new QTableWidget();
+    table = new QTableWidget(this);
 
     centralHBox->addStretch();
     centralHBox->addLayout(contentVBox);
@@ -51,31 +51,29 @@ views::VehiclesFileView::VehiclesFileView(
 
     contentVBox->addWidget(table, 1);
 
-    setLayout(centralHBox);
-
     QObject::connect(
-        &vehiclesFile,
+        vehiclesFile,
         &VehiclesFile::vehiclesChanged,
         this,
         &VehiclesFileView::handleVehiclesChanged
     );
 
     QObject::connect(
-        &vehiclesFile,
+        vehiclesFile,
         &VehiclesFile::vehicleAdded,
         this,
         &VehiclesFileView::handleVehicleAdded
     );
 
     QObject::connect(
-        &vehiclesFile,
+        vehiclesFile,
         &VehiclesFile::vehicleRemoved,
         this,
         &VehiclesFileView::handleVehicleRemoved
     );
 
     QObject::connect(
-        &vehiclesFile,
+        vehiclesFile,
         &VehiclesFile::vehicleUpdated,
         this,
         &VehiclesFileView::handleVehicleUpdated
@@ -103,7 +101,7 @@ void views::VehiclesFileView::refreshTable() {
 
     destroyTable();
 
-    const auto vehicles = vehiclesFile.getVehiclesQVector();
+    const auto vehicles = vehiclesFile->getVehiclesQVector();
 
     table->setRowCount(vehicles.size());
 
@@ -151,9 +149,14 @@ void views::VehiclesFileView::handleSelectionChanged() {
         return;
     };
 
-    QString vehicleId = table->item(row, 1)->text();
+    auto item = table->item(row, 1);
 
-    auto vehicle = vehiclesFile.searchVehicleById(vehicleId);
+    if (!item)
+        return;
+
+    QString vehicleId = item->text();
+
+    auto vehicle = vehiclesFile->searchVehicleById(vehicleId);
 
     emit vehicleSelected(vehicle);
 

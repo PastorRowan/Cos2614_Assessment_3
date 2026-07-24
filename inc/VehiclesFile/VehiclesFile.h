@@ -161,6 +161,10 @@ class VehiclesFile : public QObject {
             const QString& vehicleId
         );
 
+    // slots:
+
+        void handleVehicleUpdated(const QString vehicleId);
+
     signals:
 
         /// Emitted whenever the vehicle collection changes.
