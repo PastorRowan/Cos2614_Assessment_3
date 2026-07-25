@@ -2,8 +2,8 @@
 #include "Config.h"
 
 #include "MainWindow.h"
-#include "VehiclesFile/VehiclesFile.h"
-#include "VehiclesFile/populateVehiclesFile.h"
+#include "VehiclePersistence/VehiclePersistence.h"
+#include "VehiclePersistence/populateVehiclePersistence.h"
 #include "views/views.h"
 
 #include <QWidget>
@@ -15,14 +15,14 @@
 
 MainWindow::MainWindow(QWidget *parent) {
 
-    VehiclesFile* vehiclesFile = new VehiclesFile(
-        QString("/files/vehiclesQVector.txt"),
+    VehiclePersistence* VehiclePersistence = new VehiclePersistence(
+        QString("/files/vehicles.txt"),
         QString("/files/currentVehicleId.txt"),
         this
     );
 
     #if POPULATE_VEHICLES_FILE
-        populateVehiclesFile(vehiclesFile);
+        populateVehiclePersistence(VehiclePersistence);
     #endif
 
     QWidget *central = new QWidget(this);
@@ -40,13 +40,13 @@ MainWindow::MainWindow(QWidget *parent) {
     title->setText("Vehicle Rental System");
     title->setAlignment(Qt::AlignCenter);
 
-    views::VehiclesFileView *vehiclesFileView = new views::VehiclesFileView(content, vehiclesFile);
+    views::VehiclePersistenceView *VehiclePersistenceView = new views::VehiclePersistenceView(content, VehiclePersistence);
 
     views::VehicleView *vehicleView = new views::VehicleView(content, nullptr);
 
     QObject::connect(
-        vehiclesFileView,
-        &views::VehiclesFileView::vehicleSelected,
+        VehiclePersistenceView,
+        &views::VehiclePersistenceView::vehicleSelected,
         vehicleView,
         &views::VehicleView::handleVehicleSelected
     );
@@ -54,13 +54,13 @@ MainWindow::MainWindow(QWidget *parent) {
     QObject::connect(
         vehicleView,
         &views::VehicleView::vehicleUpdated,
-        vehiclesFileView,
-        &views::VehiclesFileView::handleVehicleUpdated
+        VehiclePersistenceView,
+        &views::VehiclePersistenceView::handleVehicleUpdated
     );
 
     QVBoxLayout *contentVLayout = new QVBoxLayout(content);
     contentVLayout->addWidget(title);
-    contentVLayout->addWidget(vehiclesFileView);
+    contentVLayout->addWidget(VehiclePersistenceView);
     contentVLayout->addWidget(vehicleView);
     contentVLayout->addStretch();
 

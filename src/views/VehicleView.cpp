@@ -1,6 +1,6 @@
 
 #include "views/views.h"
-#include "vehicles/vehicles.h"
+#include "models/models.h"
 
 #include <QVBoxLayout>
 #include <QWidget>
@@ -11,7 +11,7 @@
 
 views::VehicleView::VehicleView(
     QWidget *parent,
-    vehicles::Vehicle* vehicleP
+    models::Vehicle* vehicleP
 ):
     QWidget(parent) {
 
@@ -20,7 +20,7 @@ views::VehicleView::VehicleView(
     vehicleFormWidget = new QWidget(this);
     vehicleFormLayout = new QFormLayout(vehicleFormWidget);
 
-    typeIdLabel = new QLabel(this);
+    VehicleTypeIdLabel = new QLabel(this);
     vehicleIdLabel = new QLabel(this);
     brandField = new QLineEdit(this);
     modelField = new QLineEdit(this);
@@ -33,7 +33,7 @@ views::VehicleView::VehicleView(
     motorcycleView->hide();
 
     vehicleFormWidget->setLayout(vehicleFormLayout);
-    vehicleFormLayout->addRow("TYPE_ID: ", typeIdLabel);
+    vehicleFormLayout->addRow("TYPE_ID: ", VehicleTypeIdLabel);
     vehicleFormLayout->addRow("VEHICLE_ID: ", vehicleIdLabel);
     vehicleFormLayout->addRow("BRAND: ", brandField);
     vehicleFormLayout->addRow("MODEL: ", modelField);
@@ -48,18 +48,18 @@ views::VehicleView::VehicleView(
 
 };
 
-const vehicles::Vehicle* views::VehicleView::getVehicle() const {
+const models::Vehicle* views::VehicleView::getVehicle() const {
     return vehicle;
 };
 
 void views::VehicleView::setVehicle(
-    vehicles::Vehicle* vehicleP
+    models::Vehicle* vehicleP
 ) {
 
     vehicle = vehicleP;
     refreshFields();
 
-    if (auto* car = dynamic_cast<vehicles::Car*>(vehicle)) {
+    if (auto* car = dynamic_cast<models::Car*>(vehicle)) {
 
         motorcycleView->hide();
         motorcycleView->setMotorcycle(nullptr);
@@ -67,7 +67,7 @@ void views::VehicleView::setVehicle(
         carView->setCar(car);
         carView->show();
 
-    } else if (auto* motorcycle = dynamic_cast<vehicles::Motorcycle*>(vehicle)) {
+    } else if (auto* motorcycle = dynamic_cast<models::Motorcycle*>(vehicle)) {
 
         carView->hide();
         carView->setCar(nullptr);
@@ -89,14 +89,14 @@ void views::VehicleView::refreshFields() {
     vehicleFormWidget->setEnabled(hasVehicle);
 
     if (!hasVehicle) {
-        typeIdLabel->setText("");
+        VehicleTypeIdLabel->setText("");
         vehicleIdLabel->setText("");
         brandField->clear();
         modelField->clear();
         pricePerDayField->clear();
         isRentedLabel->setText("");
     } else {
-        typeIdLabel->setText(getVehicle()->typeIdToQString());
+        VehicleTypeIdLabel->setText(getVehicle()->VehicleTypeIdToQString());
         vehicleIdLabel->setText(getVehicle()->getVehicleId());
         brandField->setText(getVehicle()->getBrand());
         modelField->setText(getVehicle()->getModel());
@@ -106,7 +106,7 @@ void views::VehicleView::refreshFields() {
 
 };
 
-void views::VehicleView::handleVehicleSelected(vehicles::Vehicle* vehicleP) {
+void views::VehicleView::handleVehicleSelected(models::Vehicle* vehicleP) {
     qDebug() << "handleVehicleSelected is running with vehicle id: " << vehicleP->getVehicleId();
     setVehicle(vehicleP);
 };

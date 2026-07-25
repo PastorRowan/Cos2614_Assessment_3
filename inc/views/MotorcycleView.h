@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "vehicles/vehicles.h"
+#include "models/models.h"
 
 #include <QWidget>
 #include <QObject>
@@ -16,7 +16,7 @@ namespace views {
 
         private:
 
-            vehicles::Motorcycle* motorcycle;
+            models::Motorcycle* motorcycle;
             QFormLayout *motorcycleFormLayout;
             QLineEdit *engineCapacityCCField;
 
@@ -28,12 +28,12 @@ namespace views {
 
             MotorcycleView(
                 QWidget *parent = nullptr,
-                vehicles::Motorcycle* motorcycleP = nullptr
+                models::Motorcycle* motorcycleP = nullptr
             );
 
-            const vehicles::Motorcycle* getMotorcycle() const;
+            const models::Motorcycle* getMotorcycle() const;
 
-            void setMotorcycle(vehicles::Motorcycle* newMotorcycle);
+            void setMotorcycle(models::Motorcycle* newMotorcycle);
 
     };
 

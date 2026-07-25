@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "vehicles/vehicles.h"
+#include "models/models.h"
 
 #include <QObject>
 #include <QFormLayout>
@@ -15,7 +15,7 @@ namespace views {
 
         private:
 
-            vehicles::Car* car;
+            models::Car* car;
             QFormLayout *carFormLayout;
             QLineEdit *numberOfDoorsField;
             QLineEdit *numberOfSeatsField;
@@ -28,12 +28,12 @@ namespace views {
 
             CarView(
                 QWidget *parent = nullptr,
-                vehicles::Car* carP = nullptr
+                models::Car* carP = nullptr
             );
 
-            const vehicles::Car* getCar() const;
+            const models::Car* getCar() const;
 
-            void setCar(vehicles::Car* newCar);
+            void setCar(models::Car* newCar);
 
     };
 

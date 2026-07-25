@@ -1,6 +1,6 @@
 
 #include "views/views.h"
-#include "VehiclesFile/VehiclesFile.h"
+#include "VehiclePersistence/VehiclePersistence.h"
 
 #include <QObject>
 #include <QWidget>
@@ -10,12 +10,12 @@
 #include <QHeaderView>
 #include <QDebug>
 
-views::VehiclesFileView::VehiclesFileView(
+views::VehiclesRepositoryView::VehiclesRepositoryView(
     QWidget* parent,
-    VehiclesFile* vehiclesFileP
+    VehiclePersistence* VehiclePersistenceP
 ):
     QWidget(parent),
-    vehiclesFile(vehiclesFileP) {
+    VehiclePersistence(VehiclePersistenceP) {
 
     // QObject::connect();
     centralHBox = new QHBoxLayout(this);
@@ -52,62 +52,62 @@ views::VehiclesFileView::VehiclesFileView(
     contentVBox->addWidget(table, 1);
 
     QObject::connect(
-        vehiclesFile,
-        &VehiclesFile::vehiclesChanged,
+        VehiclePersistence,
+        &VehiclePersistence::vehiclesChanged,
         this,
-        &VehiclesFileView::handleVehiclesChanged
+        &VehiclePersistenceView::handleVehiclesChanged
     );
 
     QObject::connect(
-        vehiclesFile,
-        &VehiclesFile::vehicleAdded,
+        VehiclePersistence,
+        &VehiclePersistence::vehicleAdded,
         this,
-        &VehiclesFileView::handleVehicleAdded
+        &VehiclePersistenceView::handleVehicleAdded
     );
 
     QObject::connect(
-        vehiclesFile,
-        &VehiclesFile::vehicleRemoved,
+        VehiclePersistence,
+        &VehiclePersistence::vehicleRemoved,
         this,
-        &VehiclesFileView::handleVehicleRemoved
+        &VehiclePersistenceView::handleVehicleRemoved
     );
 
     QObject::connect(
-        vehiclesFile,
-        &VehiclesFile::vehicleUpdated,
+        VehiclePersistence,
+        &VehiclePersistence::vehicleUpdated,
         this,
-        &VehiclesFileView::handleVehicleUpdated
+        &VehiclePersistenceView::handleVehicleUpdated
     );
 
     QObject::connect(
         table,
         &QTableWidget::itemSelectionChanged,
         this,
-        &VehiclesFileView::handleSelectionChanged
+        &VehiclePersistenceView::handleSelectionChanged
     );
 
 };
 
-views::VehiclesFileView::~VehiclesFileView() {
+views::VehiclePersistenceView::~VehiclePersistenceView() {
     destroyTable();
 };
 
-void views::VehiclesFileView::destroyTable() {
+void views::VehiclePersistenceView::destroyTable() {
     table->clearContents();
     table->setRowCount(0);
 };
 
-void views::VehiclesFileView::refreshTable() {
+void views::VehiclePersistenceView::refreshTable() {
 
     destroyTable();
 
-    const auto vehicles = vehiclesFile->getVehiclesQVector();
+    const auto vehicles = VehiclePersistence->getvehicles();
 
     table->setRowCount(vehicles.size());
 
     for (unsigned int row = 0; row < vehicles.size(); ++row) {
         const auto vehicle = vehicles.at(row);
-        table->setItem(row, 0, new QTableWidgetItem(vehicle->typeIdToQString()));
+        table->setItem(row, 0, new QTableWidgetItem(vehicle->VehicleTypeIdToQString()));
         table->setItem(row, 1, new QTableWidgetItem(vehicle->getVehicleId()));
         table->setItem(row, 2, new QTableWidgetItem(vehicle->getBrand()));
         table->setItem(row, 3, new QTableWidgetItem(vehicle->getModel()));
@@ -125,23 +125,23 @@ void views::VehiclesFileView::refreshTable() {
 
 };
 
-void views::VehiclesFileView::handleVehiclesChanged() {
+void views::VehiclePersistenceView::handleVehiclesChanged() {
     qDebug() << "handleVehiclesChanged called";
 };
 
-void views::VehiclesFileView::handleVehicleAdded(const QString vehicleId) {
+void views::VehiclePersistenceView::handleVehicleAdded(const QString vehicleId) {
     qDebug() << "handleVehicleAdded called with: " << vehicleId;
 };
 
-void views::VehiclesFileView::handleVehicleRemoved(const QString vehicleId) {
+void views::VehiclePersistenceView::handleVehicleRemoved(const QString vehicleId) {
     qDebug() << "handleVehicleRemoved called with: " << vehicleId;
 };
 
-void views::VehiclesFileView::handleVehicleUpdated(const QString vehicleId) {
+void views::VehiclePersistenceView::handleVehicleUpdated(const QString vehicleId) {
     qDebug() << "handleVehicleUpdated called with: " << vehicleId;
 };
 
-void views::VehiclesFileView::handleSelectionChanged() {
+void views::VehiclePersistenceView::handleSelectionChanged() {
 
     int row = table->currentRow();
 
@@ -156,7 +156,7 @@ void views::VehiclesFileView::handleSelectionChanged() {
 
     QString vehicleId = item->text();
 
-    auto vehicle = vehiclesFile->searchVehicleById(vehicleId);
+    auto vehicle = VehiclePersistence->searchVehicleById(vehicleId);
 
     emit vehicleSelected(vehicle);
 

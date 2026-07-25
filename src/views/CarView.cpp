@@ -1,15 +1,15 @@
 
 #include "views/carView.h"
-#include "vehicles/vehicles.h"
+#include "models/models.h"
 
 #include <QFormLayout>
 #include <QLineEdit>
 
-const vehicles::Car* views::CarView::getCar() const {
+const models::Car* views::CarView::getCar() const {
     return car;
 };
 
-void views::CarView::setCar(vehicles::Car* newCar) {
+void views::CarView::setCar(models::Car* newCar) {
     car = newCar;
     refreshFields();
 };
@@ -32,7 +32,7 @@ void views::CarView::refreshFields() {
 
 views::CarView::CarView(
     QWidget *parent,
-    vehicles::Car* carP
+    models::Car* carP
 ):
     QWidget(parent),
     car(carP) {

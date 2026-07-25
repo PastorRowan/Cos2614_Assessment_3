@@ -1,20 +1,24 @@
 
 #pragma once
 
-#include "vehicles/Vehicle.h"
+#include "models/Vehicle.h"
 
 class QObject;
 class QString;
 
-namespace vehicles {
+namespace models {
+
+    struct MotorcycleData : public VehicleData {
+        models::VehicleTypeId VehicleTypeId = models::VehicleTypeId::motorCycle;
+        int engineCapacityCC = -1;
+    };
 
     // Represents a motorcycle vehicle type
-    class Motorcycle : public vehicles::Vehicle {
+    class Motorcycle : public models::Vehicle {
 
         private:
 
-            vehicles::TypeId typeId = vehicles::TypeId::motorCycle;
-            int engineCapacityCC = -1;
+            MotorcycleData data;
 
         public:
 
@@ -30,20 +34,9 @@ namespace vehicles {
              * and its specific engine capacity attribute
              */
             Motorcycle(
-
                 // QObject parent
                 QObject *parent,
-
-                // Vehicle attributes
-                const QString idP,
-                const QString brandP,
-                const QString modelP,
-                const double pricePerDayP,
-                const bool isRentedP,
-
-                // Motorcycle attributes
-                const int engineCapacityCCP
-
+                MotorcycleData data
             );
 
             // Destructor
@@ -62,7 +55,7 @@ namespace vehicles {
             QString toQString() const override;
 
             // Creates a deep copy of the motorcycle object
-            vehicles::Vehicle* clone() const override;
+            models::Vehicle* clone() const override;
 
             // Writes the motorcycle data to a text stream
             void writeToStream(QTextStream& out) const override;

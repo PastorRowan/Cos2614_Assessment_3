@@ -24,17 +24,23 @@ set(HEADERS
     inc/dialogues/ReturnVehicleDialogue.h
     inc/dialogues/dialogues.h
 
-    inc/vehicles/Car.h
-    inc/vehicles/Motorcycle.h
-    inc/vehicles/Vehicle.h
-    inc/vehicles/vehicles.h
+    inc/helpers/ensurePathAndFileExist.h
+    inc/helpers/helpers.h
+    inc/helpers/populateVehiclesRepository.h
 
-    inc/VehiclesFile/populateVehiclesFile.h
-    inc/VehiclesFile/VehiclesFile.h
+    inc/models/Car.h
+    inc/models/models.h
+    inc/models/Motorcycle.h
+    inc/models/Vehicle.h
+    inc/models/VehicleRepository.h
+    inc/models/VehiclesPersistence.h
+
+    inc/VehiclePersistence/populateVehiclePersistence.h
+    inc/VehiclePersistence/VehiclePersistence.h
 
     inc/views/CarView.h
     inc/views/MotorcycleView.h
-    inc/views/VehiclesFileView.h
+    inc/views/VehiclesRepositoryView.h
     inc/views/VehicleView.h
     inc/views/views.h
 
@@ -49,26 +55,19 @@ set(SOURCES
     src/dialogues/RentVehicleDialogue.cpp
     src/dialogues/ReturnVehicleDialogue.cpp
 
-    src/vehicles/Car.cpp
-    src/vehicles/Motorcycle.cpp
-    src/vehicles/Vehicle.cpp
+    src/helpers/ensurePathAndFileExist.cpp
+    src/helpers/populateVehiclesRepository.cpp
 
-    src/VehiclesFile/populateVehiclesFile.cpp
-
-    src/VehiclesFile/addCar.cpp
-    src/VehiclesFile/addMotorcycle.cpp
-    src/VehiclesFile/clear.cpp
-    src/VehiclesFile/core.cpp
-    src/VehiclesFile/fileIO.cpp
-    src/VehiclesFile/handleVehicleUpdated.cpp
-    src/VehiclesFile/removeVehicle.cpp
-    src/VehiclesFile/rentVehicleById.cpp
-    src/VehiclesFile/returnVehicleById.cpp
-    src/VehiclesFile/searchVehicleById.cpp
+    src/models/Car.cpp
+    src/models/Motorcycle.cpp
+    src/models/Vehicle.cpp
+    src/models/VehicleIdGenerator .cpp
+    src/models/VehicleRepository.cpp
+    src/models/VehiclesPersistence.cpp
 
     src/views/CarView.cpp
     src/views/MotorcycleView.cpp
-    src/views/VehiclesFileView.cpp
+    src/views/VehiclesRepositoryView.cpp
     src/views/VehicleView.cpp
 
     src/MainWindow.cpp

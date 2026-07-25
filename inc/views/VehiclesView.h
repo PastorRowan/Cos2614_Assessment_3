@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "VehiclesFile/VehiclesFile.h"
-#include "vehicles/vehicles.h"
+#include "VehiclePersistence/VehiclePersistence.h"
+#include "models/models.h"
 
 #include <QWidget>
 #include <QObject>
@@ -11,13 +11,13 @@
 
 namespace views {
 
-    class VehiclesFileView : public QWidget {
+    class VehiclePersistenceView : public QWidget {
 
         Q_OBJECT
 
         private:
 
-            VehiclesFile* vehiclesFile;
+            VehiclePersistence* VehiclePersistence;
             QHBoxLayout *centralHBox;
             QWidget *content;
             QVBoxLayout *contentVBox;
@@ -25,12 +25,12 @@ namespace views {
 
         public:
 
-            explicit VehiclesFileView(
+            explicit VehiclePersistenceView(
                 QWidget *parent,
-                VehiclesFile* vehiclesFileP
+                VehiclePersistence* VehiclePersistenceP
             );
 
-            ~VehiclesFileView();
+            ~VehiclePersistenceView();
 
             void destroyTable();
 
@@ -50,7 +50,7 @@ namespace views {
 
         signals:
 
-            void vehicleSelected(vehicles::Vehicle* vehicle);
+            void vehicleSelected(models::Vehicle* vehicle);
 
     };
 

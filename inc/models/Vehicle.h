@@ -7,13 +7,22 @@
 
 class QTextStream;
 
-namespace vehicles {
+namespace models {
 
     // Enumeration identifying the type of vehicle.
-    enum class TypeId {
+    enum class VehicleVehicleTypeId {
         car,
         motorCycle,
         count
+    };
+
+    struct VehicleData {
+        models::VehicleTypeId VehicleTypeId = models::VehicleTypeId::count;
+        QString vehicleId = "Not initialised";
+        QString brand = "Not initialised";
+        QString model = "Not initialised";
+        double pricePerDay = -1.0;
+        bool isRented = false;
     };
 
     // Abstract base class representing a generic vehicle.
@@ -23,12 +32,7 @@ namespace vehicles {
 
         private:
 
-            vehicles::TypeId typeId = vehicles::TypeId::count;
-            QString vehicleId = "Not initialised";
-            QString brand = "Not initialised";
-            QString model = "Not initialised";
-            double pricePerDay = -1.0;
-            bool isRented = false;
+            VehicleData data {};
 
         public:
 
@@ -43,13 +47,8 @@ namespace vehicles {
              * Initializes QObject and all core properties of a vehicle
              */
             Vehicle(
-                QObject* parent,
-                const vehicles::TypeId typeIdP,
-                const QString vehicleIdP,
-                const QString brandP,
-                const QString modelP,
-                const double pricePerDayP,
-                const bool isRentedP
+                QObject *parent,
+                const VehicleData vehicleDataP
             );
 
             /**
@@ -59,13 +58,13 @@ namespace vehicles {
             virtual ~Vehicle() = default;
 
             // Gets the vehicle type identifier
-            vehicles::TypeId getTypeId() const;
+            models::VehicleTypeId getVehicleTypeId() const;
 
             // Sets the vehicle type identifier
-            void setTypeId(const TypeId newTypeId);
+            void setVehicleTypeId(const VehicleTypeId newVehicleTypeId);
 
             // Converts the type identifier to a QString
-            QString typeIdToQString() const;
+            QString VehicleTypeIdToQString() const;
 
             // Gets the unique vehicle ID
             QString getVehicleId() const;
@@ -110,7 +109,7 @@ namespace vehicles {
             virtual QString toQString() const = 0;
 
             // Creates a deep copy of the vehicle object
-            virtual vehicles::Vehicle* clone() const = 0;
+            virtual models::Vehicle* clone() const = 0;
 
             // Writes the vehicle data to a text stream
             virtual void writeToStream(QTextStream& out) const = 0;

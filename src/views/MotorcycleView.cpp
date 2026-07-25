@@ -1,15 +1,15 @@
 
 #include "views/MotorcycleView.h"
-#include "vehicles/vehicles.h"
+#include "models/models.h"
 
 #include <QFormLayout>
 #include <QLineEdit>
 
-const vehicles::Motorcycle* views::MotorcycleView::getMotorcycle() const {
+const models::Motorcycle* views::MotorcycleView::getMotorcycle() const {
     return motorcycle;
 };
 
-void views::MotorcycleView::setMotorcycle(vehicles::Motorcycle* newMotorcycle) {
+void views::MotorcycleView::setMotorcycle(models::Motorcycle* newMotorcycle) {
     motorcycle = newMotorcycle;
     refreshFields();
 };
@@ -30,7 +30,7 @@ void views::MotorcycleView::refreshFields() {
 
 views::MotorcycleView::MotorcycleView(
     QWidget *parent,
-    vehicles::Motorcycle* motorcycleP
+    models::Motorcycle* motorcycleP
 ):
     QWidget(parent),
     motorcycle(motorcycleP) {

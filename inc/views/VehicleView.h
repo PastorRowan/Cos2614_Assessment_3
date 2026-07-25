@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "vehicles/vehicles.h"
+#include "models/models.h"
 #include "CarView.h"
 #include "MotorcycleView.h"
 
@@ -21,11 +21,11 @@ namespace views {
 
         protected:
 
-            vehicles::Vehicle* vehicle;
+            models::Vehicle* vehicle;
             QVBoxLayout *vBoxLayout;
             QWidget *vehicleFormWidget;
             QFormLayout *vehicleFormLayout;
-            QLabel *typeIdLabel;
+            QLabel *VehicleTypeIdLabel;
             QLabel *vehicleIdLabel;
             QLineEdit *brandField;
             QLineEdit *modelField;
@@ -40,18 +40,18 @@ namespace views {
 
             VehicleView(
                 QWidget *parent = nullptr,
-                vehicles::Vehicle* vehicleP = nullptr
+                models::Vehicle* vehicleP = nullptr
             );
 
-            const vehicles::Vehicle* getVehicle() const;
+            const models::Vehicle* getVehicle() const;
 
             void setVehicle(
-                vehicles::Vehicle* vehicleP
+                models::Vehicle* vehicleP
             );
 
         // slots:
 
-            void handleVehicleSelected(vehicles::Vehicle* vehicleP);
+            void handleVehicleSelected(models::Vehicle* vehicleP);
 
         signals:
 
