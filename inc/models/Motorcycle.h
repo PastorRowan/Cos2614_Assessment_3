@@ -3,6 +3,7 @@
 
 #include "models/Vehicle.h"
 
+#include <optional>
 class QObject;
 class QString;
 
@@ -31,8 +32,9 @@ namespace models {
             ),
             engineCapacityCC(engineCapacityCCP) {
         };
-
     };
+
+    typedef std::optional<MotorcycleData> OptionalMotorcycleData;
 
     // Represents a motorcycle vehicle type
     class Motorcycle : public Vehicle {
@@ -62,6 +64,8 @@ namespace models {
 
             // Destructor
             ~Motorcycle() = default;
+
+            const models::MotorcycleData* getVehicleData() const override;
 
             // Gets the engine capacity
             int getEngineCapacityCC() const;

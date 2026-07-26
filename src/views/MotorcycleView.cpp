@@ -5,40 +5,39 @@
 #include <QFormLayout>
 #include <QLineEdit>
 
-const models::Motorcycle* views::MotorcycleView::getMotorcycle() const {
-    return motorcycle;
-};
-
-void views::MotorcycleView::setMotorcycle(models::Motorcycle* newMotorcycle) {
-    motorcycle = newMotorcycle;
-    refreshFields();
-};
-
-void views::MotorcycleView::refreshFields() {
-
-    bool hasVehicle = (getMotorcycle() != nullptr);
-
-    setEnabled(hasVehicle);
-
-    if (!hasVehicle) {
-        engineCapacityCCField->clear();
-    } else {
-        engineCapacityCCField->setText(getMotorcycle()->getEngineCapacityCCAsQString());
-    };
-
-};
-
 views::MotorcycleView::MotorcycleView(
-    QWidget *parent,
-    models::Motorcycle* motorcycleP
+    QWidget *parent
 ):
     QWidget(parent),
-    motorcycle(motorcycleP) {
+    optionalMotorcycleData({}) {
 
     motorcycleFormLayout = new QFormLayout(this);
 
     engineCapacityCCField = new QLineEdit(this);
 
     motorcycleFormLayout->addRow("ENGINE_CAPACITY_CC", engineCapacityCCField);
+
+};
+
+void views::MotorcycleView::setMotorcycleData(
+    const models::OptionalMotorcycleData optionalMotorcycleDataP
+) {
+    optionalMotorcycleData = optionalMotorcycleDataP;
+    refreshFields();
+};
+
+void views::MotorcycleView::refreshFields() {
+
+    bool hasVehicle = optionalMotorcycleData.has_value();
+
+    setEnabled(hasVehicle);
+
+    if (!hasVehicle) {
+        engineCapacityCCField->clear();
+    } else {
+        // I am sorry
+        const models::MotorcycleData& motorcycleData = optionalMotorcycleData.value();
+        engineCapacityCCField->setText(QString::number(motorcycleData.engineCapacityCC));
+    };
 
 };

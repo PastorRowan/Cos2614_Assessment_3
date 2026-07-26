@@ -3,6 +3,7 @@
 
 #include "models/Vehicle.h"
 
+#include <optional>
 class QObject;
 class QString;
 
@@ -35,6 +36,8 @@ namespace models {
         };
     };
 
+    typedef std::optional<CarData> OptionalCarData;
+
     // Represents a Car vehicle type
     class Car : public Vehicle {
 
@@ -63,6 +66,8 @@ namespace models {
 
             // Destructor
             ~Car() = default;
+
+            const models::CarData* getVehicleData() const override;
 
             // Gets the number of doors
             int getNumberOfDoors() const;

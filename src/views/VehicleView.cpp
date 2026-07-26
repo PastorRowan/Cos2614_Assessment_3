@@ -1,19 +1,20 @@
 
 #include "views/views.h"
-#include "models/models.h"
+#include "models/Vehicle.h"
 
 #include <QVBoxLayout>
 #include <QWidget>
 #include <QFormLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QPushButton>
 #include <QDebug>
 
 views::VehicleView::VehicleView(
-    QWidget *parent,
-    models::Vehicle* vehicleP
+    QWidget *parent
 ):
-    QWidget(parent) {
+    QWidget(parent),
+    optionalVehicleData({}) {
 
     vBoxLayout = new QVBoxLayout(this);
 
@@ -27,10 +28,13 @@ views::VehicleView::VehicleView(
     pricePerDayField = new QLineEdit(this);
     isRentedLabel = new QLabel(this);
 
-    carView = new views::CarView(this, nullptr);
+    carView = new views::CarView(this);
     carView->hide();
-    motorcycleView = new views::MotorcycleView(this, nullptr);
+    motorcycleView = new views::MotorcycleView(this);
     motorcycleView->hide();
+
+    saveChangesButton = new QPushButton(this);
+    saveChangesButton->setText("Save Changes");
 
     vehicleFormWidget->setLayout(vehicleFormLayout);
     vehicleFormLayout->addRow("TYPE_ID: ", VehicleTypeIdLabel);
@@ -44,47 +48,51 @@ views::VehicleView::VehicleView(
     vBoxLayout->addWidget(carView);
     vBoxLayout->addWidget(motorcycleView);
 
-    setVehicle(vehicleP);
-
 };
 
-const models::Vehicle* views::VehicleView::getVehicle() const {
-    return vehicle;
-};
-
-void views::VehicleView::setVehicle(
-    models::Vehicle* vehicleP
+void views::VehicleView::setVehicleData(
+    const models::Vehicle* vehicle
 ) {
 
-    vehicle = vehicleP;
-    refreshFields();
-
-    if (auto* car = dynamic_cast<models::Car*>(vehicle)) {
-
-        motorcycleView->hide();
-        motorcycleView->setMotorcycle(nullptr);
-
-        carView->setCar(car);
-        carView->show();
-
-    } else if (auto* motorcycle = dynamic_cast<models::Motorcycle*>(vehicle)) {
-
+    if (vehicle == nullptr) {
+        optionalVehicleData.reset();
         carView->hide();
-        carView->setCar(nullptr);
-
-        motorcycleView->setMotorcycle(motorcycle);
-        motorcycleView->show();
-
+        motorcycleView->hide();
+        return;
     } else {
-        carView->hide();
-        motorcycleView->hide();
+        models::Vehicle* clonedVehicle = vehicle->clone();
+
+        optionalVehicleData = clonedVehicle->getVehicleData();
+
+        if (auto* car = dynamic_cast<models::Car*>(clonedVehicle)) {
+
+            motorcycleView->hide();
+            motorcycleView->setMotorcycleData({});
+
+            carView->setCarData(car->getCarData());
+            carView->show();
+
+        } else if (auto* motorcycle = dynamic_cast<models::Motorcycle*>(clonedVehicle)) {
+
+            carView->hide();
+            carView->setCarData({});
+
+            motorcycleView->setMotorcycleData(motorcycle->getMotorcycleData());
+            motorcycleView->show();
+
+        };
+
+        delete clonedVehicle;
+
     };
+
+    refreshFields();
 
 };
 
 void views::VehicleView::refreshFields() {
 
-    bool hasVehicle = (getVehicle() != nullptr);
+    bool hasVehicle = optionalVehicleData.has_value();
 
     vehicleFormWidget->setEnabled(hasVehicle);
 
@@ -96,17 +104,19 @@ void views::VehicleView::refreshFields() {
         pricePerDayField->clear();
         isRentedLabel->setText("");
     } else {
-        VehicleTypeIdLabel->setText(getVehicle()->getVehicleTypeIdAsQString());
-        vehicleIdLabel->setText(getVehicle()->getVehicleIdAsQString());
-        brandField->setText(getVehicle()->getBrand());
-        modelField->setText(getVehicle()->getModel());
-        pricePerDayField->setText(getVehicle()->getPricePerDayAsQString());
-        isRentedLabel->setText(getVehicle()->getIsRentedAsQString());
+        // I am sorry
+        const models::VehicleData& vehicleData = optionalVehicleData.value();
+        VehicleTypeIdLabel->setText(QString::number(static_cast<int>(vehicleData.vehicleTypeId)));
+        vehicleIdLabel->setText(QString::number(vehicleData.vehicleId));
+        brandField->setText(vehicleData.brand);
+        modelField->setText(vehicleData.model);
+        pricePerDayField->setText(QString::number(vehicleData.pricePerDay));
+        isRentedLabel->setText(vehicleData.isRented ? "Yes" : "No");
     };
 
 };
 
-void views::VehicleView::handleVehicleSelected(models::Vehicle* vehicleP) {
-    qDebug() << "handleVehicleSelected is running with vehicle id: " << vehicleP->getVehicleIdAsQString();
-    setVehicle(vehicleP);
+void views::VehicleView::handleVehicleSelected(models::Vehicle* vehicle) {
+    qDebug() << "handleVehicleSelected is running with vehicle id: " << vehicle->getVehicleIdAsQString();
+    setVehicleData(vehicle);
 };

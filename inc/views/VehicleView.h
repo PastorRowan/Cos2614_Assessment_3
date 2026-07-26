@@ -12,6 +12,7 @@
 #include <QFormLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QPushButton>
 
 namespace views {
 
@@ -21,7 +22,7 @@ namespace views {
 
         protected:
 
-            models::Vehicle* vehicle;
+            models::OptionalVehicleData optionalVehicleData;
             QVBoxLayout *vBoxLayout;
             QWidget *vehicleFormWidget;
             QFormLayout *vehicleFormLayout;
@@ -33,20 +34,18 @@ namespace views {
             QLabel *isRentedLabel;
             views::CarView *carView;
             views::MotorcycleView *motorcycleView;
+            QPushButton *saveChangesButton;
 
             void refreshFields();
 
         public:
 
             VehicleView(
-                QWidget *parent = nullptr,
-                models::Vehicle* vehicleP = nullptr
+                QWidget *parent = nullptr
             );
 
-            const models::Vehicle* getVehicle() const;
-
-            void setVehicle(
-                models::Vehicle* vehicleP
+            void setVehicleData(
+                const models::Vehicle* vehicle
             );
 
         // slots:

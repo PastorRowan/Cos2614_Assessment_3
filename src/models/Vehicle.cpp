@@ -38,6 +38,10 @@ long long models::Vehicle::getVehicleId() const {
     return data.vehicleId;
 };
 
+QString models::Vehicle::getVehicleIdAsQString() const {
+    return QString::number(data.vehicleId);
+};
+
 // Converts the vehicle type ID to a QString
 QString models::Vehicle::getVehicleTypeIdAsQString() const {
     return QString::number(static_cast<int>(data.vehicleTypeId));

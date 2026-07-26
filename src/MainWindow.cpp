@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) {
 
     views::VehiclesRepositoryView *vehiclesRepositoryView = new views::VehiclesRepositoryView(content, vehicleRepository);
 
-    views::VehicleView *vehicleView = new views::VehicleView(content, nullptr);
+    views::VehicleView *vehicleView = new views::VehicleView(content);
 
     QObject::connect(
         vehiclesRepositoryView,

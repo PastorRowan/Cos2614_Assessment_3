@@ -39,11 +39,11 @@ namespace views {
 
             void handleVehiclesChanged();
 
-            void handleVehicleAdded(const QString vehicleId);
+            void handleVehicleAdded(const long long vehicleId);
 
-            void handleVehicleRemoved(const QString vehicleId);
+            void handleVehicleRemoved(const long long vehicleId);
 
-            void handleVehicleUpdated(const QString vehicleId);
+            void handleVehicleUpdated(const long long vehicleId);
 
             void handleSelectionChanged();
 

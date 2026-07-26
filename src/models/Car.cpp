@@ -23,6 +23,10 @@ models::Car::Car(
     
 };
 
+const models::CarData* models::Car::getVehicleData() const {
+    return &data;
+};
+
 // Gets the number of doors
 int models::Car::getNumberOfDoors() const {
     return data.numberOfDoors;

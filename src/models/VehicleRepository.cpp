@@ -32,7 +32,7 @@ void models::VehicleRepository::destroyVehicles() {
 /**
  * Gets the internal vehicle collection
  *
- * Returns a constant reference to the internal vehicle QVector
+ * Returns a constant reference to the internal vehicles list
  */
 const models::Vehicles& models::VehicleRepository::getVehicles() const {
     return vehicles;

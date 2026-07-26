@@ -1,10 +1,9 @@
 
 #pragma once
 
+#include <optional>
 #include <QObject>
 #include <QString>
-#include <QStringList>
-
 class QTextStream;
 
 namespace models {
@@ -41,7 +40,11 @@ namespace models {
             isRented(isRentedP) {
         };
 
+        virtual ~VehicleData() = default;
+
     };
+
+    typedef std::optional<VehicleData> OptionalVehicleData;
 
     // Abstract base class representing a generic vehicle.
     class Vehicle : public QObject {
@@ -74,6 +77,8 @@ namespace models {
              * Ensures proper cleanup of derived vehicle objects
              */
             virtual ~Vehicle() = default;
+
+            virtual const VehicleData* getVehicleData() const = 0;
 
             // Gets the vehicle type identifier
             models::VehicleTypeId getVehicleTypeId() const;

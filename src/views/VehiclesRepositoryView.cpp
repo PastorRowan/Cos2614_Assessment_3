@@ -129,15 +129,15 @@ void views::VehiclesRepositoryView::handleVehiclesChanged() {
     qDebug() << "handleVehiclesChanged called";
 };
 
-void views::VehiclesRepositoryView::handleVehicleAdded(const QString vehicleId) {
+void views::VehiclesRepositoryView::handleVehicleAdded(const long long vehicleId) {
     qDebug() << "handleVehicleAdded called with: " << vehicleId;
 };
 
-void views::VehiclesRepositoryView::handleVehicleRemoved(const QString vehicleId) {
+void views::VehiclesRepositoryView::handleVehicleRemoved(const long long vehicleId) {
     qDebug() << "handleVehicleRemoved called with: " << vehicleId;
 };
 
-void views::VehiclesRepositoryView::handleVehicleUpdated(const QString vehicleId) {
+void views::VehiclesRepositoryView::handleVehicleUpdated(const long long vehicleId) {
     qDebug() << "handleVehicleUpdated called with: " << vehicleId;
 };
 

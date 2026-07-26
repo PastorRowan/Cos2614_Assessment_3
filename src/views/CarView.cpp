@@ -5,37 +5,11 @@
 #include <QFormLayout>
 #include <QLineEdit>
 
-const models::Car* views::CarView::getCar() const {
-    return car;
-};
-
-void views::CarView::setCar(models::Car* newCar) {
-    car = newCar;
-    refreshFields();
-};
-
-void views::CarView::refreshFields() {
-
-    bool hasVehicle = (getCar() != nullptr);
-
-    setEnabled(hasVehicle);
-
-    if (!hasVehicle) {
-        numberOfDoorsField->clear();
-        numberOfSeatsField->clear();
-    } else {
-        numberOfDoorsField->setText(getCar()->getNumberOfDoorsAsQString());
-        numberOfSeatsField->setText(getCar()->getNumberOfSeatsAsQString());
-    };
-
-};
-
 views::CarView::CarView(
-    QWidget *parent,
-    models::Car* carP
+    QWidget *parent
 ):
     QWidget(parent),
-    car(carP) {
+    optionalCarData({}) {
 
     carFormLayout = new QFormLayout(this);
 
@@ -44,5 +18,30 @@ views::CarView::CarView(
 
     carFormLayout->addRow("NUMBER_OF_DOORS", numberOfDoorsField);
     carFormLayout->addRow("NUMBER_OF_SEATS", numberOfSeatsField);
+
+};
+
+void views::CarView::setCarData(
+    const models::OptionalCarData optionalCarDataP
+) {
+    optionalCarData = optionalCarDataP;
+    refreshFields();
+};
+
+void views::CarView::refreshFields() {
+
+    bool hasVehicle = optionalCarData.has_value();
+
+    setEnabled(hasVehicle);
+
+    if (!hasVehicle) {
+        numberOfDoorsField->clear();
+        numberOfSeatsField->clear();
+    } else {
+        // I am sorry
+        const models::CarData& carData = optionalCarData.value();
+        numberOfDoorsField->setText(QString::number(carData.numberOfDoors));
+        numberOfSeatsField->setText(QString::number(carData.numberOfSeats));
+    };
 
 };

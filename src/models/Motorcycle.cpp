@@ -23,6 +23,10 @@ models::Motorcycle::Motorcycle(
 
 };
 
+const models::MotorcycleData* models::Motorcycle::getVehicleData() const {
+    return &data;
+};
+
 // Gets the engine capacity
 int models::Motorcycle::getEngineCapacityCC() const {
     return data.engineCapacityCC;

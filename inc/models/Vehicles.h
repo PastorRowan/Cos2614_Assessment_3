@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "models/Vehicle.h"
+
 #include <QVector>
 
 namespace models {
