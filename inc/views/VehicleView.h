@@ -55,7 +55,7 @@ namespace views {
 
         signals:
 
-            void vehicleUpdated(const QString vehicleId);
+            void vehicleUpdated(const long long vehicleId);
 
     };
 };

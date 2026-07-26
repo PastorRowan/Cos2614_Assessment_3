@@ -24,8 +24,8 @@ void views::CarView::refreshFields() {
         numberOfDoorsField->clear();
         numberOfSeatsField->clear();
     } else {
-        numberOfDoorsField->setText(getCar()->numberOfDoorsToQString());
-        numberOfSeatsField->setText(getCar()->numberOfSeatsToQString());
+        numberOfDoorsField->setText(getCar()->getNumberOfDoorsAsQString());
+        numberOfSeatsField->setText(getCar()->getNumberOfSeatsAsQString());
     };
 
 };

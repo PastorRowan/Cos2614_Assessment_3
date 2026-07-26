@@ -15,14 +15,8 @@ namespace models {
             // Current numeric vehicle ID counter
             long long currentVehicleId = -1;
 
-            // Validates a numeric vehicle ID
-            static bool isVehicleIdValid(const long long id);
-
-            // Validates a vehicle ID represented as a QString
-            static bool isVehicleIdValid(const QString& id);
-
-            // Gets the current vehicle ID counter
-            long long getCurrentVehicleId() const;
+            // Gets the current vehicle ID file location
+            const QString& getCurrentIdFileLocation() const;
 
             // Sets the current vehicle ID counter
             void setCurrentVehicleId(const long long newCurrentVehicleId);
@@ -45,15 +39,32 @@ namespace models {
             // Loads the current vehicle ID from storage
             void loadCurrentVehicleId(bool& ok);
 
-            // Gets the current vehicle ID file location
-            const QString& getCurrentIdFileLocation() const;
+            // Validates a numeric vehicle ID
+            static bool isVehicleIdValid(const long long id);
+
+            // Validates a vehicle ID represented as a QString
+            static bool isVehicleIdValid(const QString& id);
 
         public:
+
+            /**
+            * Constructor
+            */
+            VehicleIdGenerator(
+                const QString currentVehicleIdFileLocationP
+            );
 
             /**
             * Destructor
             */
             ~VehicleIdGenerator() = default;
+
+            // Gets the current vehicle ID counter
+            long long getCurrentVehicleId() const;
+
+            QString getCurrentVehicleIdAsQString() const;
+
+            long long generateId();
 
     };
 

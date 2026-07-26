@@ -23,7 +23,7 @@ void views::MotorcycleView::refreshFields() {
     if (!hasVehicle) {
         engineCapacityCCField->clear();
     } else {
-        engineCapacityCCField->setText(getMotorcycle()->engineCapacityCCToQString());
+        engineCapacityCCField->setText(getMotorcycle()->getEngineCapacityCCAsQString());
     };
 
 };

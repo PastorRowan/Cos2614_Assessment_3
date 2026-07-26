@@ -1,22 +1,36 @@
 
 #include "models/models.h"
+#include "helpers/helpers.h"
 
 #include <QString>
+#include <QRegularExpression>
+#include <QFile>
 #include <QTextStream>
+#include <QDebug>
+
+models::VehicleIdGenerator::VehicleIdGenerator(
+    const QString currentVehicleIdFileLocationP
+):
+    currentVehicleIdFileLocation(currentVehicleIdFileLocationP) {
+
+    bool ok = false;
+
+    loadCurrentVehicleId(ok);
+
+    if (!ok) {
+        qFatal() << "Error: failed to load current vehicle id";
+    };
+
+};
 
 // Validates a numeric vehicle ID
 bool models::VehicleIdGenerator::isVehicleIdValid(const long long vehicleId) {
-    return vehicleId >= 0;
+    return vehicleId >= 1;
 };
 
 // Validates a string vehicle ID
 bool models::VehicleIdGenerator::isVehicleIdValid(const QString& vehicleId) {
-    return vehicleId.contains(QRegularExpression("^\\d+$"));
-};
-
-// Converts the current vehicle ID to QString format
-QString models::VehicleIdGenerator::vehicleIdToQString() const {
-    return QString::number(currentVehicleId);
+    return vehicleId.contains(QRegularExpression("^[1-9]\\d*$"));
 };
 
 // Gets the current vehicle ID file location
@@ -27,6 +41,11 @@ const QString& models::VehicleIdGenerator::getCurrentIdFileLocation() const {
 // Gets the current vehicle ID counter
 long long models::VehicleIdGenerator::getCurrentVehicleId() const {
     return currentVehicleId;
+};
+
+// Converts the current vehicle ID to QString format
+QString models::VehicleIdGenerator::getCurrentVehicleIdAsQString() const {
+    return QString::number(currentVehicleId);
 };
 
 // Sets the current vehicle ID counter
@@ -57,7 +76,7 @@ void models::VehicleIdGenerator::incrementCurrentVehicleId() {
 void models::VehicleIdGenerator::saveCurrentVehicleId(bool& ok) {
 
     // Ensures path and file exist
-    VehiclePersistence::ensurePathAndFileExist(
+    helpers::ensurePathAndFileExist(
         currentVehicleIdFileLocation,
         QString("0"),
         ok
@@ -97,10 +116,10 @@ void models::VehicleIdGenerator::saveCurrentVehicleId(bool& ok) {
  * 
  * Newly created files are initialized with a default vehicle ID of `0`
  */
-void VehiclePersistence::loadCurrentVehicleId(bool& ok) {
+void models::VehicleIdGenerator::loadCurrentVehicleId(bool& ok) {
 
     // Ensures path and file exist
-    VehiclePersistence::ensurePathAndFileExist(
+    helpers::ensurePathAndFileExist(
         currentVehicleIdFileLocation,
         QString("0"),
         ok
@@ -128,5 +147,22 @@ void VehiclePersistence::loadCurrentVehicleId(bool& ok) {
     currentIdFile.close();
 
     ok = true;
+
+};
+
+long long models::VehicleIdGenerator::generateId() {
+
+    incrementCurrentVehicleId();
+
+    bool ok = false;
+
+    saveCurrentVehicleId(ok);
+
+    if (!ok) {
+        qFatal() << "Error failed to generate unique id because failed to save current id";
+        return -1;
+    };
+
+    return currentVehicleId;
 
 };

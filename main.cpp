@@ -2,7 +2,7 @@
 // Entry point for the Vehicle Rental Management application
 
 #include "MainWindow.h"
-#include "VehiclePersistence/VehiclePersistence.h"
+#include "models/models.h"
 
 #include <QApplication>
 #include <QDebug>

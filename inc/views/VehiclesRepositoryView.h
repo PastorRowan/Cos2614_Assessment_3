@@ -1,8 +1,7 @@
 
 #pragma once
 
-#include "VehiclePersistence/VehiclePersistence.h"
-#include "models/models.h"
+#include "models/VehicleRepository.h"
 
 #include <QWidget>
 #include <QObject>
@@ -11,13 +10,13 @@
 
 namespace views {
 
-    class VehiclePersistenceView : public QWidget {
+    class VehiclesRepositoryView : public QWidget {
 
         Q_OBJECT
 
         private:
 
-            VehiclePersistence* VehiclePersistence;
+            models::VehicleRepository* vehicleRepository;
             QHBoxLayout *centralHBox;
             QWidget *content;
             QVBoxLayout *contentVBox;
@@ -25,12 +24,12 @@ namespace views {
 
         public:
 
-            explicit VehiclePersistenceView(
+            explicit VehiclesRepositoryView(
                 QWidget *parent,
-                VehiclePersistence* VehiclePersistenceP
+                models::VehicleRepository* vehicleRepositoryP
             );
 
-            ~VehiclePersistenceView();
+            ~VehiclesRepositoryView();
 
             void destroyTable();
 

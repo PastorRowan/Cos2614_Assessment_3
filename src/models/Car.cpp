@@ -1,7 +1,7 @@
 
 // Implementation of the Car class for the vehicle rental system.
 
-#include "vehicles/Car.h"
+#include "models/Car.h"
 
 #include <QObject>
 #include <QString>
@@ -11,10 +11,9 @@
 
 // Constructs a Car object with full initialization
 models::Car::Car(
-
     // QObject parent
     QObject *parent,
-    const CarData carDataP
+    const models::CarData carDataP
 ):
     Vehicle(
         parent,
@@ -42,7 +41,7 @@ void models::Car::setNumberOfDoors(const int newNumberOfDoors) {
 };
 
 // Converts number of doors to QString
-QString models::Car::numberOfDoorsToQString() const {
+QString models::Car::getNumberOfDoorsAsQString() const {
     return QString::number(getNumberOfDoors());
 };
 
@@ -64,7 +63,7 @@ void models::Car::setNumberOfSeats(const int newNumberOfSeats) {
 };
 
 // Converts number of seats to QString
-QString models::Car::numberOfSeatsToQString() const {
+QString models::Car::getNumberOfSeatsAsQString() const {
     return QString::number(getNumberOfSeats());
 };
 
@@ -73,14 +72,14 @@ QString models::Car::toQString() const {
 
     QString str = QString("%1|%2|%3|%4|%5|%6|%7|%8")
         .arg(
-            VehicleTypeIdToQString(),
-            getVehicleId(),
+            getVehicleTypeIdAsQString(),
+            getVehicleIdAsQString(),
             getBrand(),
             getModel(),
-            pricePerDayToQString(),
-            isRentedToQString(),
-            numberOfDoorsToQString(),
-            numberOfSeatsToQString()
+            getPricePerDayAsQString(),
+            getIsRentedAsQString(),
+            getNumberOfDoorsAsQString(),
+            getNumberOfSeatsAsQString()
         );
 
     return str;
@@ -114,12 +113,22 @@ void models::Car::readFromStream(QTextStream& in) {
         return;
     };
 
+    bool ok = false;
+
     // Vehicle data fields
-    data.VehicleTypeId = models::VehicleTypeId::car;
-    data.vehicleId = fields.at(1);
+    data.vehicleTypeId = models::VehicleTypeId::car;
+    data.vehicleId = fields.at(1).toLongLong(&ok);
+    if (!ok) {
+        qFatal() << "Error: failed to convert vehicle id QString to long long. Consider checking the file";
+        return;
+    };
     data.brand = fields.at(2);
     data.model = fields.at(3);
-    data.pricePerDay = fields.at(4).toDouble();
+    data.pricePerDay = fields.at(4).toDouble(&ok);
+    if (!ok) {
+        qFatal() << "Error: failed to convert vehicle id QString to double. Consider checking the file";
+        return;
+    };
     data.isRented = models::Vehicle::isRentedQStringToBool(fields.at(5));
 
     // Car data fields

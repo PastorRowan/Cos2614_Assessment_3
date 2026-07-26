@@ -9,12 +9,33 @@ class QString;
 namespace models {
 
     struct MotorcycleData : public VehicleData {
-        models::VehicleTypeId VehicleTypeId = models::VehicleTypeId::motorCycle;
+
+        models::VehicleTypeId vehicleTypeId = models::VehicleTypeId::motorCycle;
         int engineCapacityCC = -1;
+
+        MotorcycleData(
+            const QString brandP = "Not initialised",
+            const QString modelP = "Not initialised",
+            double pricePerDayP = -1.0,
+            int engineCapacityCCP = -1,
+            bool isRentedP = false,
+            long long vehicleIdP = -1
+        ):
+            VehicleData(
+                VehicleTypeId::motorCycle,
+                vehicleIdP,
+                brandP,
+                modelP,
+                pricePerDayP,
+                isRentedP
+            ),
+            engineCapacityCC(engineCapacityCCP) {
+        };
+
     };
 
     // Represents a motorcycle vehicle type
-    class Motorcycle : public models::Vehicle {
+    class Motorcycle : public Vehicle {
 
         private:
 
@@ -40,16 +61,16 @@ namespace models {
             );
 
             // Destructor
-            ~Motorcycle() {};
+            ~Motorcycle() = default;
 
             // Gets the engine capacity
             int getEngineCapacityCC() const;
 
+            // Converts the engine capacity to a QString
+            QString getEngineCapacityCCAsQString() const;
+
             // Sets the engine capacity
             void setEngineCapacityCC(const int newEngineCapacityCC);
-
-            // Converts the engine capacity to a QString
-            QString engineCapacityCCToQString() const;
 
             // Converts the motorcycle object to a formatted QString
             QString toQString() const override;

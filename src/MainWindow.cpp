@@ -2,8 +2,8 @@
 #include "Config.h"
 
 #include "MainWindow.h"
-#include "VehiclePersistence/VehiclePersistence.h"
-#include "VehiclePersistence/populateVehiclePersistence.h"
+#include "models/VehicleRepository.h"
+#include "helpers/populateVehicleRepository.h"
 #include "views/views.h"
 
 #include <QWidget>
@@ -15,14 +15,10 @@
 
 MainWindow::MainWindow(QWidget *parent) {
 
-    VehiclePersistence* VehiclePersistence = new VehiclePersistence(
-        QString("/files/vehicles.txt"),
-        QString("/files/currentVehicleId.txt"),
-        this
-    );
+    models::VehicleRepository* vehicleRepository = new models::VehicleRepository(this);
 
     #if POPULATE_VEHICLES_FILE
-        populateVehiclePersistence(VehiclePersistence);
+        helpers::populateVehicleRepository(vehicleRepository);
     #endif
 
     QWidget *central = new QWidget(this);
@@ -40,13 +36,13 @@ MainWindow::MainWindow(QWidget *parent) {
     title->setText("Vehicle Rental System");
     title->setAlignment(Qt::AlignCenter);
 
-    views::VehiclePersistenceView *VehiclePersistenceView = new views::VehiclePersistenceView(content, VehiclePersistence);
+    views::VehiclesRepositoryView *vehiclesRepositoryView = new views::VehiclesRepositoryView(content, vehicleRepository);
 
     views::VehicleView *vehicleView = new views::VehicleView(content, nullptr);
 
     QObject::connect(
-        VehiclePersistenceView,
-        &views::VehiclePersistenceView::vehicleSelected,
+        vehiclesRepositoryView,
+        &views::VehiclesRepositoryView::vehicleSelected,
         vehicleView,
         &views::VehicleView::handleVehicleSelected
     );
@@ -54,18 +50,16 @@ MainWindow::MainWindow(QWidget *parent) {
     QObject::connect(
         vehicleView,
         &views::VehicleView::vehicleUpdated,
-        VehiclePersistenceView,
-        &views::VehiclePersistenceView::handleVehicleUpdated
+        vehiclesRepositoryView,
+        &views::VehiclesRepositoryView::handleVehicleUpdated
     );
 
     QVBoxLayout *contentVLayout = new QVBoxLayout(content);
     contentVLayout->addWidget(title);
-    contentVLayout->addWidget(VehiclePersistenceView);
+    contentVLayout->addWidget(vehiclesRepositoryView);
     contentVLayout->addWidget(vehicleView);
     contentVLayout->addStretch();
 
     setCentralWidget(central);
 
 };
-
-MainWindow::~MainWindow() {};

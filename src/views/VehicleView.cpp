@@ -96,17 +96,17 @@ void views::VehicleView::refreshFields() {
         pricePerDayField->clear();
         isRentedLabel->setText("");
     } else {
-        VehicleTypeIdLabel->setText(getVehicle()->VehicleTypeIdToQString());
-        vehicleIdLabel->setText(getVehicle()->getVehicleId());
+        VehicleTypeIdLabel->setText(getVehicle()->getVehicleTypeIdAsQString());
+        vehicleIdLabel->setText(getVehicle()->getVehicleIdAsQString());
         brandField->setText(getVehicle()->getBrand());
         modelField->setText(getVehicle()->getModel());
-        pricePerDayField->setText(getVehicle()->pricePerDayToQString());
-        isRentedLabel->setText(getVehicle()->isRentedToQString());
+        pricePerDayField->setText(getVehicle()->getPricePerDayAsQString());
+        isRentedLabel->setText(getVehicle()->getIsRentedAsQString());
     };
 
 };
 
 void views::VehicleView::handleVehicleSelected(models::Vehicle* vehicleP) {
-    qDebug() << "handleVehicleSelected is running with vehicle id: " << vehicleP->getVehicleId();
+    qDebug() << "handleVehicleSelected is running with vehicle id: " << vehicleP->getVehicleIdAsQString();
     setVehicle(vehicleP);
 };

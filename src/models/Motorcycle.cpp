@@ -1,18 +1,19 @@
 
 // Implementation of the Motorcycle class for the vehicle rental system
 
-#include "vehicles/Motorcycle.h"
+#include "models/Motorcycle.h"
 
 #include <QObject>
 #include <QString>
 #include <QTextStream>
 #include <QStringList>
+#include <QDebug>
 
 // Constructs a Motorcycle object with full initialization
 models::Motorcycle::Motorcycle(
     // QObject parent
     QObject *parent,
-    MotorcycleData motorcycleDataP
+    const models::MotorcycleData motorcycleDataP
 ):
     Vehicle(
         parent,
@@ -40,7 +41,7 @@ void models::Motorcycle::setEngineCapacityCC(const int newEngineCapacityCC) {
 };
 
 // Converts engine capacity to QString
-QString models::Motorcycle::engineCapacityCCToQString() const {
+QString models::Motorcycle::getEngineCapacityCCAsQString() const {
     return QString::number(getEngineCapacityCC());
 };
 
@@ -49,13 +50,13 @@ QString models::Motorcycle::toQString() const {
 
     QString str = QString("%1|%2|%3|%4|%5|%6|%7")
         .arg(
-            VehicleTypeIdToQString(),
-            getVehicleId(),
+            getVehicleTypeIdAsQString(),
+            getVehicleIdAsQString(),
             getBrand(),
             getModel(),
-            pricePerDayToQString(),
-            isRentedToQString(),
-            engineCapacityCCToQString()
+            getPricePerDayAsQString(),
+            getIsRentedAsQString(),
+            getEngineCapacityCCAsQString()
         );
 
     return str;
@@ -89,12 +90,22 @@ void models::Motorcycle::readFromStream(QTextStream& in) {
         return;
     };
 
+    bool ok = false;
+
     // Vehicle data fields
-    data.VehicleTypeId = models::VehicleTypeId::motorCycle;
-    data.vehicleId = fields.at(1);
+    data.vehicleTypeId = models::VehicleTypeId::motorCycle;
+    data.vehicleId = fields.at(1).toLongLong(&ok);
+    if (!ok) {
+        qFatal() << "Error: failed to convert vehicle id QString to long long. Consider checking the file";
+        return;
+    };
     data.brand = fields.at(2);
     data.model = fields.at(3);
-    data.pricePerDay = fields.at(4).toDouble();
+    data.pricePerDay = fields.at(4).toDouble(&ok);
+    if (!ok) {
+        qFatal() << "Error: failed to convert vehicle id QString to double. Consider checking the file";
+        return;
+    };
     data.isRented = models::Vehicle::isRentedQStringToBool(fields.at(5));
 
     // Car data fields

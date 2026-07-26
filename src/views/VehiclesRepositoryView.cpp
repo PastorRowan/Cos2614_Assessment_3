@@ -1,6 +1,6 @@
 
 #include "views/views.h"
-#include "VehiclePersistence/VehiclePersistence.h"
+#include "models/VehicleRepository.h"
 
 #include <QObject>
 #include <QWidget>
@@ -11,11 +11,11 @@
 #include <QDebug>
 
 views::VehiclesRepositoryView::VehiclesRepositoryView(
-    QWidget* parent,
-    VehiclePersistence* VehiclePersistenceP
+    QWidget *parent,
+    models::VehicleRepository* vehicleRepositoryP
 ):
     QWidget(parent),
-    VehiclePersistence(VehiclePersistenceP) {
+    vehicleRepository(vehicleRepositoryP) {
 
     // QObject::connect();
     centralHBox = new QHBoxLayout(this);
@@ -52,67 +52,67 @@ views::VehiclesRepositoryView::VehiclesRepositoryView(
     contentVBox->addWidget(table, 1);
 
     QObject::connect(
-        VehiclePersistence,
-        &VehiclePersistence::vehiclesChanged,
+        vehicleRepository,
+        &models::VehicleRepository::vehiclesChanged,
         this,
-        &VehiclePersistenceView::handleVehiclesChanged
+        &VehiclesRepositoryView::handleVehiclesChanged
     );
 
     QObject::connect(
-        VehiclePersistence,
-        &VehiclePersistence::vehicleAdded,
+        vehicleRepository,
+        &models::VehicleRepository::vehicleAdded,
         this,
-        &VehiclePersistenceView::handleVehicleAdded
+        &VehiclesRepositoryView::handleVehicleAdded
     );
 
     QObject::connect(
-        VehiclePersistence,
-        &VehiclePersistence::vehicleRemoved,
+        vehicleRepository,
+        &models::VehicleRepository::vehicleRemoved,
         this,
-        &VehiclePersistenceView::handleVehicleRemoved
+        &VehiclesRepositoryView::handleVehicleRemoved
     );
 
     QObject::connect(
-        VehiclePersistence,
-        &VehiclePersistence::vehicleUpdated,
+        vehicleRepository,
+        &models::VehicleRepository::vehicleUpdated,
         this,
-        &VehiclePersistenceView::handleVehicleUpdated
+        &VehiclesRepositoryView::handleVehicleUpdated
     );
 
     QObject::connect(
         table,
         &QTableWidget::itemSelectionChanged,
         this,
-        &VehiclePersistenceView::handleSelectionChanged
+        &VehiclesRepositoryView::handleSelectionChanged
     );
 
 };
 
-views::VehiclePersistenceView::~VehiclePersistenceView() {
+views::VehiclesRepositoryView::~VehiclesRepositoryView() {
     destroyTable();
 };
 
-void views::VehiclePersistenceView::destroyTable() {
+void views::VehiclesRepositoryView::destroyTable() {
     table->clearContents();
     table->setRowCount(0);
 };
 
-void views::VehiclePersistenceView::refreshTable() {
+void views::VehiclesRepositoryView::refreshTable() {
 
     destroyTable();
 
-    const auto vehicles = VehiclePersistence->getvehicles();
+    const auto vehicles = vehicleRepository->getVehicles();
 
     table->setRowCount(vehicles.size());
 
     for (unsigned int row = 0; row < vehicles.size(); ++row) {
         const auto vehicle = vehicles.at(row);
-        table->setItem(row, 0, new QTableWidgetItem(vehicle->VehicleTypeIdToQString()));
-        table->setItem(row, 1, new QTableWidgetItem(vehicle->getVehicleId()));
+        table->setItem(row, 0, new QTableWidgetItem(vehicle->getVehicleTypeIdAsQString()));
+        table->setItem(row, 1, new QTableWidgetItem(vehicle->getVehicleIdAsQString()));
         table->setItem(row, 2, new QTableWidgetItem(vehicle->getBrand()));
         table->setItem(row, 3, new QTableWidgetItem(vehicle->getModel()));
-        table->setItem(row, 4, new QTableWidgetItem(vehicle->pricePerDayToQString()));
-        table->setItem(row, 5, new QTableWidgetItem(vehicle->isRentedToQString()));
+        table->setItem(row, 4, new QTableWidgetItem(vehicle->getPricePerDayAsQString()));
+        table->setItem(row, 5, new QTableWidgetItem(vehicle->getIsRentedAsQString()));
     };
 
     int width =
@@ -125,23 +125,23 @@ void views::VehiclePersistenceView::refreshTable() {
 
 };
 
-void views::VehiclePersistenceView::handleVehiclesChanged() {
+void views::VehiclesRepositoryView::handleVehiclesChanged() {
     qDebug() << "handleVehiclesChanged called";
 };
 
-void views::VehiclePersistenceView::handleVehicleAdded(const QString vehicleId) {
+void views::VehiclesRepositoryView::handleVehicleAdded(const QString vehicleId) {
     qDebug() << "handleVehicleAdded called with: " << vehicleId;
 };
 
-void views::VehiclePersistenceView::handleVehicleRemoved(const QString vehicleId) {
+void views::VehiclesRepositoryView::handleVehicleRemoved(const QString vehicleId) {
     qDebug() << "handleVehicleRemoved called with: " << vehicleId;
 };
 
-void views::VehiclePersistenceView::handleVehicleUpdated(const QString vehicleId) {
+void views::VehiclesRepositoryView::handleVehicleUpdated(const QString vehicleId) {
     qDebug() << "handleVehicleUpdated called with: " << vehicleId;
 };
 
-void views::VehiclePersistenceView::handleSelectionChanged() {
+void views::VehiclesRepositoryView::handleSelectionChanged() {
 
     int row = table->currentRow();
 
@@ -154,9 +154,18 @@ void views::VehiclePersistenceView::handleSelectionChanged() {
     if (!item)
         return;
 
-    QString vehicleId = item->text();
+    const QString vehicleIdQString = item->text();
 
-    auto vehicle = VehiclePersistence->searchVehicleById(vehicleId);
+    bool ok = false;
+
+    const long long vehicleIdLongLong = vehicleIdQString.toLongLong(&ok);
+
+    if (!ok) {
+        qDebug() << "Error: Failed to convert vehicle id QString to long long, no vehicle selected";
+        return;
+    };
+
+    auto vehicle = vehicleRepository->searchVehicleById(vehicleIdLongLong);
 
     emit vehicleSelected(vehicle);
 

@@ -10,19 +10,37 @@ class QTextStream;
 namespace models {
 
     // Enumeration identifying the type of vehicle.
-    enum class VehicleVehicleTypeId {
+    enum class VehicleTypeId {
         car,
         motorCycle,
         count
     };
 
     struct VehicleData {
-        models::VehicleTypeId VehicleTypeId = models::VehicleTypeId::count;
-        QString vehicleId = "Not initialised";
+
+        VehicleTypeId vehicleTypeId = VehicleTypeId::count;
+        long long vehicleId = -1;
         QString brand = "Not initialised";
         QString model = "Not initialised";
         double pricePerDay = -1.0;
         bool isRented = false;
+
+        VehicleData(
+            VehicleTypeId vehicleTypeIdP = VehicleTypeId::count,
+            long long vehicleIdP = -1,
+            const QString brandP = "Not initialised",
+            const QString modelP = "Not initialised",
+            double pricePerDayP = -1.0,
+            bool isRentedP = false
+        ):
+            vehicleTypeId(vehicleTypeIdP),
+            vehicleId(vehicleIdP),
+            brand(brandP),
+            model(modelP),
+            pricePerDay(pricePerDayP),
+            isRented(isRentedP) {
+        };
+
     };
 
     // Abstract base class representing a generic vehicle.
@@ -60,17 +78,19 @@ namespace models {
             // Gets the vehicle type identifier
             models::VehicleTypeId getVehicleTypeId() const;
 
+            // Converts the type identifier to a QString
+            QString getVehicleTypeIdAsQString() const;
+
             // Sets the vehicle type identifier
             void setVehicleTypeId(const VehicleTypeId newVehicleTypeId);
 
-            // Converts the type identifier to a QString
-            QString VehicleTypeIdToQString() const;
-
             // Gets the unique vehicle ID
-            QString getVehicleId() const;
+            long long getVehicleId() const;
+
+            QString getVehicleIdAsQString() const;
 
             // Sets the unique vehicle ID
-            void setVehicleId(const QString& newVehicleId);
+            void setVehicleId(const long long newVehicleId);
 
             // Gets the vehicle brand
             QString getBrand() const;
@@ -87,20 +107,20 @@ namespace models {
             // Gets the rental price per day
             double getPricePerDay() const;
 
+            // Converts the price per day to a QString
+            QString getPricePerDayAsQString() const;
+
             // Sets the rental price per day
             void setPricePerDay(const double newPricePerDay);
-
-            // Converts the price per day to a QString
-            QString pricePerDayToQString() const;
 
             // Checks whether the vehicle is currently rented
             bool getIsRented() const;
 
+            // Converts the rental status to a QString (0 = not rented, 1 = is rented)
+            QString getIsRentedAsQString() const;
+
             // Sets the rental status of the vehicle
             void setIsRented(const bool newIsRented);
-
-            // Converts the rental status to a QString (0 = not rented, 1 = is rented)
-            QString isRentedToQString() const;
 
             // Converts a rental status QString into a boolean value
             static bool isRentedQStringToBool(const QString& isRentedQString);
@@ -119,7 +139,7 @@ namespace models {
 
         signals:
 
-            void vehicleUpdated(const QString vehicleId);
+            void vehicleUpdated(const long long vehicleId);
 
     };
 

@@ -1,20 +1,25 @@
 
 #pragma once
 
-#include "models/models.h"
+#include "models/VehicleIdGenerator.h"
+#include "models/VehiclesPersistence.h"
+#include "models/Car.h"
+#include "models/Motorcycle.h"
+
+#include <QObject>
+#include <QVector>
 
 namespace models {
 
-    class VehicleRepository {
+    class VehicleRepository : public QObject {
+
+        Q_OBJECT
 
         private:
 
             models::VehicleIdGenerator vehicleIdGenerator;
 
-            models::VehiclePersistence vehiclePersistence;
-
-            // Alias for the internal vehicle container type
-            typedef QVector<models::Vehicle*> Vehicles;
+            models::VehiclesPersistence vehiclesPersistence;
 
             // Internal container storing all vehicle objects
             Vehicles vehicles;
@@ -24,6 +29,12 @@ namespace models {
 
         public:
 
+            VehicleRepository(
+                QObject* parent
+            );
+
+            ~VehicleRepository() = default;
+
             // Gets the internal vehicle collection
             const Vehicles& getVehicles() const;
 
@@ -32,7 +43,7 @@ namespace models {
             * Automatically generates a unique vehicle ID
             */
             void addCar(
-                const models::CarData carData
+                models::CarData carData
             );
 
             /**
@@ -40,14 +51,14 @@ namespace models {
             * Automatically generates a unique vehicle ID
             */
             void addMotorcycle(
-                const models::MotorcycleData
+                models::MotorcycleData motorcycleData
             );
 
             /**
             * Removes a vehicle in the collection
             */
             void removeVehicle(
-                const QString& vehicleId
+                const long long vehicleId
             );
 
             void clear();
@@ -56,21 +67,17 @@ namespace models {
             * Searches for a vehicle by its ID
             * Returns a pointer to the matching vehicle, or nullptr if not found
             */
-            models::Vehicle* searchVehicleById(const QString& vehicleId);
+            models::Vehicle* searchVehicleById(const long long vehicleId);
 
             // Marks a vehicle as rented using its ID
-            void rentVehicleById(
-                const QString& vehicleId
-            );
+            void rentVehicleById(const long long vehicleId);
 
             // Marks a rented vehicle as returned (not rented)
-            void returnVehicleById(
-                const QString& vehicleId
-            );
+            void returnVehicleById(const long long vehicleId);
 
         // slots:
 
-            void handleVehicleUpdated(const QString vehicleId);
+            void handleVehicleUpdated(const long long vehicleId);
 
         signals:
 
@@ -78,19 +85,19 @@ namespace models {
             void vehiclesChanged();
 
             /// Emitted after a vehicle is added.
-            void vehicleAdded(const QString vehicleId);
+            void vehicleAdded(const long long vehicleId);
 
             /// Emitted after a vehicle is removed.
-            void vehicleRemoved(const QString vehicleId);
+            void vehicleRemoved(const long long vehicleId);
 
             /// Emitted after a vehicle's data changes.
-            void vehicleUpdated(const QString vehicleId);
+            void vehicleUpdated(const long long vehicleId);
 
             /// Emitted after a vehicle is rented.
-            void vehicleRented(const QString vehicleId);
+            void vehicleRented(const long long vehicleId);
 
             /// Emitted after a vehicle is returned.
-            void vehicleReturned(const QString vehicleId);
+            void vehicleReturned(const long long vehicleId);
 
     };
 

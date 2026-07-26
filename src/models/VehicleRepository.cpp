@@ -8,31 +8,13 @@
 
 // Constructs a VehicleRepository object and loads persisted vehicle data
 models::VehicleRepository::VehicleRepository(
-    const QString currentVehicleIdFileLocationP,
-    const QString VehicleFileLocationP,
     QObject* parent
 ):
     QObject(parent),
-    vehicleIdGenerator(QCoreApplication::applicationDirPath() + VehiclePersistenceLocationParameter),
-    vehiclePersistence(QCoreApplication::applicationDirPath() + currentVehicleIdFileLocationParameter) {
+    vehicleIdGenerator(QCoreApplication::applicationDirPath() + QString("/files/vehicles.txt")),
+    vehiclesPersistence(QCoreApplication::applicationDirPath() + QString("/files/currentVehicleId.txt")) {
 
-    bool ok = false;
-
-    loadCurrentVehicleId(ok);
-
-    if (!ok) {
-        qFatal() << "Failed to load current vehicle id";
-        return;
-    };
-
-    vehicles.reserve(currentVehicleId + 50);
-
-    loadvehicles(ok);
-
-    if (!ok) {
-        qFatal() << "Failed to load vehicles";
-        return;
-    };
+    vehicles.reserve(vehicleIdGenerator.getCurrentVehicleId() + 50);
 
 };
 
@@ -42,24 +24,9 @@ models::VehicleRepository::VehicleRepository(
  * Dynamically allocated vehicle objects are deleted and the collection is
  * cleared afterward
  */
-void models::VehicleRepository::destroyvehicles() {
-
-    for (unsigned int i = 0; i < vehicles.size(); i++) {
-        delete vehicles[i];
-    };
-
+void models::VehicleRepository::destroyVehicles() {
+    qDeleteAll(vehicles);
     vehicles.clear();
-
-};
-
-/**
- * Destructor for VehiclePersistence.
- *
- * Releases all dynamically allocated vehicle objects stored in the internal
- * vehicle container
- */
-models::VehicleRepository::~VehicleRepository() {
-    destroyvehicles();
 };
 
 /**
@@ -67,7 +34,7 @@ models::VehicleRepository::~VehicleRepository() {
  *
  * Returns a constant reference to the internal vehicle QVector
  */
-const models::VehicleRepository::vehicles& models::VehicleRepository::getvehicles() const {
+const models::Vehicles& models::VehicleRepository::getVehicles() const {
     return vehicles;
 };
 
@@ -85,11 +52,12 @@ const models::VehicleRepository::vehicles& models::VehicleRepository::getvehicle
  * the current vehicle ID counter to ensure future vehicles receive unique IDs
  */
 void models::VehicleRepository::addCar(
-    const models::CarData carData
+    models::CarData carData
 ) {
 
-    models::Vehicle*
-    newVehicle = new models::Car(
+    carData.vehicleId = vehicleIdGenerator.generateId();;
+
+    models::Vehicle* newVehicle = new models::Car(
         this,
         carData
     );
@@ -98,19 +66,10 @@ void models::VehicleRepository::addCar(
 
     bool ok;
 
-    savevehicles(ok);
+    vehiclesPersistence.saveVehicles(vehicles, ok);
 
     if (!ok) {
-        qDebug() << QString("Failed to add vehicle because failed to save vehicles: %1").arg(newVehicle->toQString());
-        delete vehicles.last();
-        vehicles.pop_back();
-        return;
-    };
-
-    incrementAndSaveCurrentVehicleId(ok);
-
-    if (!ok) {
-        qDebug() << QString("Failed to add vehicle because failed to increment and save current vehicle id: %1").arg(newVehicle->toQString());
+        qDebug() << QString("Failed to add vehicle '%1' because failed to save vehicles").arg(newVehicle->toQString());
         delete vehicles.last();
         vehicles.pop_back();
         return;
@@ -137,35 +96,26 @@ void models::VehicleRepository::addCar(
  * the current vehicle ID counter to ensure future vehicles receive unique IDs
  */
 void models::VehicleRepository::addMotorcycle(
-    const models::CarData motorcycleData
+    models::MotorcycleData motorcycleData
 ) {
 
-    models::Vehicle* newVehicle =
-        new models::Motorcycle(
-            this,
-            motorcycleData
-        )
-    ;
+    motorcycleData.vehicleId = vehicleIdGenerator.generateId();
+
+    models::Vehicle* newVehicle = new models::Motorcycle(
+        this,
+        motorcycleData
+    );
 
     vehicles.push_back(newVehicle);
 
     bool ok;
 
-    savevehicles(
-        ok
-    );
+    vehiclesPersistence.saveVehicles(vehicles, ok);
 
     if (!ok) {
-        qDebug() << QString("Failed to add vehicle: %1").arg(newVehicle->toQString());
+        qDebug() << QString("Failed to add vehicle '%1' because failed to save vehicles").arg(newVehicle->toQString());
         delete vehicles.last();
         vehicles.pop_back();
-        return;
-    };
-
-    incrementAndSaveCurrentVehicleId(ok);
-
-    if (!ok) {
-        qDebug() << QString("Failed to save currentVehicleId vehicle: %1").arg(currentVehicleId);
         return;
     };
 
@@ -180,7 +130,7 @@ void models::VehicleRepository::addMotorcycle(
   * Removes a vehicle in the collection
   */
 void models::VehicleRepository::removeVehicle(
-    const QString& vehicleId
+    const long long vehicleId
 ) {
 
     for (unsigned int i = 0; i < vehicles.size(); ++i) {
@@ -208,7 +158,7 @@ void models::VehicleRepository::removeVehicle(
  * If saving fails, the rental change is reverted
  */
 void models::VehicleRepository::rentVehicleById(
-    const QString& vehicleId
+    const long long vehicleId
 ) {
 
     for (unsigned int i = 0; i < vehicles.size(); i++) {
@@ -227,7 +177,7 @@ void models::VehicleRepository::rentVehicleById(
 
             bool ok;
 
-            savevehicles(ok);
+            vehiclesPersistence.saveVehicles(vehicles, ok);
 
             if (!ok) {
                 qDebug() << QString("Failed to rent vehicle '%1'").arg(vehicleId);
@@ -263,7 +213,7 @@ void models::VehicleRepository::rentVehicleById(
  * If saving fails, the state change is reverted
  */
 void models::VehicleRepository::returnVehicleById(
-    const QString& vehicleId
+    const long long vehicleId
 ) {
 
     for (unsigned int i = 0; i < vehicles.size(); i++) {
@@ -280,7 +230,7 @@ void models::VehicleRepository::returnVehicleById(
 
                 bool ok;
 
-                savevehicles(ok);
+                vehiclesPersistence.saveVehicles(vehicles, ok);
 
                 if (!ok) {
                     qDebug() << QString("Failed to rent vehicle '%1'").arg(vehicleId);
@@ -315,7 +265,7 @@ void models::VehicleRepository::returnVehicleById(
  * This function does not modify the vehicle collection
  */
 models::Vehicle* models::VehicleRepository::searchVehicleById(
-    const QString& vehicleId
+    const long long vehicleId
 ) {
 
     for (unsigned int i = 0; i < vehicles.size(); i++) {
@@ -335,39 +285,19 @@ models::Vehicle* models::VehicleRepository::searchVehicleById(
   */
 void models::VehicleRepository::clear() {
 
-    // Clear vehicles
-    qDeleteAll(vehicles);
-    vehicles.clear();
+    destroyVehicles();
 
     bool ok = false;
 
-    savevehicles(ok);
+    vehiclesPersistence.saveVehicles(vehicles, ok);
 
     if (!ok) {
-        qDebug() << "Failed to save vehicles list";
+        qDebug() << "Failed to save vehicles list while clearing vehicles";
         return;
     };
 
-    setCurrentVehicleId(1);
-    saveCurrentVehicleId(ok);
-
-    if (!ok) {
-        qDebug() << "Failed to save vehicles current vehicle id";
-    };
-
 };
 
-// Increments and persists the current vehicle ID counter
-void models::VehicleRepository::incrementAndSaveCurrentVehicleId(bool &ok) {
-    incrementCurrentVehicleId();
-    saveCurrentVehicleId(ok);
-};
-
-// Sets the current vehicle ID file location
-void models::VehicleRepository::setCurrentIdFileLocation(const QString currentVehicleIdFileLocationP) {
-    currentVehicleIdFileLocation = currentVehicleIdFileLocationP;
-};
-
-void models::VehiclePersistence::handleVehicleUpdated(const QString vehicleId) {
+void models::VehicleRepository::handleVehicleUpdated(const long long vehicleId) {
     emit vehicleUpdated(vehicleId);
 };

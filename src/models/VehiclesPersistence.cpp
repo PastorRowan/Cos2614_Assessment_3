@@ -1,14 +1,29 @@
 
 #include "models/models.h"
+#include "helpers/helpers.h"
+
+#include <QFile>
+#include <QDebug>
+#include <QObject>
+#include <QTextStream>
+
+models::VehiclesPersistence::VehiclesPersistence(
+    const QString vehiclesFileLocationP
+):
+    vehiclesFileLocation(vehiclesFileLocationP) {
+
+};
 
 // Gets the vehicle data file location
-const QString& VehiclePersistence::getVehiclesFileLocation() const {
-    return VehiclePersistenceLocation;
+const QString& models::VehiclesPersistence::getVehiclesFileLocation() const {
+    return vehiclesFileLocation;
 };
 
 // Sets the vehicle data file location
-void VehiclePersistence::setVehiclesFileLocation(const QString VehiclePersistenceLocationP) {
-    VehiclePersistenceLocation = VehiclePersistenceLocationP;
+void models::VehiclesPersistence::setVehiclesFileLocation(
+    const QString vehiclesFileLocationP
+) {
+    vehiclesFileLocation = vehiclesFileLocationP;
 };
 
 /**
@@ -21,33 +36,36 @@ void VehiclePersistence::setVehiclesFileLocation(const QString VehiclePersistenc
  *
  * Existing file contents are overwritten
  */
-void VehiclePersistence::savevehicles(bool& ok) {
+void models::VehiclesPersistence::saveVehicles(
+    const models::Vehicles& vehicles,
+    bool& ok
+) {
 
     // Ensures path and file exist
-    VehiclePersistence::ensurePathAndFileExist(
-        VehiclePersistenceLocation,
+    helpers::ensurePathAndFileExist(
+        vehiclesFileLocation,
         QString(""),
         ok
     );
 
     if (!ok) {
-        qDebug() << QString(R"(Failed to ensure file path exists '%1')").arg(VehiclePersistenceLocation);
+        qDebug() << QString(R"(Failed to ensure file path exists '%1')").arg(vehiclesFileLocation);
         return;
     };
 
-    QFile VehiclePersistence(VehiclePersistenceLocation);
+    QFile vehiclesFile(vehiclesFileLocation);
 
-    if (!VehiclePersistence.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-        qDebug() << "Failed to open file:" << VehiclePersistence.errorString();
+    if (!vehiclesFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        qDebug() << "Failed to open file:" << vehiclesFile.errorString();
         ok = false;
         return;
     };
 
-    QTextStream out(&VehiclePersistence);
+    QTextStream out(&vehiclesFile);
 
     for (unsigned int i = 0; i < vehicles.size(); ++i) {
 
-        out << *vehicles[i];
+        out << *vehicles.at(i);
 
         if (i != vehicles.size() - 1) {
             out << '\n';
@@ -56,7 +74,7 @@ void VehiclePersistence::savevehicles(bool& ok) {
     };
 
     out.flush();
-    VehiclePersistence.close();
+    vehiclesFile.close();
 
     ok = true;
 
@@ -83,30 +101,33 @@ void VehiclePersistence::savevehicles(bool& ok) {
  * Dynamically allocated vehicle objects are owned by `vehicles`
  * and must later be deleted to avoid memory leaks.
  */
-void VehiclePersistence::loadvehicles(bool& ok) {
+void models::VehiclesPersistence::loadVehicles(
+    models::Vehicles& vehicles,
+    bool& ok
+) {
 
     // Ensures path and file exist
-    VehiclePersistence::ensurePathAndFileExist(
-        VehiclePersistenceLocation,
+    helpers::ensurePathAndFileExist(
+        vehiclesFileLocation,
         QString(""),
         ok
     );
 
     if (!ok) {
-        qDebug() << "Failed to ensure path exists: " << VehiclePersistenceLocation;
+        qDebug() << "Failed to ensure path exists: " << vehiclesFileLocation;
         ok = false;
         return;
     };
 
-    QFile VehiclePersistence(VehiclePersistenceLocation);
+    QFile vehiclesFile(vehiclesFileLocation);
 
-    if (!VehiclePersistence.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << "Failed to open file:" << VehiclePersistence.errorString();
+    if (!vehiclesFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "Failed to open file:" << vehiclesFile.errorString();
         ok = false;
         return;
     };
 
-    QTextStream inp(&VehiclePersistence);
+    QTextStream inp(&vehiclesFile);
     QString line;
 
     while (!inp.atEnd()) {
@@ -116,16 +137,23 @@ void VehiclePersistence::loadvehicles(bool& ok) {
         const QStringList fields = line.split('|');
 
         if (fields.size() <= 5) {
-            qDebug() << QString(R"(A line is invalid in '%1')").arg(VehiclePersistenceLocation);
+            qDebug() << QString("A line is invalid in '%1'").arg(vehiclesFileLocation);
             ok = false;
             return;
         };
 
-        const QString VehicleTypeId = fields[0];
+        const QString vehicleTypeIdQString = fields.at(0);
+
+        const int vehicleTypeIdInt = vehicleTypeIdQString.toInt(&ok);
+
+        if (!ok) {
+            qDebug() << QString("vehicle type id '%1' is invalid in file location '%2'").arg(vehicleTypeIdQString, vehiclesFileLocation);
+            return;
+        };
 
         models::Vehicle* vehiclePointer = nullptr;
 
-        switch (static_cast<models::VehicleTypeId>(VehicleTypeId.toInt())) {
+        switch (static_cast<models::VehicleTypeId>(vehicleTypeIdInt)) {
 
             case models::VehicleTypeId::car:
                 vehiclePointer = new models::Car();
@@ -138,10 +166,10 @@ void VehiclePersistence::loadvehicles(bool& ok) {
             default:
                 qDebug() << QString("invalid type id '%1' exists in '%2'")
                     .arg(
-                        VehicleTypeId,
-                        VehiclePersistenceLocation
+                        vehicleTypeIdQString,
+                        vehiclesFileLocation
                     );
-                VehiclePersistence.close();
+                vehiclesFile.close();
                 ok = false;
                 return;
                 break;
@@ -152,20 +180,15 @@ void VehiclePersistence::loadvehicles(bool& ok) {
 
         lineStream >> *vehiclePointer;
 
-        vehiclePointer->setParent(this);
-
-        QObject::connect(
-            vehiclePointer,
-            &models::Vehicle::vehicleUpdated,
-            this,
-            &VehiclePersistence::handleVehicleUpdated
-        );
-
         vehicles.push_back(vehiclePointer);
 
     };
 
-    VehiclePersistence.close();
+    vehiclesFile.close();
     ok = true;
 
+};
+
+void models::VehiclesPersistence::clear() {
+    qDebug() << "NOT IMPLEMENTED YET";
 };

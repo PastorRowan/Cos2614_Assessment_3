@@ -1,6 +1,8 @@
 
 #pragma once
 
+class QString;
+
 /*
  * Ensures that a file and its parent directory path exist
  *
@@ -11,42 +13,13 @@
  *
  * Existing files are left unchanged
  */
-void ensurePathAndFileExist(
-    const QString& path,
-    const QString& initialContents,
-    bool& ok
-) {
 
-    QFile file(path);
+namespace helpers {
 
-    if (!file.exists()) {
-
-        QFileInfo fileInfo(path);
-
-        // Create directory path
-        QDir dir;
-        if (!dir.mkpath(fileInfo.path())) {
-            qDebug() << "Failed to create directory:" << fileInfo.path();
-            ok = false;
-            return;
-        };
-
-        // Create empty file
-        if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            qDebug() << "Failed to create file:" << file.errorString();
-            ok = false;
-            return;
-        };
-
-        // Write starting value
-        QTextStream out(&file);
-        out << initialContents;
-
-        // Close file
-        file.close();
-
-    };
-
-    ok = true;
+    void ensurePathAndFileExist(
+        const QString& path,
+        const QString& initialContents,
+        bool& ok
+    );
 
 };

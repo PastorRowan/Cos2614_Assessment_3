@@ -1,4 +1,6 @@
 
+#include "helpers/ensurePathAndFileExist.h"
+
 #include <QFile>
 #include <QDebug>
 #include <QDir>
@@ -14,7 +16,7 @@
  *
  * Existing files are left unchanged
  */
-void VehiclePersistence::ensurePathAndFileExist(
+void helpers::ensurePathAndFileExist(
     const QString& path,
     const QString& initialContents,
     bool& ok

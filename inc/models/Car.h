@@ -9,9 +9,30 @@ class QString;
 namespace models {
 
     struct CarData : public VehicleData {
-        models::VehicleTypeId VehicleTypeId = models::VehicleTypeId::car;
+
         int numberOfDoors = -1;
         int numberOfSeats = -1;
+
+        CarData(
+            const QString brandP = "Not initialised",
+            const QString modelP = "Not initialised",
+            double pricePerDayP = -1.0,
+            int numberOfDoorsP = -1,
+            int numberOfSeatsP = -1,
+            bool isRentedP = false,
+            long long vehicleIdP = -1
+        ):
+            VehicleData(
+                VehicleTypeId::car,
+                vehicleIdP,
+                brandP,
+                modelP,
+                pricePerDayP,
+                isRentedP
+            ),
+            numberOfDoors(numberOfDoorsP),
+            numberOfSeats(numberOfSeatsP) {
+        };
     };
 
     // Represents a Car vehicle type
@@ -41,25 +62,25 @@ namespace models {
             );
 
             // Destructor
-            ~Car() {};
+            ~Car() = default;
 
             // Gets the number of doors
             int getNumberOfDoors() const;
 
+            // Converts the number of doors to a QString
+            QString getNumberOfDoorsAsQString() const;
+
             // Sets the number of doors
             void setNumberOfDoors(const int newNumberOfDoors);
-
-            // Converts the number of doors to a QString
-            QString numberOfDoorsToQString() const;
 
             // Gets the number of seats
             int getNumberOfSeats() const;
 
+            // Converts the number of seats to a QString.
+            QString getNumberOfSeatsAsQString() const;
+
             // Sets the number of seats
             void setNumberOfSeats(const int newNumberOfSeats);
-
-            // Converts the number of seats to a QString.
-            QString numberOfSeatsToQString() const;
 
             // Converts the car object to a formatted QString.
             QString toQString() const override;

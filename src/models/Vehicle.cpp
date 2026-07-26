@@ -10,7 +10,7 @@
 // Constructs a Vehicle object with all base attributes initialized
 models::Vehicle::Vehicle(
     QObject *parent,
-    const VehicleData vehicleDataP
+    const models::VehicleData vehicleDataP
 ):
     QObject(parent),
     data(vehicleDataP) {
@@ -19,32 +19,32 @@ models::Vehicle::Vehicle(
 
 // Gets the vehicle type identifier
 models::VehicleTypeId models::Vehicle::getVehicleTypeId() const {
-    return data.VehicleTypeId;
+    return data.vehicleTypeId;
 };
 
 // Sets the vehicle type identifier
 void models::Vehicle::setVehicleTypeId(const models::VehicleTypeId newVehicleTypeId) {
 
-    if (data.VehicleTypeId == newVehicleTypeId) {
+    if (data.vehicleTypeId == newVehicleTypeId) {
         return;
     };
 
-    data.VehicleTypeId = newVehicleTypeId;
+    data.vehicleTypeId = newVehicleTypeId;
     emit vehicleUpdated(getVehicleId());
 };
 
-// Converts the vehicle type ID to a QString
-QString models::Vehicle::VehicleTypeIdToQString() const {
-    return QString::number(static_cast<int>(data.VehicleTypeId));
-};
-
 // Gets the vehicle ID
-QString models::Vehicle::getVehicleId() const {
+long long models::Vehicle::getVehicleId() const {
     return data.vehicleId;
 };
 
+// Converts the vehicle type ID to a QString
+QString models::Vehicle::getVehicleTypeIdAsQString() const {
+    return QString::number(static_cast<int>(data.vehicleTypeId));
+};
+
 // Sets the vehicle ID
-void models::Vehicle::setVehicleId(const QString& newVehicleId) {
+void models::Vehicle::setVehicleId(const long long newVehicleId) {
 
     if (data.vehicleId == newVehicleId) {
         return;
@@ -94,7 +94,7 @@ void models::Vehicle::setPricePerDay(const double newPricePerDay) {
 };
 
 // Converts the price per day to QString
-QString models::Vehicle::pricePerDayToQString() const {
+QString models::Vehicle::getPricePerDayAsQString() const {
     return QString::number(getPricePerDay());
 };
 
@@ -110,7 +110,7 @@ void models::Vehicle::setIsRented(const bool newIsRented) {
 };
 
 // Converts rental status to QString
-QString models::Vehicle::isRentedToQString() const {
+QString models::Vehicle::getIsRentedAsQString() const {
     return QString(getIsRented() ? "Yes" : "No");
 };
 
