@@ -2,6 +2,7 @@
 #pragma once
 
 #include "models/VehicleRepository.h"
+#include "models/Vehicle.h"
 
 #include <QWidget>
 #include <QObject>
@@ -45,11 +46,17 @@ namespace views {
 
             void handleVehicleUpdated(const long long vehicleId);
 
+            void handleUpdateVehicle(
+                const models::VehicleData& data
+            );
+
             void handleSelectionChanged();
 
         signals:
 
-            void vehicleSelected(models::Vehicle* vehicle);
+            void vehicleSelected(
+                const models::VehicleData& data
+            );
 
     };
 

@@ -4,6 +4,8 @@
 #include <optional>
 #include <QObject>
 #include <QString>
+#include <optional>
+#include <memory>
 class QTextStream;
 
 namespace models {
@@ -53,7 +55,7 @@ namespace models {
 
         private:
 
-            VehicleData data {};
+            // VehicleData data {};
 
         public:
 
@@ -78,7 +80,11 @@ namespace models {
              */
             virtual ~Vehicle() = default;
 
-            virtual const VehicleData* getVehicleData() const = 0;
+            virtual const VehicleData& getVehicleData() const = 0;
+
+            virtual VehicleData& getVehicleData() = 0;
+
+            virtual void setVehicleData(const models::VehicleData& vehicleData) = 0;
 
             // Gets the vehicle type identifier
             models::VehicleTypeId getVehicleTypeId() const;

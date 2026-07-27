@@ -134,11 +134,51 @@ void views::VehiclesRepositoryView::handleVehicleAdded(const long long vehicleId
 };
 
 void views::VehiclesRepositoryView::handleVehicleRemoved(const long long vehicleId) {
-    qDebug() << "handleVehicleRemoved called with: " << vehicleId;
+    qDebug() << "VehiclesRepositoryView handleVehicleRemoved called with: " << vehicleId;
 };
 
 void views::VehiclesRepositoryView::handleVehicleUpdated(const long long vehicleId) {
-    qDebug() << "handleVehicleUpdated called with: " << vehicleId;
+
+    qDebug() << "VehiclesRepositoryView handleVehicleUpdated called with: " << vehicleId;
+
+    models::Vehicle* vehicle = vehicleRepository->searchVehicleById(vehicleId);
+
+    qDebug() << "VehiclesRepositoryView vehicle: " << vehicle->toQString();
+
+    for (unsigned int row = 0; row < table->rowCount(); ++row) {
+
+        QTableWidgetItem* idItem = table->item(row, 1);
+
+        if (idItem == nullptr) {
+            continue;
+        };
+
+        bool ok = false;
+        const long long currentId = idItem->text().toLongLong(&ok);
+
+        if (!ok || currentId != vehicleId) {
+            continue;
+        };
+
+        table->item(row, 0)->setText(vehicle->getVehicleTypeIdAsQString());
+        table->item(row, 1)->setText(vehicle->getVehicleIdAsQString());
+        table->item(row, 2)->setText(vehicle->getBrand());
+        table->item(row, 3)->setText(vehicle->getModel());
+        table->item(row, 4)->setText(vehicle->getPricePerDayAsQString());
+        table->item(row, 5)->setText(vehicle->getIsRentedAsQString());
+
+        return;
+
+    };
+
+    qDebug() << "Vehicle row not found in table";
+
+};
+
+void views::VehiclesRepositoryView::handleUpdateVehicle(
+    const models::VehicleData& data
+) {
+    vehicleRepository->addVehicle(data);
 };
 
 void views::VehiclesRepositoryView::handleSelectionChanged() {
@@ -151,8 +191,9 @@ void views::VehiclesRepositoryView::handleSelectionChanged() {
 
     auto item = table->item(row, 1);
 
-    if (!item)
+    if (!item) {
         return;
+    };
 
     const QString vehicleIdQString = item->text();
 
@@ -167,6 +208,6 @@ void views::VehiclesRepositoryView::handleSelectionChanged() {
 
     auto vehicle = vehicleRepository->searchVehicleById(vehicleIdLongLong);
 
-    emit vehicleSelected(vehicle);
+    emit vehicleSelected(vehicle->getVehicleData());
 
 };

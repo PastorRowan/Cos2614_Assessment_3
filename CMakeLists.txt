@@ -34,10 +34,10 @@ set(HEADERS
     inc/models/Vehicles.h
     inc/models/VehiclesPersistence.h
 
-    inc/views/CarView.h
-    inc/views/MotorcycleView.h
+    inc/views/CarDataView.h
+    inc/views/MotorcycleDataView.h
+    inc/views/VehicleDataView.h
     inc/views/VehiclesRepositoryView.h
-    inc/views/VehicleView.h
     inc/views/views.h
 
     inc/MainWindow.h
@@ -59,10 +59,10 @@ set(SOURCES
     src/models/VehicleRepository.cpp
     src/models/VehiclesPersistence.cpp
 
-    src/views/CarView.cpp
-    src/views/MotorcycleView.cpp
+    src/views/CarDataView.cpp
+    src/views/MotorcycleDataView.cpp
+    src/views/VehicleDataView.cpp
     src/views/VehiclesRepositoryView.cpp
-    src/views/VehicleView.cpp
 
     src/MainWindow.cpp
 

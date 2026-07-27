@@ -12,88 +12,87 @@ models::Vehicle::Vehicle(
     QObject *parent,
     const models::VehicleData vehicleDataP
 ):
-    QObject(parent),
-    data(vehicleDataP) {
+    QObject(parent) {
 
 };
 
 // Gets the vehicle type identifier
 models::VehicleTypeId models::Vehicle::getVehicleTypeId() const {
-    return data.vehicleTypeId;
+    return getVehicleData().vehicleTypeId;
 };
 
 // Sets the vehicle type identifier
 void models::Vehicle::setVehicleTypeId(const models::VehicleTypeId newVehicleTypeId) {
 
-    if (data.vehicleTypeId == newVehicleTypeId) {
+    if (getVehicleData().vehicleTypeId == newVehicleTypeId) {
         return;
     };
 
-    data.vehicleTypeId = newVehicleTypeId;
+    getVehicleData().vehicleTypeId = newVehicleTypeId;
     emit vehicleUpdated(getVehicleId());
 };
 
 // Gets the vehicle ID
 long long models::Vehicle::getVehicleId() const {
-    return data.vehicleId;
+    return getVehicleData().vehicleId;
 };
 
 QString models::Vehicle::getVehicleIdAsQString() const {
-    return QString::number(data.vehicleId);
+    return QString::number(getVehicleData().vehicleId);
 };
 
 // Converts the vehicle type ID to a QString
 QString models::Vehicle::getVehicleTypeIdAsQString() const {
-    return QString::number(static_cast<int>(data.vehicleTypeId));
+    return QString::number(static_cast<int>(getVehicleData().vehicleTypeId));
 };
 
 // Sets the vehicle ID
 void models::Vehicle::setVehicleId(const long long newVehicleId) {
 
-    if (data.vehicleId == newVehicleId) {
+    if (getVehicleData().vehicleId == newVehicleId) {
         return;
     };
 
-    data.vehicleId = newVehicleId;
+    getVehicleData().vehicleId = newVehicleId;
     emit vehicleUpdated(getVehicleId());
 };
 
 // Gets the brand of the vehicle
 QString models::Vehicle::getBrand() const {
-    return data.brand;
+    return getVehicleData().brand;
 };
 
 // Sets the brand of the vehicle
 void models::Vehicle::setBrand(const QString& newBrand) {
 
-    if (data.brand == newBrand) {
+    if (getVehicleData().brand == newBrand) {
         return;
     };
 
-    data.brand = newBrand;
+    getVehicleData().brand = newBrand;
     emit vehicleUpdated(getVehicleId());
 
 };
 
 // Gets the model of the vehicle
 QString models::Vehicle::getModel() const {
-    return data.model;
+    return getVehicleData().model;
 };
 
 // Sets the model of the vehicle
 void models::Vehicle::setModel(const QString& newModel) {
-    data.model = newModel;
+    getVehicleData().model = newModel;
     emit vehicleUpdated(getVehicleId());
 };
 
 // Gets the rental price per day
 double models::Vehicle::getPricePerDay() const {
-    return data.pricePerDay;
+    return getVehicleData().pricePerDay;
 };
 
 // Sets the rental price per day
 void models::Vehicle::setPricePerDay(const double newPricePerDay) {
-    data.pricePerDay = newPricePerDay;
+    getVehicleData().pricePerDay = newPricePerDay;
     emit vehicleUpdated(getVehicleId());
 };
 
@@ -104,12 +103,12 @@ QString models::Vehicle::getPricePerDayAsQString() const {
 
 // Gets the rental status of the vehicle
 bool models::Vehicle::getIsRented() const {
-    return data.isRented;
+    return getVehicleData().isRented;
 };
 
 // Sets the rental status of the vehicle
 void models::Vehicle::setIsRented(const bool newIsRented) {
-    data.isRented = newIsRented;
+    getVehicleData().isRented = newIsRented;
     emit vehicleUpdated(getVehicleId());
 };
 

@@ -2,8 +2,8 @@
 #pragma once
 
 #include "models/models.h"
-#include "CarView.h"
-#include "MotorcycleView.h"
+#include "CarDataView.h"
+#include "MotorcycleDataView.h"
 
 #include <QWidget>
 #include <QObject>
@@ -16,7 +16,7 @@
 
 namespace views {
 
-    class VehicleView : public QWidget {
+    class VehicleDataView : public QWidget {
 
         Q_OBJECT
 
@@ -26,35 +26,54 @@ namespace views {
             QVBoxLayout *vBoxLayout;
             QWidget *vehicleFormWidget;
             QFormLayout *vehicleFormLayout;
-            QLabel *VehicleTypeIdLabel;
+            QLabel *vehicleTypeIdLabel;
             QLabel *vehicleIdLabel;
             QLineEdit *brandField;
             QLineEdit *modelField;
             QLineEdit *pricePerDayField;
             QLabel *isRentedLabel;
-            views::CarView *carView;
-            views::MotorcycleView *motorcycleView;
+            views::CarDataView *carDataView;
+            views::MotorcycleDataView *motorcycleDataView;
             QPushButton *saveChangesButton;
 
             void refreshFields();
 
         public:
 
-            VehicleView(
+            VehicleDataView(
                 QWidget *parent = nullptr
             );
 
             void setVehicleData(
-                const models::Vehicle* vehicle
+                const models::VehicleData& vehicleData
             );
 
         // slots:
 
-            void handleVehicleSelected(models::Vehicle* vehicleP);
+            void handleVehicleSelected(
+                const models::VehicleData& vehicleData
+            );
+
+            void handleChangeBrandField(
+                const QString& text
+            );
+
+            void handleChangeModelField(
+                const QString& text
+            );
+
+            void handleChangepPricePerDayField(
+                const QString& text
+            );
+
+            void handleSaveChanges();
 
         signals:
 
-            void vehicleUpdated(const long long vehicleId);
+            void updateVehicle(
+                const models::VehicleData& vehicleData
+            );
 
     };
+
 };

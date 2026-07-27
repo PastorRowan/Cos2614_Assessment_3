@@ -10,7 +10,7 @@
 
 namespace views {
 
-    class MotorcycleView : public QWidget {
+    class MotorcycleDataView : public QWidget {
 
         Q_OBJECT
 
@@ -20,18 +20,24 @@ namespace views {
             QFormLayout *motorcycleFormLayout;
             QLineEdit *engineCapacityCCField;
 
-        protected:
-
             void refreshFields();
 
         public:
 
-            MotorcycleView(
+            MotorcycleDataView(
                 QWidget *parent = nullptr
             );
 
+            models::OptionalMotorcycleData getVehicleData();
+
             void setMotorcycleData(
                 const models::OptionalMotorcycleData optionalMotorcycleDataP
+            );
+
+        // slots:
+
+            void handleChangeEngineCapacityCCField(
+                const QString& text
             );
 
     };

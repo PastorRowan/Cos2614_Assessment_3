@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "CarView.h"
-#include "MotorcycleView.h"
+#include "CarDataView.h"
+#include "MotorcycleDataView.h"
+#include "VehicleDataView.h"
 #include "VehiclesRepositoryView.h"
-#include "VehicleView.h"

@@ -67,7 +67,11 @@ namespace models {
             // Destructor
             ~Car() = default;
 
-            const models::CarData* getVehicleData() const override;
+            const VehicleData& getVehicleData() const override;
+
+            VehicleData& getVehicleData() override;
+
+            void setVehicleData(const models::VehicleData& vehicleData) override;
 
             // Gets the number of doors
             int getNumberOfDoors() const;

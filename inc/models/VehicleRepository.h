@@ -39,19 +39,19 @@ namespace models {
             const Vehicles& getVehicles() const;
 
             /**
-            * Adds a new car to the collection
-            * Automatically generates a unique vehicle ID
+            *
+            *
             */
-            void addCar(
-                models::CarData carData
+            void addVehicle(
+                const VehicleData& vehicleData
             );
 
             /**
             * Adds a new motorcycle to the collection
             * Automatically generates a unique vehicle ID
             */
-            void addMotorcycle(
-                models::MotorcycleData motorcycleData
+            void updateVehicle(
+                const VehicleData& vehicleData
             );
 
             /**
@@ -77,7 +77,7 @@ namespace models {
 
         // slots:
 
-            void handleVehicleUpdated(const long long vehicleId);
+            void handleUpdateVehicle(const models::VehicleData& vehicleData);
 
         signals:
 

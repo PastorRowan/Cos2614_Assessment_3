@@ -12,28 +12,32 @@ void helpers::populateVehicleRepository(models::VehicleRepository* vehicleReposi
         vehicleRepository->clear();
 
         // Cars
-        vehicleRepository->addCar(models::CarData("Toyota", "Corolla", 450.0, 4, 5));
-        vehicleRepository->addCar(models::CarData("Volkswagen", "Golf GTI", 680.0, 4, 5));
-        vehicleRepository->addCar(models::CarData("BMW", "320i", 950.0, 4, 5));
-        vehicleRepository->addCar(models::CarData("Mercedes-Benz", "C200", 1100.0, 4, 5));
-        vehicleRepository->addCar(models::CarData("Audi", "A4", 1000.0, 4, 5));
-        vehicleRepository->addCar(models::CarData("Honda", "Civic", 520.0, 4, 5));
-        vehicleRepository->addCar(models::CarData("Mercedes-Benz", "CLK320", 750.0, 4, 5));
-        vehicleRepository->addCar(models::CarData("Hyundai", "i30", 430.0, 4, 5));
-        vehicleRepository->addCar(models::CarData("Kia", "Sportage", 690.0, 4, 5));
-        vehicleRepository->addCar(models::CarData("Nissan", "Navara", 820.0, 4, 5));
+        /*
+        vehicleRepository->addVehicle(models::CarData("Toyota", "Corolla", 450.0, 4, 5));
+        vehicleRepository->addVehicle(models::CarData("Volkswagen", "Golf GTI", 680.0, 4, 5));
+        vehicleRepository->addVehicle(models::CarData("BMW", "320i", 950.0, 4, 5));
+        vehicleRepository->addVehicle(models::CarData("Mercedes-Benz", "C200", 1100.0, 4, 5));
+        vehicleRepository->addVehicle(models::CarData("Audi", "A4", 1000.0, 4, 5));
+        vehicleRepository->addVehicle(models::CarData("Honda", "Civic", 520.0, 4, 5));
+        vehicleRepository->addVehicle(models::CarData("Mercedes-Benz", "CLK320", 750.0, 4, 5));
+        vehicleRepository->addVehicle(models::CarData("Hyundai", "i30", 430.0, 4, 5));
+        vehicleRepository->addVehicle(models::CarData("Kia", "Sportage", 690.0, 4, 5));
+        */
+        vehicleRepository->addVehicle(models::CarData("Nissan", "Navara", 820.0, 4, 5));
 
         // Motorcycles
-        vehicleRepository->addMotorcycle(models::MotorcycleData("Honda", "CBR500R", 350.0, 500));
-        vehicleRepository->addMotorcycle(models::MotorcycleData("Yamaha", "MT-07", 420.0, 689));
-        vehicleRepository->addMotorcycle(models::MotorcycleData("Kawasaki", "Ninja 650", 450.0, 649));
-        vehicleRepository->addMotorcycle(models::MotorcycleData("Suzuki", "GSX-R750", 550.0, 750));
-        vehicleRepository->addMotorcycle(models::MotorcycleData("Ducati", "Monster", 800.0, 937));
-        vehicleRepository->addMotorcycle(models::MotorcycleData("BMW", "S1000RR", 1200.0, 999));
-        vehicleRepository->addMotorcycle(models::MotorcycleData("KTM", "390 Duke", 320.0, 373));
-        vehicleRepository->addMotorcycle(models::MotorcycleData("Triumph", "Street Triple", 700.0, 765));
-        vehicleRepository->addMotorcycle(models::MotorcycleData("Harley-Davidson", "Iron 883", 650.0, 883));
-        vehicleRepository->addMotorcycle(models::MotorcycleData("Royal Enfield", "Interceptor 650", 380.0, 648));
+        /*
+        vehicleRepository->addVehicle(models::MotorcycleData("Honda", "CBR500R", 350.0, 500));
+        vehicleRepository->addVehicle(models::MotorcycleData("Yamaha", "MT-07", 420.0, 689));
+        vehicleRepository->addVehicle(models::MotorcycleData("Kawasaki", "Ninja 650", 450.0, 649));
+        vehicleRepository->addVehicle(models::MotorcycleData("Suzuki", "GSX-R750", 550.0, 750));
+        vehicleRepository->addVehicle(models::MotorcycleData("Ducati", "Monster", 800.0, 937));
+        vehicleRepository->addVehicle(models::MotorcycleData("BMW", "S1000RR", 1200.0, 999));
+        vehicleRepository->addVehicle(models::MotorcycleData("KTM", "390 Duke", 320.0, 373));
+        vehicleRepository->addVehicle(models::MotorcycleData("Triumph", "Street Triple", 700.0, 765));
+        vehicleRepository->addVehicle(models::MotorcycleData("Harley-Davidson", "Iron 883", 650.0, 883));
+        */
+        vehicleRepository->addVehicle(models::MotorcycleData("Royal Enfield", "Interceptor 650", 380.0, 648));
 
         // Rent a few vehicles
         vehicleRepository->rentVehicleById(2);

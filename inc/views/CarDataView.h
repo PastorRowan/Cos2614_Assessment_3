@@ -9,7 +9,7 @@
 
 namespace views {
 
-    class CarView : public QWidget {
+    class CarDataView : public QWidget {
 
         Q_OBJECT
 
@@ -20,19 +20,29 @@ namespace views {
             QLineEdit *numberOfDoorsField;
             QLineEdit *numberOfSeatsField;
 
-        protected:
-
             void refreshFields();
 
         public:
 
-            CarView(
+            CarDataView(
                 QWidget *parent = nullptr
             );
+
+            models::OptionalCarData getVehicleData();
 
             void setCarData(
                 const models::OptionalCarData optionalCarDataP
             );
+
+        // slots:
+
+        void handleChangeNumberOfDoorsField(
+            const QString& text
+        );
+
+        void handleChangeNumberOfSeatsField(
+            const QString& text
+        );
 
     };
 

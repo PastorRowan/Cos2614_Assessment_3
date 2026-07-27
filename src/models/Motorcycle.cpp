@@ -5,6 +5,7 @@
 
 #include <QObject>
 #include <QString>
+#include <memory>
 #include <QTextStream>
 #include <QStringList>
 #include <QDebug>
@@ -23,8 +24,18 @@ models::Motorcycle::Motorcycle(
 
 };
 
-const models::MotorcycleData* models::Motorcycle::getVehicleData() const {
-    return &data;
+const models::VehicleData& models::Motorcycle::getVehicleData() const {
+    return data;
+};
+
+models::VehicleData& models::Motorcycle::getVehicleData() {
+    return data;
+};
+
+void models::Motorcycle::setVehicleData(const models::VehicleData& vehicleData) {
+    const auto& motorcycleData = static_cast<const models::MotorcycleData&>(vehicleData);
+    data = motorcycleData;
+    emit vehicleUpdated(getVehicleId());
 };
 
 // Gets the engine capacity

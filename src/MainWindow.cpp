@@ -15,12 +15,6 @@
 
 MainWindow::MainWindow(QWidget *parent) {
 
-    models::VehicleRepository* vehicleRepository = new models::VehicleRepository(this);
-
-    #if POPULATE_VEHICLES_FILE
-        helpers::populateVehicleRepository(vehicleRepository);
-    #endif
-
     QWidget *central = new QWidget(this);
     central->setContentsMargins(10, 10, 10, 10);
 
@@ -36,28 +30,34 @@ MainWindow::MainWindow(QWidget *parent) {
     title->setText("Vehicle Rental System");
     title->setAlignment(Qt::AlignCenter);
 
+    models::VehicleRepository* vehicleRepository = new models::VehicleRepository(this);
+
+    #if POPULATE_VEHICLES_FILE
+        helpers::populateVehicleRepository(vehicleRepository);
+    #endif
+
     views::VehiclesRepositoryView *vehiclesRepositoryView = new views::VehiclesRepositoryView(content, vehicleRepository);
 
-    views::VehicleView *vehicleView = new views::VehicleView(content);
+    views::VehicleDataView *vehicleDataView = new views::VehicleDataView(content);
 
     QObject::connect(
         vehiclesRepositoryView,
         &views::VehiclesRepositoryView::vehicleSelected,
-        vehicleView,
-        &views::VehicleView::handleVehicleSelected
+        vehicleDataView,
+        &views::VehicleDataView::handleVehicleSelected
     );
 
     QObject::connect(
-        vehicleView,
-        &views::VehicleView::vehicleUpdated,
-        vehiclesRepositoryView,
-        &views::VehiclesRepositoryView::handleVehicleUpdated
+        vehicleDataView,
+        &views::VehicleDataView::updateVehicle,
+        vehicleRepository,
+        &models::VehicleRepository::handleUpdateVehicle
     );
 
     QVBoxLayout *contentVLayout = new QVBoxLayout(content);
     contentVLayout->addWidget(title);
     contentVLayout->addWidget(vehiclesRepositoryView);
-    contentVLayout->addWidget(vehicleView);
+    contentVLayout->addWidget(vehicleDataView);
     contentVLayout->addStretch();
 
     setCentralWidget(central);

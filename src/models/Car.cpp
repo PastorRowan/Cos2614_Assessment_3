@@ -5,6 +5,7 @@
 
 #include <QObject>
 #include <QString>
+#include <memory>
 #include <QTextStream>
 #include <QStringList>
 #include <QDebug>
@@ -23,8 +24,18 @@ models::Car::Car(
     
 };
 
-const models::CarData* models::Car::getVehicleData() const {
-    return &data;
+const models::VehicleData& models::Car::getVehicleData() const {
+    return data;
+};
+
+models::VehicleData& models::Car::getVehicleData() {
+    return data;
+};
+
+void models::Car::setVehicleData(const models::VehicleData& vehicleData) {
+    const auto& carData = static_cast<const models::CarData&>(vehicleData);
+    data = carData;
+    emit vehicleUpdated(getVehicleId());
 };
 
 // Gets the number of doors

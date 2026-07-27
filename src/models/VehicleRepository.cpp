@@ -51,21 +51,40 @@ const models::Vehicles& models::VehicleRepository::getVehicles() const {
  * After successfully saving the collection, the function increments and saves
  * the current vehicle ID counter to ensure future vehicles receive unique IDs
  */
-void models::VehicleRepository::addCar(
-    models::CarData carData
+void models::VehicleRepository::addVehicle(
+    const models::VehicleData& vehicleData
 ) {
 
-    carData.vehicleId = vehicleIdGenerator.generateId();;
+    models::Vehicle* newVehicle = nullptr;
 
-    models::Vehicle* newVehicle = new models::Car(
-        this,
-        carData
-    );
+    switch (vehicleData.vehicleTypeId) {
+
+        case models::VehicleTypeId::car: {
+            auto carData = static_cast<const models::CarData&>(vehicleData);
+            models::CarData copy = carData;
+            copy.vehicleId = vehicleIdGenerator.generateId();
+            newVehicle = new models::Car(this, copy);
+            break;
+        };
+
+        case models::VehicleTypeId::motorCycle: {
+            auto motorcycleData = static_cast<const models::MotorcycleData&>(vehicleData);
+            models::MotorcycleData copy = motorcycleData;
+            copy.vehicleId = vehicleIdGenerator.generateId();
+            newVehicle = new models::Motorcycle(this, copy);
+            break;
+        };
+
+        default: {
+            qDebug() << "Unknown vehicle type";
+            return;
+        };
+
+    };
 
     vehicles.push_back(newVehicle);
 
     bool ok;
-
     vehiclesPersistence.saveVehicles(vehicles, ok);
 
     if (!ok) {
@@ -83,46 +102,46 @@ void models::VehicleRepository::addCar(
 };
 
 /**
- * Adds a new Motorcycle object to the vehicle collection and saves it to storage
  *
- * This function creates a new instance of `models::Motorcycle` using the
- * provided vehicle and motorcycle-specific attributes, appends it to the
- * internal `vehicles` container, and persists the updated collection
- *
- * If saving the vehicle collection fails, the newly created motorcycle is
- * removed from the collection and an error message is returned
- *
- * After successfully saving the collection, the function increments and saves
- * the current vehicle ID counter to ensure future vehicles receive unique IDs
  */
-void models::VehicleRepository::addMotorcycle(
-    models::MotorcycleData motorcycleData
+void models::VehicleRepository::updateVehicle(
+    const models::VehicleData& vehicleData
 ) {
 
-    motorcycleData.vehicleId = vehicleIdGenerator.generateId();
+    qDebug()
+        << "vehicleData:"
+        << "type =" << static_cast<int>(vehicleData.vehicleTypeId)
+        << ", id =" << vehicleData.vehicleId
+        << ", brand =" << vehicleData.brand
+        << ", model =" << vehicleData.model
+        << ", pricePerDay =" << vehicleData.pricePerDay
+        << ", isRented =" << vehicleData.isRented;
 
-    models::Vehicle* newVehicle = new models::Motorcycle(
-        this,
-        motorcycleData
-    );
+    Vehicle* vehicle = searchVehicleById(vehicleData.vehicleId);
 
-    vehicles.push_back(newVehicle);
+    qDebug() << "Found Vehicle update: " << vehicle->toQString();
 
-    bool ok;
-
-    vehiclesPersistence.saveVehicles(vehicles, ok);
-
-    if (!ok) {
-        qDebug() << QString("Failed to add vehicle '%1' because failed to save vehicles").arg(newVehicle->toQString());
-        delete vehicles.last();
-        vehicles.pop_back();
+    if (vehicle == nullptr) {
+        qDebug() << "Vehicle not found";
         return;
     };
 
-    qDebug() << QString("Successfully added vehicle: %1").arg(newVehicle->toQString());
+    qDebug() << "Vehicle before update: " << vehicle->toQString();
+
+    vehicle->setVehicleData(vehicleData);
+
+    qDebug() << "Vehicle after update: " << vehicle->toQString();
+
+    bool ok;
+    vehiclesPersistence.saveVehicles(vehicles, ok);
+
+    if (!ok) {
+        qDebug() << "Failed to save updated vehicle";
+        return;
+    };
 
     emit vehiclesChanged();
-    emit vehicleAdded(newVehicle->getVehicleId());
+    emit vehicleUpdated(vehicleData.vehicleId);
 
 };
 
@@ -298,6 +317,8 @@ void models::VehicleRepository::clear() {
 
 };
 
-void models::VehicleRepository::handleVehicleUpdated(const long long vehicleId) {
-    emit vehicleUpdated(vehicleId);
+void models::VehicleRepository::handleUpdateVehicle(
+    const models::VehicleData& vehicleData
+) {
+    updateVehicle(vehicleData);
 };
