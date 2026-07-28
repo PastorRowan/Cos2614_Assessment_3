@@ -3,9 +3,10 @@
 
 #include "models/Car.h"
 
+#include <QWidget>
 #include <QObject>
-#include <QFormLayout>
-#include <QLineEdit>
+class QFormLayout;
+class QLineEdit;
 
 namespace views {
 
@@ -15,7 +16,7 @@ namespace views {
 
         private:
 
-            models::OptionalCarData optionalCarData;
+            models::CarData* carData;
             QFormLayout *carFormLayout;
             QLineEdit *numberOfDoorsField;
             QLineEdit *numberOfSeatsField;
@@ -24,25 +25,25 @@ namespace views {
 
         public:
 
-            CarDataView(
+            explicit CarDataView(
                 QWidget *parent = nullptr
             );
 
-            models::OptionalCarData getVehicleData();
-
             void setCarData(
-                const models::OptionalCarData optionalCarDataP
+                models::CarData* carDataP
             );
+
+            bool hasCarData() const;
 
         // slots:
 
-        void handleChangeNumberOfDoorsField(
-            const QString& text
-        );
+            void handleChangeNumberOfDoorsField(
+                const QString& text
+            );
 
-        void handleChangeNumberOfSeatsField(
-            const QString& text
-        );
+            void handleChangeNumberOfSeatsField(
+                const QString& text
+            );
 
     };
 

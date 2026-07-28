@@ -3,7 +3,7 @@
 
 #include "models/Vehicle.h"
 
-#include <optional>
+#include <memory>
 class QObject;
 class QString;
 
@@ -34,9 +34,21 @@ namespace models {
             numberOfDoors(numberOfDoorsP),
             numberOfSeats(numberOfSeatsP) {
         };
-    };
 
-    typedef std::optional<CarData> OptionalCarData;
+        QString getNumberOfDoorsAsQString() {
+            return QString::number(numberOfDoors);
+        };
+
+        QString getNumberOfSeatsAsQString() {
+            return QString::number(numberOfSeats);
+        };
+
+        [[nodiscard]]
+        std::unique_ptr<VehicleData> clone() const override {
+            return std::make_unique<CarData>(*this);
+        };
+
+    };
 
     // Represents a Car vehicle type
     class Car : public Vehicle {

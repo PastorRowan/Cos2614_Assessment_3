@@ -6,8 +6,9 @@
 
 #include <QWidget>
 #include <QObject>
-#include <QVBoxLayout>
-#include <QTableWidget>
+class QHBoxLayout;
+class QVBoxLayout;
+class QTableWidget;
 
 namespace views {
 

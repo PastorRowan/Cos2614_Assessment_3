@@ -18,8 +18,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(HEADERS
 
-    inc/dialogues/AddCarDialogue.h
-    inc/dialogues/AddMotorcycleDialogue.h
+    inc/dialogues/AddVehicleDialogue.h
     inc/dialogues/dialogues.h
 
     inc/helpers/ensurePathAndFileExist.h
@@ -46,8 +45,7 @@ set(HEADERS
 
 set(SOURCES
 
-    src/dialogues/AddCarDialogue.cpp
-    src/dialogues/AddMotorcycleDialogue.cpp
+    src/dialogues/AddVehicleDialogue.cpp
 
     src/helpers/ensurePathAndFileExist.cpp
     src/helpers/populateVehicleRepository.cpp

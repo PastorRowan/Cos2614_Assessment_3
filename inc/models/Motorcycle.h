@@ -3,7 +3,7 @@
 
 #include "models/Vehicle.h"
 
-#include <optional>
+#include <memory>
 class QObject;
 class QString;
 
@@ -32,9 +32,17 @@ namespace models {
             ),
             engineCapacityCC(engineCapacityCCP) {
         };
-    };
 
-    typedef std::optional<MotorcycleData> OptionalMotorcycleData;
+        QString getEngineCapacityCCAsQString() {
+            return QString::number(engineCapacityCC);
+        };
+
+        [[nodiscard]]
+        std::unique_ptr<VehicleData> clone() const override {
+            return std::make_unique<MotorcycleData>(*this);
+        };
+
+    };
 
     // Represents a motorcycle vehicle type
     class Motorcycle : public Vehicle {

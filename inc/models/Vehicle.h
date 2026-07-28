@@ -1,10 +1,8 @@
 
 #pragma once
 
-#include <optional>
 #include <QObject>
 #include <QString>
-#include <optional>
 #include <memory>
 class QTextStream;
 
@@ -42,11 +40,30 @@ namespace models {
             isRented(isRentedP) {
         };
 
+        // Converts the vehicle type ID to a QString
+        QString getVehicleTypeIdAsQString() const {
+            return QString::number(static_cast<int>(vehicleTypeId));
+        };
+
+        QString getVehicleIdAsQString() const {
+            return QString::number(vehicleId);
+        };
+
+        // Converts the price per day to QString
+        QString getPricePerDayAsQString() const {
+            return QString::number(pricePerDay);
+        };
+
+        // Converts rental status to QString
+        QString getIsRentedAsQString() const {
+            return QString(isRented ? "Yes" : "No");
+        };
+
         virtual ~VehicleData() = default;
 
-    };
+        virtual std::unique_ptr<VehicleData> clone() const = 0;
 
-    typedef std::optional<VehicleData> OptionalVehicleData;
+    };
 
     // Abstract base class representing a generic vehicle.
     class Vehicle : public QObject {
@@ -70,8 +87,7 @@ namespace models {
              * Initializes QObject and all core properties of a vehicle
              */
             Vehicle(
-                QObject *parent,
-                const VehicleData vehicleDataP
+                QObject *parent
             );
 
             /**

@@ -9,8 +9,7 @@
 
 // Constructs a Vehicle object with all base attributes initialized
 models::Vehicle::Vehicle(
-    QObject *parent,
-    const models::VehicleData vehicleDataP
+    QObject *parent
 ):
     QObject(parent) {
 
@@ -19,6 +18,11 @@ models::Vehicle::Vehicle(
 // Gets the vehicle type identifier
 models::VehicleTypeId models::Vehicle::getVehicleTypeId() const {
     return getVehicleData().vehicleTypeId;
+};
+
+// Converts the vehicle type ID to a QString
+QString models::Vehicle::getVehicleTypeIdAsQString() const {
+    return getVehicleData().getVehicleTypeIdAsQString();
 };
 
 // Sets the vehicle type identifier
@@ -38,12 +42,7 @@ long long models::Vehicle::getVehicleId() const {
 };
 
 QString models::Vehicle::getVehicleIdAsQString() const {
-    return QString::number(getVehicleData().vehicleId);
-};
-
-// Converts the vehicle type ID to a QString
-QString models::Vehicle::getVehicleTypeIdAsQString() const {
-    return QString::number(static_cast<int>(getVehicleData().vehicleTypeId));
+    return getVehicleData().getVehicleIdAsQString();
 };
 
 // Sets the vehicle ID
@@ -90,15 +89,15 @@ double models::Vehicle::getPricePerDay() const {
     return getVehicleData().pricePerDay;
 };
 
+// Converts the price per day to QString
+QString models::Vehicle::getPricePerDayAsQString() const {
+    return getVehicleData().getPricePerDayAsQString();
+};
+
 // Sets the rental price per day
 void models::Vehicle::setPricePerDay(const double newPricePerDay) {
     getVehicleData().pricePerDay = newPricePerDay;
     emit vehicleUpdated(getVehicleId());
-};
-
-// Converts the price per day to QString
-QString models::Vehicle::getPricePerDayAsQString() const {
-    return QString::number(getPricePerDay());
 };
 
 // Gets the rental status of the vehicle
@@ -106,15 +105,15 @@ bool models::Vehicle::getIsRented() const {
     return getVehicleData().isRented;
 };
 
+// Converts rental status to QString
+QString models::Vehicle::getIsRentedAsQString() const {
+    return getVehicleData().getIsRentedAsQString();
+};
+
 // Sets the rental status of the vehicle
 void models::Vehicle::setIsRented(const bool newIsRented) {
     getVehicleData().isRented = newIsRented;
     emit vehicleUpdated(getVehicleId());
-};
-
-// Converts rental status to QString
-QString models::Vehicle::getIsRentedAsQString() const {
-    return QString(getIsRented() ? "Yes" : "No");
 };
 
 bool models::Vehicle::isRentedQStringToBool(const QString& isRentedQString) {

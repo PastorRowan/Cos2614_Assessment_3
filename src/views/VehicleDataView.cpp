@@ -9,6 +9,7 @@
 #include <QFormLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QComboBox>
 #include <QPushButton>
 #include <QDebug>
 
@@ -16,7 +17,7 @@ views::VehicleDataView::VehicleDataView(
     QWidget *parent
 ):
     QWidget(parent),
-    optionalVehicleData({}) {
+    vehicleData(nullptr) {
 
     vBoxLayout = new QVBoxLayout(this);
 
@@ -24,19 +25,26 @@ views::VehicleDataView::VehicleDataView(
     vehicleFormLayout = new QFormLayout(vehicleFormWidget);
 
     vehicleTypeIdLabel = new QLabel(this);
+
     vehicleIdLabel = new QLabel(this);
+
     brandField = new QLineEdit(this);
+
     modelField = new QLineEdit(this);
+
     pricePerDayField = new QLineEdit(this);
-    isRentedLabel = new QLabel(this);
+
+    isRentedComboBox = new QComboBox(this);
+    isRentedComboBox->addItem("No", false);
+    isRentedComboBox->addItem("Yes", true);
 
     carDataView = new views::CarDataView(this);
     carDataView->hide();
     motorcycleDataView = new views::MotorcycleDataView(this);
     motorcycleDataView->hide();
 
-    saveChangesButton = new QPushButton(this);
-    saveChangesButton->setText("Save Changes");
+    confirmButton = new QPushButton(this);
+    confirmButton->setText("confirm");
 
     vehicleFormWidget->setLayout(vehicleFormLayout);
     vehicleFormLayout->addRow("TYPE_ID: ", vehicleTypeIdLabel);
@@ -44,12 +52,12 @@ views::VehicleDataView::VehicleDataView(
     vehicleFormLayout->addRow("BRAND: ", brandField);
     vehicleFormLayout->addRow("MODEL: ", modelField);
     vehicleFormLayout->addRow("PRICE_PER_DAY: ", pricePerDayField);
-    vehicleFormLayout->addRow("IS_RENTED: ", isRentedLabel);
+    vehicleFormLayout->addRow("IS_RENTED: ", isRentedComboBox);
 
     vBoxLayout->addWidget(vehicleFormWidget);
     vBoxLayout->addWidget(carDataView);
     vBoxLayout->addWidget(motorcycleDataView);
-    vBoxLayout->addWidget(saveChangesButton);
+    vBoxLayout->addWidget(confirmButton);
 
     QObject::connect(
         brandField,
@@ -73,45 +81,63 @@ views::VehicleDataView::VehicleDataView(
     );
 
     QObject::connect(
-        saveChangesButton,
+        isRentedComboBox,
+        &QComboBox::currentIndexChanged,
+        this,
+        &views::VehicleDataView::handleChangeIsRentedComboBox
+    );
+
+    QObject::connect(
+        confirmButton,
         &QPushButton::clicked,
         this,
-        &views::VehicleDataView::handleSaveChanges
+        &views::VehicleDataView::handleConfirm
     );
 
 };
 
+std::unique_ptr<models::VehicleData> views::VehicleDataView::getVehicleData() const {
+
+    if (!vehicleData) {
+        return nullptr;
+    };
+
+    return vehicleData->clone();
+
+};
+
 void views::VehicleDataView::setVehicleData(
-    const models::VehicleData& vehicleData
+    const models::VehicleData& vehicleDataP
 ) {
 
-    optionalVehicleData = vehicleData;
+    this->vehicleData = vehicleDataP.clone();
 
-    switch (vehicleData.vehicleTypeId) {
+    switch (vehicleDataP.vehicleTypeId) {
 
         case models::VehicleTypeId::car: {
-            const auto& carData = static_cast<const models::CarData&>(vehicleData);
-            carDataView->setCarData(carData);
+            carDataView->setCarData(
+                static_cast<models::CarData*>(vehicleData.get())
+            );
             carDataView->show();
 
             motorcycleDataView->hide();
-            motorcycleDataView->setMotorcycleData({});
+            motorcycleDataView->setMotorcycleData(nullptr);
             break;
         };
 
         case models::VehicleTypeId::motorCycle: {
-            const auto& motorcycleData = static_cast<const models::MotorcycleData&>(vehicleData);
-
-            motorcycleDataView->setMotorcycleData(motorcycleData);
+            motorcycleDataView->setMotorcycleData(
+                static_cast<models::MotorcycleData*>(vehicleData.get())
+            );
             motorcycleDataView->show();
 
             carDataView->hide();
-            carDataView->setCarData({});
+            carDataView->setCarData(nullptr);
             break;
         };
 
         default: {
-            optionalVehicleData.reset();
+            vehicleData = nullptr;
             carDataView->hide();
             carDataView->setCarData({});
             motorcycleDataView->hide();
@@ -125,29 +151,36 @@ void views::VehicleDataView::setVehicleData(
 
 };
 
-void views::VehicleDataView::refreshFields() {
+bool views::VehicleDataView::hasVehicle() const {
+    return (vehicleData != nullptr);
+};
 
-    bool hasVehicle = optionalVehicleData.has_value();
+void views::VehicleDataView::setConfirmButtonText(const QString text) {
+    confirmButton->setText(text);
+};
 
-    vehicleFormWidget->setEnabled(hasVehicle);
+void views::VehicleDataView::refreshFields() {;
 
-    if (!hasVehicle) {
-        vehicleTypeIdLabel->setText("");
-        vehicleIdLabel->setText("");
+    vehicleFormWidget->setEnabled(hasVehicle());
+
+    if (!hasVehicle()) {
+        vehicleTypeIdLabel->clear();
+        vehicleIdLabel->clear();
         brandField->clear();
         modelField->clear();
         pricePerDayField->clear();
-        isRentedLabel->setText("");
-    } else {
-        // I am sorry
-        const models::VehicleData& vehicleData = optionalVehicleData.value();
-        vehicleTypeIdLabel->setText(QString::number(static_cast<int>(vehicleData.vehicleTypeId)));
-        vehicleIdLabel->setText(QString::number(vehicleData.vehicleId));
-        brandField->setText(vehicleData.brand);
-        modelField->setText(vehicleData.model);
-        pricePerDayField->setText(QString::number(vehicleData.pricePerDay));
-        isRentedLabel->setText(vehicleData.isRented ? "Yes" : "No");
+        isRentedComboBox->setCurrentIndex(-1);
+        return;
     };
+
+    vehicleTypeIdLabel->setText(vehicleData->getVehicleTypeIdAsQString());
+    vehicleIdLabel->setText(vehicleData->getVehicleIdAsQString());
+    brandField->setText(vehicleData->brand);
+    modelField->setText(vehicleData->model);
+    pricePerDayField->setText(vehicleData->getPricePerDayAsQString());
+
+    int index = isRentedComboBox->findData(vehicleData->isRented);
+    isRentedComboBox->setCurrentIndex(index);
 
 };
 
@@ -161,25 +194,25 @@ void views::VehicleDataView::handleVehicleSelected(
 void views::VehicleDataView::handleChangeBrandField(
     const QString& text
 ) {
-    if (!optionalVehicleData.has_value()) {
+    if (!hasVehicle()) {
         return;
     };
-    optionalVehicleData->brand = text;
+    vehicleData->brand = text;
 };
 
 void views::VehicleDataView::handleChangeModelField(
     const QString& text
 ) {
-    if (!optionalVehicleData.has_value()) {
+    if (!hasVehicle()) {
         return;
     };
-    optionalVehicleData->model = text;
+    vehicleData->model = text;
 };
 
 void views::VehicleDataView::handleChangepPricePerDayField(
     const QString& text
 ) {
-    if (!optionalVehicleData.has_value()) {
+    if (!hasVehicle()) {
         return;
     };
     bool ok = false;
@@ -187,71 +220,26 @@ void views::VehicleDataView::handleChangepPricePerDayField(
     if (!ok) {
         return;
     };
-    optionalVehicleData->pricePerDay = value;
-}; 
+    vehicleData->pricePerDay = value;
+};
 
-void views::VehicleDataView::handleSaveChanges() {
+void views::VehicleDataView::handleChangeIsRentedComboBox(
+    int index
+) {
+    if (!hasVehicle()) {
+        return;
+    };
+    vehicleData->isRented = isRentedComboBox->itemData(index).toBool();
+};
+
+void views::VehicleDataView::handleConfirm() {
 
     qDebug() << "handleSaveChanges is running";
 
-    if (!optionalVehicleData.has_value()) {
+    if (!hasVehicle()) {
         return;
     };
 
-    switch (optionalVehicleData->vehicleTypeId) {
-
-        case models::VehicleTypeId::car: {
-
-            auto carData = carDataView->getVehicleData();
-
-            if (!carData.has_value()) {
-                return;
-            };
-
-            carData->vehicleId = optionalVehicleData->vehicleId;
-            carData->vehicleTypeId = optionalVehicleData->vehicleTypeId;
-            carData->brand = optionalVehicleData->brand;
-            carData->model = optionalVehicleData->model;
-            carData->pricePerDay = optionalVehicleData->pricePerDay;
-            carData->isRented = optionalVehicleData->isRented;
-
-            models::Car debugCar(nullptr, *carData);
-
-            qDebug() << debugCar.toQString();
-
-            emit updateVehicle(*carData);
-
-            break;
-
-        };
-
-        case models::VehicleTypeId::motorCycle: {
-
-            auto motorcycleData = motorcycleDataView->getVehicleData();
-
-            if (!motorcycleData.has_value()) {
-                return;
-            };
-
-            motorcycleData->vehicleId = optionalVehicleData->vehicleId;
-            motorcycleData->vehicleTypeId = optionalVehicleData->vehicleTypeId;
-            motorcycleData->brand = optionalVehicleData->brand;
-            motorcycleData->model = optionalVehicleData->model;
-            motorcycleData->pricePerDay = optionalVehicleData->pricePerDay;
-            motorcycleData->isRented = optionalVehicleData->isRented;
-
-            models::Motorcycle debugMotorcycle(nullptr, *motorcycleData);
-
-            qDebug() << debugMotorcycle.toQString();
-
-            emit updateVehicle(*motorcycleData);
-
-            break;
-
-        };
-
-        default:
-            break;
-    };
+    emit confirmVehicle(*vehicleData);
 
 };

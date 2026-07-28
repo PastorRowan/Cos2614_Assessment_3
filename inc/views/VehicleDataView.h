@@ -1,18 +1,20 @@
 
 #pragma once
 
-#include "models/models.h"
+#include "models/Vehicle.h"
 #include "CarDataView.h"
 #include "MotorcycleDataView.h"
 
 #include <QWidget>
 #include <QObject>
-#include <QVBoxLayout>
-#include <QWidget>
-#include <QFormLayout>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
+#include <memory>
+class QVBoxLayout;
+class QFormLayout;
+class QLabel;
+class QLineEdit;
+class QComboBox;
+class QPushButton;
+class QString;
 
 namespace views {
 
@@ -22,7 +24,7 @@ namespace views {
 
         protected:
 
-            models::OptionalVehicleData optionalVehicleData;
+            std::unique_ptr<models::VehicleData> vehicleData;
             QVBoxLayout *vBoxLayout;
             QWidget *vehicleFormWidget;
             QFormLayout *vehicleFormLayout;
@@ -31,10 +33,10 @@ namespace views {
             QLineEdit *brandField;
             QLineEdit *modelField;
             QLineEdit *pricePerDayField;
-            QLabel *isRentedLabel;
+            QComboBox *isRentedComboBox;
             views::CarDataView *carDataView;
             views::MotorcycleDataView *motorcycleDataView;
-            QPushButton *saveChangesButton;
+            QPushButton *confirmButton;
 
             void refreshFields();
 
@@ -44,9 +46,15 @@ namespace views {
                 QWidget *parent = nullptr
             );
 
+            std::unique_ptr<models::VehicleData> getVehicleData() const;
+
             void setVehicleData(
                 const models::VehicleData& vehicleData
             );
+
+            bool hasVehicle() const;
+
+            void setConfirmButtonText(const QString text);
 
         // slots:
 
@@ -66,11 +74,15 @@ namespace views {
                 const QString& text
             );
 
-            void handleSaveChanges();
+            void handleChangeIsRentedComboBox(
+                int index
+            );
+
+            void handleConfirm();
 
         signals:
 
-            void updateVehicle(
+            void confirmVehicle(
                 const models::VehicleData& vehicleData
             );
 

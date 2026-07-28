@@ -10,7 +10,7 @@ views::MotorcycleDataView::MotorcycleDataView(
     QWidget *parent
 ):
     QWidget(parent),
-    optionalMotorcycleData({}) {
+    motorcycleData(nullptr) {
 
     motorcycleFormLayout = new QFormLayout(this);
 
@@ -27,29 +27,27 @@ views::MotorcycleDataView::MotorcycleDataView(
 
 };
 
-models::OptionalMotorcycleData views::MotorcycleDataView::getVehicleData() {
-    return optionalMotorcycleData;
+void views::MotorcycleDataView::setMotorcycleData(
+    models::MotorcycleData* motorcycleDataP
+) {
+    motorcycleData = motorcycleDataP;
+    refreshFields();
 };
 
-void views::MotorcycleDataView::setMotorcycleData(
-    const models::OptionalMotorcycleData optionalMotorcycleDataP
-) {
-    optionalMotorcycleData = optionalMotorcycleDataP;
-    refreshFields();
+bool views::MotorcycleDataView::hasMotorcycleData() const {
+    return (motorcycleData != nullptr);
 };
 
 void views::MotorcycleDataView::refreshFields() {
 
-    bool hasVehicle = optionalMotorcycleData.has_value();
+    bool hasVehicle = hasMotorcycleData();
 
     setEnabled(hasVehicle);
 
     if (!hasVehicle) {
         engineCapacityCCField->clear();
     } else {
-        // I am sorry
-        const models::MotorcycleData& motorcycleData = optionalMotorcycleData.value();
-        engineCapacityCCField->setText(QString::number(motorcycleData.engineCapacityCC));
+        engineCapacityCCField->setText(motorcycleData->getEngineCapacityCCAsQString());
     };
 
 };
@@ -57,7 +55,7 @@ void views::MotorcycleDataView::refreshFields() {
 void views::MotorcycleDataView::handleChangeEngineCapacityCCField(
     const QString& text
 ) {
-    if (!optionalMotorcycleData.has_value()) {
+    if (!hasMotorcycleData()) {
         return;
     };
     bool ok = false;
@@ -65,6 +63,6 @@ void views::MotorcycleDataView::handleChangeEngineCapacityCCField(
     if (!ok) {
         return;
     };
-    optionalMotorcycleData->engineCapacityCC = engineCapacityCC;
+    motorcycleData->engineCapacityCC = engineCapacityCC;
 
 };

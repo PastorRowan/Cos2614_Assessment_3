@@ -9,7 +9,7 @@ views::CarDataView::CarDataView(
     QWidget *parent
 ):
     QWidget(parent),
-    optionalCarData({}) {
+    carData(nullptr) {
 
     carFormLayout = new QFormLayout(this);
 
@@ -35,20 +35,20 @@ views::CarDataView::CarDataView(
 
 };
 
-models::OptionalCarData views::CarDataView::getVehicleData() {
-    return optionalCarData;
+void views::CarDataView::setCarData(
+    models::CarData* carDataP
+) {
+    carData = carDataP;
+    refreshFields();
 };
 
-void views::CarDataView::setCarData(
-    const models::OptionalCarData optionalCarDataP
-) {
-    optionalCarData = optionalCarDataP;
-    refreshFields();
+bool views::CarDataView::hasCarData() const {
+    return (carData != nullptr);
 };
 
 void views::CarDataView::refreshFields() {
 
-    bool hasVehicle = optionalCarData.has_value();
+    bool hasVehicle = hasCarData();
 
     setEnabled(hasVehicle);
 
@@ -56,10 +56,8 @@ void views::CarDataView::refreshFields() {
         numberOfDoorsField->clear();
         numberOfSeatsField->clear();
     } else {
-        // I am sorry
-        const models::CarData& carData = optionalCarData.value();
-        numberOfDoorsField->setText(QString::number(carData.numberOfDoors));
-        numberOfSeatsField->setText(QString::number(carData.numberOfSeats));
+        numberOfDoorsField->setText(carData->getNumberOfDoorsAsQString());
+        numberOfSeatsField->setText(carData->getNumberOfSeatsAsQString());
     };
 
 };
@@ -67,7 +65,7 @@ void views::CarDataView::refreshFields() {
 void views::CarDataView::handleChangeNumberOfDoorsField(
     const QString& text
 ) {
-    if (!optionalCarData.has_value()) {
+    if (!hasCarData()) {
         return;
     };
     bool ok = false;
@@ -75,13 +73,13 @@ void views::CarDataView::handleChangeNumberOfDoorsField(
     if (!ok) {
         return;
     };
-    optionalCarData->numberOfDoors = value;
+    carData->numberOfDoors = value;
 };
 
 void views::CarDataView::handleChangeNumberOfSeatsField(
     const QString& text
 ) {
-    if (!optionalCarData.has_value()) {
+    if (!hasCarData()) {
         return;
     };
     bool ok = false;
@@ -89,5 +87,5 @@ void views::CarDataView::handleChangeNumberOfSeatsField(
     if (!ok) {
         return;
     };
-    optionalCarData->numberOfSeats = value;
+    carData->numberOfSeats = value;
 };

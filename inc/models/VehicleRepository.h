@@ -7,7 +7,6 @@
 #include "models/Motorcycle.h"
 
 #include <QObject>
-#include <QVector>
 
 namespace models {
 

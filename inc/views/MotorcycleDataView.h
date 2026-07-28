@@ -5,8 +5,8 @@
 
 #include <QWidget>
 #include <QObject>
-#include <QFormLayout>
-#include <QLineEdit>
+class QFormLayout;
+class QLineEdit;
 
 namespace views {
 
@@ -16,7 +16,7 @@ namespace views {
 
         private:
 
-            models::OptionalMotorcycleData optionalMotorcycleData;
+            models::MotorcycleData* motorcycleData;
             QFormLayout *motorcycleFormLayout;
             QLineEdit *engineCapacityCCField;
 
@@ -28,11 +28,11 @@ namespace views {
                 QWidget *parent = nullptr
             );
 
-            models::OptionalMotorcycleData getVehicleData();
-
             void setMotorcycleData(
-                const models::OptionalMotorcycleData optionalMotorcycleDataP
+                models::MotorcycleData* motorcycleDataP
             );
+
+            bool hasMotorcycleData() const;
 
         // slots:
 

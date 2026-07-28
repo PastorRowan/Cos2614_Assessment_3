@@ -16,10 +16,7 @@ models::Car::Car(
     QObject *parent,
     const models::CarData carDataP
 ):
-    Vehicle(
-        parent,
-        carDataP
-    ),
+    Vehicle(parent),
     data(carDataP) {
     
 };
