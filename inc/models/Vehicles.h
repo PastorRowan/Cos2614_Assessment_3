@@ -7,7 +7,10 @@
 
 namespace models {
 
-    // Alias for the vehicle container type
+    /**
+     * Vehicles
+     * Container type used to store vehicle pointers
+     */
     typedef QVector<models::Vehicle*> Vehicles;
 
 };

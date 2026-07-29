@@ -105,7 +105,7 @@ views::VehicleDataView::VehicleDataView(
 
 };
 
-const std::shared_ptr<const models::VehicleData> views::VehicleDataView::getVehicleData() const {
+std::shared_ptr<const models::VehicleData> views::VehicleDataView::getVehicleData() const {
     if (!vehicleData) {
         return nullptr;
     };
@@ -113,7 +113,7 @@ const std::shared_ptr<const models::VehicleData> views::VehicleDataView::getVehi
 };
 
 void views::VehicleDataView::setVehicleData(
-    const std::shared_ptr<const models::VehicleData> vehicleDataP
+    std::shared_ptr<const models::VehicleData> vehicleDataP
 ) {
 
     this->vehicleData = vehicleDataP->clone();
@@ -191,7 +191,7 @@ void views::VehicleDataView::refreshFields() {;
 };
 
 void views::VehicleDataView::handleVehicleSelected(
-    const std::shared_ptr<const models::VehicleData> vehicleDataP
+    std::shared_ptr<const models::VehicleData> vehicleDataP
 ) {
     qDebug() << "handleVehicleSelected is running with vehicle id: " << vehicleDataP->vehicleId;
     setVehicleData(vehicleDataP);
@@ -246,7 +246,7 @@ void views::VehicleDataView::handleConfirm() {
         return;
     };
 
-    const std::shared_ptr<const models::VehicleData> vehicleDataImmutable = vehicleData->clone();
+    std::shared_ptr<const models::VehicleData> vehicleDataImmutable = vehicleData->clone();
 
     emit confirmVehicle(vehicleDataImmutable);
 

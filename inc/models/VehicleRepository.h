@@ -11,14 +11,25 @@
 
 namespace models {
 
+    /**
+     * VehicleRepository
+     * Stores and manages the application's collection of vehicles
+     *
+     * The repository owns all vehicle objects and provides operations for
+     * modifying and querying the collection
+     * It is also responsible for generating unique vehicle identifiers, persisting vehicle data, and
+     * notifying interested objects whenever the collection changes
+     */
     class VehicleRepository : public QObject {
 
         Q_OBJECT
 
         private:
 
+            // Generates unique identifiers for newly added vehicles
             models::VehicleIdGenerator vehicleIdGenerator;
 
+            // Handles loading and saving the vehicle collection
             models::VehiclesPersistence vehiclesPersistence;
 
             // Internal container storing all vehicle objects
@@ -29,19 +40,28 @@ namespace models {
 
         public:
 
-            VehicleRepository(
+            /**
+             * Constructs a VehicleRepository
+             *
+             * parent - The parent QObject
+             */
+            explicit VehicleRepository(
                 QObject* parent
             );
 
+            // Destroys the repository
             ~VehicleRepository() = default;
 
-            // Gets the internal vehicle collection
+            // Returns a constant reference to the collection of vehicles
             const Vehicles& getVehicles() const;
 
             /**
-            *
-            *
-            */
+             * Adds a new vehicle to the repository
+             *
+             * A unique vehicle identifier is generated automatically before the vehicle is stored
+             *
+             * vehicleData - The data describing the vehicle to add
+             */
             void addVehicle(
                 const models::VehicleData& vehicleData
             );
@@ -61,6 +81,11 @@ namespace models {
                 const long long vehicleId
             );
 
+            /**
+             * Removes all vehicles from the repository
+             *
+             * All owned vehicle objects are destroyed and the repository is returned to an empty state
+             */
             void clear();
 
             /**
@@ -77,12 +102,22 @@ namespace models {
 
         // slots:
 
+            /**
+             * Handles requests to add a vehicle
+             *
+             * vehicleData - Shared pointer to the vehicle data to add
+             */
             void handleAddVehicle(
-                const std::shared_ptr<const models::VehicleData> vehicleData
+                std::shared_ptr<const models::VehicleData> vehicleData
             );
 
+            /**
+             * Handles requests to update a vehicle
+             *
+             * vehicleData - Shared pointer to the updated vehicle data
+             */
             void handleUpdateVehicle(
-                const std::shared_ptr<const models::VehicleData> vehicleData
+                std::shared_ptr<const models::VehicleData> vehicleData
             );
 
         signals:

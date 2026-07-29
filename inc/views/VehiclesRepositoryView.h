@@ -53,7 +53,7 @@ namespace views {
             void handleVehicleUpdated(const long long vehicleId);
 
             void handleUpdateVehicle(
-                const std::shared_ptr<const models::VehicleData> vehicleData
+                std::shared_ptr<const models::VehicleData> vehicleData
             );
 
             void handleSelectionChanged();
@@ -61,7 +61,7 @@ namespace views {
         signals:
 
             void vehicleSelected(
-                const std::shared_ptr<const models::VehicleData> vehicleData
+                std::shared_ptr<const models::VehicleData> vehicleData
             );
 
     };

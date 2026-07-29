@@ -18,10 +18,13 @@ views::CarDataView::CarDataView(
 
     numberOfDoorsField = new QLineEdit(this);
     numberOfDoorsField->setValidator(
-        new QIntValidator()
+        new QIntValidator(1, 1000)
     );
 
     numberOfSeatsField = new QLineEdit(this);
+    numberOfSeatsField->setValidator(
+        new QIntValidator(1, 1000)
+    );
 
     carFormLayout->addRow("NUMBER_OF_DOORS", numberOfDoorsField);
     carFormLayout->addRow("NUMBER_OF_SEATS", numberOfSeatsField);

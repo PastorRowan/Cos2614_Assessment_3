@@ -9,19 +9,48 @@ class QString;
 
 namespace models {
 
+    // Default number of doors for a car
+    const int DEFAULT_NUMBER_OF_DOORS = 0;
+
+    // Default number of seats for a car
+    const int DEFAULT_NUMBER_OF_SEATS = 0;
+
+
+    /**
+     * CarData
+     * struct that stores the data associated with a car
+     *
+     * Extends VehicleData by adding car-specific attributes such as the
+     * number of doors and seats
+     */
     struct CarData : public VehicleData {
 
-        int numberOfDoors = -1;
-        int numberOfSeats = -1;
+        // The number of doors
+        int numberOfDoors = DEFAULT_NUMBER_OF_DOORS;
 
+        // The number of seats
+        int numberOfSeats = DEFAULT_NUMBER_OF_SEATS;
+
+        /**
+         * Constructs a CarData object
+         *
+         * brandP - The vehicle brand
+         * modelP - The vehicle model
+         * pricePerDayP - The daily rental price
+         * numberOfDoorsP - The number of doors
+         * numberOfSeatsP - The number of seats
+         * isRentedP - Whether the vehicle is currently rented
+         * vehicleIdP - The unique vehicle identifier (Should generally be left empty until
+         * the vehicle id generator gives it can id)
+         */
         CarData(
-            const QString brandP = "Not initialised",
-            const QString modelP = "Not initialised",
-            double pricePerDayP = -1.0,
-            int numberOfDoorsP = -1,
-            int numberOfSeatsP = -1,
-            bool isRentedP = false,
-            long long vehicleIdP = -1
+            const QString brandP = models::DEFAULT_BRAND,
+            const QString modelP = models::DEFAULT_MODEL,
+            double pricePerDayP = models::DEFAULT_PRICE_PER_DAY,
+            int numberOfDoorsP = DEFAULT_NUMBER_OF_DOORS,
+            int numberOfSeatsP = DEFAULT_NUMBER_OF_SEATS,
+            bool isRentedP = models::DEFAULT_IS_RENTED,
+            long long vehicleIdP = models::DEFAULT_VEHICLE_ID
         ):
             VehicleData(
                 VehicleTypeId::car,
@@ -35,14 +64,25 @@ namespace models {
             numberOfSeats(numberOfSeatsP) {
         };
 
+        // Returns the number of doors as a QString
         QString getNumberOfDoorsAsQString() {
             return QString::number(numberOfDoors);
         };
 
+        // Returns the number of seats as a QString
         QString getNumberOfSeatsAsQString() {
             return QString::number(numberOfSeats);
         };
 
+        /**
+         * isValid
+         * Validates the car data
+         *
+         * message - Receives a description of the validation error if
+         * validation fails
+         *
+         * Returns True if the data is valid, otherwise false
+         */
         bool isValid(QString& message) const override {
             if (pricePerDay < 0.0) {
                 message = "PRICE_PER_DAY must be greater than or equal to 0";
@@ -58,6 +98,11 @@ namespace models {
             };
         };
 
+        /**
+         * clone
+         * Creates a deep copy of this CarData object
+         * Returns a unique pointer to the cloned CarData object
+         */
         [[nodiscard]]
         std::unique_ptr<VehicleData> clone() const override {
             return std::make_unique<CarData>(*this);
@@ -65,7 +110,13 @@ namespace models {
 
     };
 
-    // Represents a Car vehicle type
+    /**
+     * Car
+     * Represents a car in the vehicle rental system.
+     *
+     * Implements the Vehicle interface using a CarData object to store
+     * both the common vehicle attributes and car-specific properties
+     */
     class Car : public Vehicle {
 
         private:
@@ -78,14 +129,14 @@ namespace models {
              * Default constructor
              * Creates an uninitialized Car object with default placeholder values
              */
-            Car() {};
+            explicit Car() {};
 
             /**
              * Parameterized constructor
              * Initializes a Car object with both general vehicle
              * attributes and car-specific properties
              */
-            Car(
+            explicit Car(
                 // QObject parent
                 QObject *parent,
                 CarData carDataP
@@ -94,10 +145,16 @@ namespace models {
             // Destructor
             ~Car() = default;
 
+            // Returns a constant reference to the vehicle data
             const VehicleData& getVehicleData() const override;
 
+            // Returns a mutable reference to the vehicle data
             VehicleData& getVehicleData() override;
 
+            /**
+             * Replaces the vehicle data
+             * vehicleData - The new vehicle data
+             */
             void setVehicleData(const models::VehicleData& vehicleData) override;
 
             // Gets the number of doors

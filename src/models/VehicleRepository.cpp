@@ -321,7 +321,7 @@ void models::VehicleRepository::clear() {
 };
 
 void models::VehicleRepository::handleAddVehicle(
-    const std::shared_ptr<const models::VehicleData> vehicleData
+    std::shared_ptr<const models::VehicleData> vehicleData
 ) {
 
     qDebug() << "VehicleRepository handleAddVehicle is running with vehicleData->brand: " << vehicleData->brand;
@@ -331,7 +331,7 @@ void models::VehicleRepository::handleAddVehicle(
 };
 
 void models::VehicleRepository::handleUpdateVehicle(
-    const std::shared_ptr<const models::VehicleData> vehicleData
+    std::shared_ptr<const models::VehicleData> vehicleData
 ) {
     updateVehicle(*vehicleData);
 };

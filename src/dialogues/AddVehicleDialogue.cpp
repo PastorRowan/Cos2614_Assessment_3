@@ -47,7 +47,7 @@ dialogues::AddVehicleDialogue::AddVehicleDialogue(
         &dialogues::AddVehicleDialogue::handleAddVehicle
     );
 
-    vehicleTypeComboBox->setCurrentIndex(0);
+    handleVehicleTypeChanged(static_cast<int>(models::VehicleTypeId::car));
 
 };
 
@@ -59,15 +59,23 @@ void dialogues::AddVehicleDialogue::handleVehicleTypeChanged(
     int vehicleTypeId
 ) {
 
+    qDebug() 
+        << "dialogues::AddVehicleDialogue::handleVehicleTypeChanged was called with vehicleTypeId: " << vehicleTypeId
+    ;
+
     switch (static_cast<models::VehicleTypeId>(vehicleTypeId)) {
         case models::VehicleTypeId::car:
             vehicleDataView->setVehicleData(
-                std::make_shared<models::CarData>()
+                std::make_shared<models::CarData>(
+                    "", "", 0.0, 0, 0, false
+                )
             );
             break;
         case models::VehicleTypeId::motorCycle:
             vehicleDataView->setVehicleData(
-                std::make_shared<models::MotorcycleData>()
+                std::make_shared<models::MotorcycleData>(
+                    "", "", 0.0, 0, false
+                )
             );
             break;
         default:
@@ -80,7 +88,7 @@ void dialogues::AddVehicleDialogue::handleVehicleTypeChanged(
 };
 
 void dialogues::AddVehicleDialogue::handleAddVehicle(
-    const std::shared_ptr<const models::VehicleData> vehicleData
+    std::shared_ptr<const models::VehicleData> vehicleData
 ) {
 
     qDebug() << "AddVehicleDialogue handleAddVehicle is running with vehicleData.brand: " << vehicleData->brand;

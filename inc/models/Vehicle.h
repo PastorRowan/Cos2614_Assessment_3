@@ -8,29 +8,70 @@ class QTextStream;
 
 namespace models {
 
-    // Enumeration identifying the type of vehicle.
+    // Enumeration identifying the type of vehicle
     enum class VehicleTypeId {
         car,
         motorCycle,
         count
     };
 
+    // Default vehicle type identifier
     const VehicleTypeId DEFAULT_VEHICLE_TYPE_ID = VehicleTypeId::count;
+
+    // Default vehicle identifier
     const long long DEFAULT_VEHICLE_ID = -1;
+
+    // Default vehicle brand
     const QString DEFAULT_BRAND = "";
+
+    // Default vehicle model
     const QString DEFAULT_MODEL = "";
+
+    // Default daily rental price
     const double DEFAULT_PRICE_PER_DAY = -1.0;
+
+    // Default rental status
     const bool DEFAULT_IS_RENTED = false;
 
+    /**
+     * VehicleData
+     * Stores the common data associated with a vehicle
+     *
+     * This abstract base structure contains the properties shared by all
+     * vehicle types
+     * Derived structures add type-specific fields and provide
+     * implementations for validation and cloning
+     */
     struct VehicleData {
 
+        // The type of vehicle
         VehicleTypeId vehicleTypeId = DEFAULT_VEHICLE_TYPE_ID;
+
+        // The unique vehicle identifier
         long long vehicleId = DEFAULT_VEHICLE_ID;
+
+        // The vehicle manufacturer
         QString brand = DEFAULT_BRAND;
+
+        // The vehicle model
         QString model = DEFAULT_MODEL;
+
+        // The rental price per day
         double pricePerDay = DEFAULT_PRICE_PER_DAY;
+
+        // Indicates whether the vehicle is currently rented
         bool isRented = DEFAULT_IS_RENTED;
 
+        /**
+         * Constructs a VehicleData object
+         *
+         * vehicleTypeIdP - The vehicle type
+         * vehicleIdP - The unique vehicle identifier
+         * brandP - The vehicle brand
+         * modelP - The vehicle model
+         * pricePerDayP - The daily rental price
+         * isRentedP - Whether the vehicle is currently rented
+         */
         VehicleData(
             VehicleTypeId vehicleTypeIdP = DEFAULT_VEHICLE_TYPE_ID,
             long long vehicleIdP = DEFAULT_VEHICLE_ID,
@@ -52,6 +93,7 @@ namespace models {
             return QString::number(static_cast<int>(vehicleTypeId));
         };
 
+        // Returns the vehicle identifier as a QString
         QString getVehicleIdAsQString() const {
             return QString::number(vehicleId);
         };
@@ -66,22 +108,41 @@ namespace models {
             return QString(isRented ? "Yes" : "No");
         };
 
+        // Destroys the vehicle data object
         virtual ~VehicleData() = default;
 
+        /**
+         * Validates the stored vehicle data
+         *
+         * message - Receives a description of the validation error if
+         * validation fails
+         *
+         * Returns true if the data is valid, otherwise false
+         */
         virtual bool isValid(QString& message) const = 0;
 
+        /**
+         * Creates a deep copy of the vehicle data
+         *
+         * Returns a unique pointer to the cloned vehicle data
+         */
         virtual std::unique_ptr<VehicleData> clone() const = 0;
 
     };
 
-    // Abstract base class representing a generic vehicle.
+    /**
+     * Vehicle
+     * Abstract base class representing a vehicle
+     *
+     * Defines the common interface implemented by all vehicle types
+     * Derived classes provide storage for their specific VehicleData implementation,
+     * support cloning, serialisation, and formatted string conversion
+     */
     class Vehicle : public QObject {
 
         Q_OBJECT
 
         private:
-
-            // VehicleData data {};
 
         public:
 
@@ -89,13 +150,13 @@ namespace models {
              * Default constructor, creates a vehicle in an uninitialized state.
              * Most fields contain placeholder values and should be set before use.
              */
-            Vehicle() {};
+            explicit Vehicle() {};
 
             /**
              * Parameterized constructor
              * Initializes QObject and all core properties of a vehicle
              */
-            Vehicle(
+            explicit Vehicle(
                 QObject *parent
             );
 
@@ -105,10 +166,17 @@ namespace models {
              */
             virtual ~Vehicle() = default;
 
+            // Returns a constant reference to the vehicle data
             virtual const VehicleData& getVehicleData() const = 0;
 
+            // Returns a mutable reference to the vehicle data
             virtual VehicleData& getVehicleData() = 0;
 
+            /**
+             * @brief Replaces the vehicle data
+             *
+             * vehicleData - The new vehicle data
+             */
             virtual void setVehicleData(const models::VehicleData& vehicleData) = 0;
 
             // Gets the vehicle type identifier
@@ -175,6 +243,11 @@ namespace models {
 
         signals:
 
+            /**
+             * Emitted when a vehicle has been updated
+             *
+             * vehicleId - The identifier of the updated vehicle
+             */
             void vehicleUpdated(const long long vehicleId);
 
     };

@@ -46,10 +46,10 @@ namespace views {
                 QWidget *parent = nullptr
             );
 
-            const std::shared_ptr<const models::VehicleData> getVehicleData() const;
+            std::shared_ptr<const models::VehicleData> getVehicleData() const;
 
             void setVehicleData(
-                const std::shared_ptr<const models::VehicleData> vehicleDataP
+                std::shared_ptr<const models::VehicleData> vehicleDataP
             );
 
             bool hasVehicle() const;
@@ -59,7 +59,7 @@ namespace views {
         // slots:
 
             void handleVehicleSelected(
-                const std::shared_ptr<const models::VehicleData> vehicleDataP
+                std::shared_ptr<const models::VehicleData> vehicleDataP
             );
 
             void handleChangeBrandField(
@@ -83,7 +83,7 @@ namespace views {
         signals:
 
             void confirmVehicle(
-                const std::shared_ptr<const models::VehicleData> vehicleData
+                std::shared_ptr<const models::VehicleData> vehicleData
             );
 
     };

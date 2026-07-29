@@ -216,7 +216,7 @@ void views::VehiclesRepositoryView::handleVehicleUpdated(
 };
 
 void views::VehiclesRepositoryView::handleUpdateVehicle(
-    const std::shared_ptr<const models::VehicleData> vehicleData
+    std::shared_ptr<const models::VehicleData> vehicleData
 ) {
     vehicleRepository->addVehicle(*vehicleData);
 };

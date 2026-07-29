@@ -27,12 +27,6 @@ namespace models {
             // Increments the current vehicle ID counter
             void incrementCurrentVehicleId();
 
-            // Increments and saves the current vehicle ID
-            void incrementAndSaveCurrentVehicleId(bool& ok);
-
-            // Sets the current vehicle ID file location
-            void setCurrentIdFileLocation(const QString currentVehicleIdFileLocationP);
-
             // Saves the current vehicle ID to storage
             void saveCurrentVehicleId(bool& ok);
 
@@ -48,22 +42,31 @@ namespace models {
         public:
 
             /**
-            * Constructor
-            */
+             * Constructor
+             */
             VehicleIdGenerator(
                 const QString currentVehicleIdFileLocationP
             );
 
             /**
-            * Destructor
-            */
+             * Destructor
+             */
             ~VehicleIdGenerator() = default;
 
             // Gets the current vehicle ID counter
             long long getCurrentVehicleId() const;
 
+            // Returns the current vehicle identifier as a QString
             QString getCurrentVehicleIdAsQString() const;
 
+            /**
+             * Generates a new unique vehicle identifier
+             *
+             * The identifier is incremented, persisted to storage, and returned
+             * to the caller
+             *
+             * Returns a newly generated unique vehicle identifier
+             */
             long long generateId();
 
     };

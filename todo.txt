@@ -1,0 +1,3 @@
+
+- write documentaiton for views headers
+    - start from cardataview.h then go down like how it appears in the editor.
