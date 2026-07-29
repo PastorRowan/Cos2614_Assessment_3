@@ -7,6 +7,7 @@
 #include "models/Motorcycle.h"
 
 #include <QObject>
+#include <memory>
 
 namespace models {
 
@@ -42,7 +43,7 @@ namespace models {
             *
             */
             void addVehicle(
-                const VehicleData& vehicleData
+                const models::VehicleData& vehicleData
             );
 
             /**
@@ -50,7 +51,7 @@ namespace models {
             * Automatically generates a unique vehicle ID
             */
             void updateVehicle(
-                const VehicleData& vehicleData
+                const models::VehicleData& vehicleData
             );
 
             /**
@@ -76,7 +77,13 @@ namespace models {
 
         // slots:
 
-            void handleUpdateVehicle(const models::VehicleData& vehicleData);
+            void handleAddVehicle(
+                const std::shared_ptr<const models::VehicleData> vehicleData
+            );
+
+            void handleUpdateVehicle(
+                const std::shared_ptr<const models::VehicleData> vehicleData
+            );
 
         signals:
 

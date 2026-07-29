@@ -2,8 +2,11 @@
 #include "views/CarDataView.h"
 #include "models/models.h"
 
+#include <QObject>
+#include <memory>
 #include <QFormLayout>
 #include <QLineEdit>
+#include <QIntValidator>
 
 views::CarDataView::CarDataView(
     QWidget *parent
@@ -14,6 +17,10 @@ views::CarDataView::CarDataView(
     carFormLayout = new QFormLayout(this);
 
     numberOfDoorsField = new QLineEdit(this);
+    numberOfDoorsField->setValidator(
+        new QIntValidator()
+    );
+
     numberOfSeatsField = new QLineEdit(this);
 
     carFormLayout->addRow("NUMBER_OF_DOORS", numberOfDoorsField);
@@ -36,7 +43,7 @@ views::CarDataView::CarDataView(
 };
 
 void views::CarDataView::setCarData(
-    models::CarData* carDataP
+    std::shared_ptr<models::CarData> carDataP
 ) {
     carData = carDataP;
     refreshFields();
@@ -63,7 +70,7 @@ void views::CarDataView::refreshFields() {
 };
 
 void views::CarDataView::handleChangeNumberOfDoorsField(
-    const QString& text
+    const QString text
 ) {
     if (!hasCarData()) {
         return;
@@ -77,7 +84,7 @@ void views::CarDataView::handleChangeNumberOfDoorsField(
 };
 
 void views::CarDataView::handleChangeNumberOfSeatsField(
-    const QString& text
+    const QString text
 ) {
     if (!hasCarData()) {
         return;

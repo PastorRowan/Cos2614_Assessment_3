@@ -1,9 +1,10 @@
 
-#include "views/views.h"
+#include "views/VehiclesRepositoryView.h"
 #include "models/VehicleRepository.h"
 
 #include <QObject>
 #include <QWidget>
+#include <memory>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QTableWidget>
@@ -26,7 +27,7 @@ views::VehiclesRepositoryView::VehiclesRepositoryView(
     centralHBox->addLayout(contentVBox);
     centralHBox->addStretch();
 
-    table->setFixedHeight(430);
+    table->setFixedHeight(300);
     table->setColumnCount(6);
     table->setHorizontalHeaderLabels({
         "TYPE_ID",
@@ -92,6 +93,31 @@ views::VehiclesRepositoryView::~VehiclesRepositoryView() {
     destroyTable();
 };
 
+int views::VehiclesRepositoryView::searchRowById(
+    const long long vehicleId
+) {
+
+    for (int row = 0; row < table->rowCount(); ++row) {
+
+        QTableWidgetItem* idItem = table->item(row, 1);
+
+        if (idItem == nullptr) {
+            continue;
+        };
+
+        bool ok = false;
+        const long long currentId = idItem->text().toLongLong(&ok);
+
+        if (ok && currentId == vehicleId) {
+            return row;
+        };
+
+    };
+
+    return -1;
+
+};
+
 void views::VehiclesRepositoryView::destroyTable() {
     table->clearContents();
     table->setRowCount(0);
@@ -129,56 +155,70 @@ void views::VehiclesRepositoryView::handleVehiclesChanged() {
     qDebug() << "handleVehiclesChanged called";
 };
 
-void views::VehiclesRepositoryView::handleVehicleAdded(const long long vehicleId) {
-    qDebug() << "handleVehicleAdded called with: " << vehicleId;
+void views::VehiclesRepositoryView::handleVehicleAdded(
+    const long long vehicleId
+) {
+    qDebug() << "VehiclesRepositoryView handleVehicleAdded called with: " << vehicleId;
+
+    models::Vehicle* vehicle = vehicleRepository->searchVehicleById(vehicleId);
+
+    if (vehicle == nullptr) {
+        qDebug() << "Failed to find vehicle in vehicle repository with vehicle id: " << vehicleId;
+        return;
+    };
+
+    const int rowIndex = table->rowCount();
+
+    table->insertRow(rowIndex);
+
+    table->setItem(rowIndex, 0, new QTableWidgetItem(vehicle->getVehicleTypeIdAsQString()));
+    table->setItem(rowIndex, 1, new QTableWidgetItem(vehicle->getVehicleIdAsQString()));
+    table->setItem(rowIndex, 2, new QTableWidgetItem(vehicle->getBrand()));
+    table->setItem(rowIndex, 3, new QTableWidgetItem(vehicle->getModel()));
+    table->setItem(rowIndex, 4, new QTableWidgetItem(vehicle->getPricePerDayAsQString()));
+    table->setItem(rowIndex, 5, new QTableWidgetItem(vehicle->getIsRentedAsQString()));
+
 };
 
-void views::VehiclesRepositoryView::handleVehicleRemoved(const long long vehicleId) {
+void views::VehiclesRepositoryView::handleVehicleRemoved(
+    const long long vehicleId
+) {
     qDebug() << "VehiclesRepositoryView handleVehicleRemoved called with: " << vehicleId;
 };
 
-void views::VehiclesRepositoryView::handleVehicleUpdated(const long long vehicleId) {
+void views::VehiclesRepositoryView::handleVehicleUpdated(
+    const long long vehicleId
+) {
 
     qDebug() << "VehiclesRepositoryView handleVehicleUpdated called with: " << vehicleId;
 
     models::Vehicle* vehicle = vehicleRepository->searchVehicleById(vehicleId);
 
-    qDebug() << "VehiclesRepositoryView vehicle: " << vehicle->toQString();
-
-    for (unsigned int row = 0; row < table->rowCount(); ++row) {
-
-        QTableWidgetItem* idItem = table->item(row, 1);
-
-        if (idItem == nullptr) {
-            continue;
-        };
-
-        bool ok = false;
-        const long long currentId = idItem->text().toLongLong(&ok);
-
-        if (!ok || currentId != vehicleId) {
-            continue;
-        };
-
-        table->item(row, 0)->setText(vehicle->getVehicleTypeIdAsQString());
-        table->item(row, 1)->setText(vehicle->getVehicleIdAsQString());
-        table->item(row, 2)->setText(vehicle->getBrand());
-        table->item(row, 3)->setText(vehicle->getModel());
-        table->item(row, 4)->setText(vehicle->getPricePerDayAsQString());
-        table->item(row, 5)->setText(vehicle->getIsRentedAsQString());
-
+    if (vehicle == nullptr) {
+        qDebug() << "Failed to find vehicle in vehicle repository with vehicle id: " << vehicleId;
         return;
-
     };
 
-    qDebug() << "Vehicle row not found in table";
+    int rowIndex = searchRowById(vehicleId);
+
+    if (rowIndex <= -1) {
+        qDebug() << "Failed to find vehicle in table with vehicle id: " << vehicleId;
+        return;
+    };
+
+    table->item(rowIndex, 0)->setText(vehicle->getVehicleTypeIdAsQString());
+    table->item(rowIndex, 1)->setText(vehicle->getVehicleIdAsQString());
+    table->item(rowIndex, 2)->setText(vehicle->getBrand());
+    table->item(rowIndex, 3)->setText(vehicle->getModel());
+    table->item(rowIndex, 4)->setText(vehicle->getPricePerDayAsQString());
+    table->item(rowIndex, 5)->setText(vehicle->getIsRentedAsQString());
 
 };
 
 void views::VehiclesRepositoryView::handleUpdateVehicle(
-    const models::VehicleData& data
+    const std::shared_ptr<const models::VehicleData> vehicleData
 ) {
-    vehicleRepository->addVehicle(data);
+    vehicleRepository->addVehicle(*vehicleData);
 };
 
 void views::VehiclesRepositoryView::handleSelectionChanged() {
@@ -208,6 +248,11 @@ void views::VehiclesRepositoryView::handleSelectionChanged() {
 
     auto vehicle = vehicleRepository->searchVehicleById(vehicleIdLongLong);
 
-    emit vehicleSelected(vehicle->getVehicleData());
+    auto vehicleDataSnapshot =
+        std::shared_ptr<const models::VehicleData>(
+            vehicle->getVehicleData().clone()
+        );
+
+    emit vehicleSelected(vehicleDataSnapshot);
 
 };

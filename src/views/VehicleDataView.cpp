@@ -12,6 +12,8 @@
 #include <QComboBox>
 #include <QPushButton>
 #include <QDebug>
+#include <QDoubleValidator>
+#include <limits>
 
 views::VehicleDataView::VehicleDataView(
     QWidget *parent
@@ -33,6 +35,13 @@ views::VehicleDataView::VehicleDataView(
     modelField = new QLineEdit(this);
 
     pricePerDayField = new QLineEdit(this);
+    pricePerDayField->setValidator(
+        new QDoubleValidator(
+            0,
+            std::numeric_limits<double>::max(),
+            2
+        )
+    );
 
     isRentedComboBox = new QComboBox(this);
     isRentedComboBox->addItem("No", false);
@@ -96,27 +105,24 @@ views::VehicleDataView::VehicleDataView(
 
 };
 
-std::unique_ptr<models::VehicleData> views::VehicleDataView::getVehicleData() const {
-
+const std::shared_ptr<const models::VehicleData> views::VehicleDataView::getVehicleData() const {
     if (!vehicleData) {
         return nullptr;
     };
-
     return vehicleData->clone();
-
 };
 
 void views::VehicleDataView::setVehicleData(
-    const models::VehicleData& vehicleDataP
+    const std::shared_ptr<const models::VehicleData> vehicleDataP
 ) {
 
-    this->vehicleData = vehicleDataP.clone();
+    this->vehicleData = vehicleDataP->clone();
 
-    switch (vehicleDataP.vehicleTypeId) {
+    switch (vehicleData->vehicleTypeId) {
 
         case models::VehicleTypeId::car: {
             carDataView->setCarData(
-                static_cast<models::CarData*>(vehicleData.get())
+                std::static_pointer_cast<models::CarData>(vehicleData)
             );
             carDataView->show();
 
@@ -127,7 +133,7 @@ void views::VehicleDataView::setVehicleData(
 
         case models::VehicleTypeId::motorCycle: {
             motorcycleDataView->setMotorcycleData(
-                static_cast<models::MotorcycleData*>(vehicleData.get())
+                std::static_pointer_cast<models::MotorcycleData>(vehicleData)
             );
             motorcycleDataView->show();
 
@@ -185,14 +191,14 @@ void views::VehicleDataView::refreshFields() {;
 };
 
 void views::VehicleDataView::handleVehicleSelected(
-    const models::VehicleData& vehicleData
+    const std::shared_ptr<const models::VehicleData> vehicleDataP
 ) {
-    qDebug() << "handleVehicleSelected is running with vehicle id: " << vehicleData.vehicleId;
-    setVehicleData(vehicleData);
+    qDebug() << "handleVehicleSelected is running with vehicle id: " << vehicleDataP->vehicleId;
+    setVehicleData(vehicleDataP);
 };
 
 void views::VehicleDataView::handleChangeBrandField(
-    const QString& text
+    const QString text
 ) {
     if (!hasVehicle()) {
         return;
@@ -201,7 +207,7 @@ void views::VehicleDataView::handleChangeBrandField(
 };
 
 void views::VehicleDataView::handleChangeModelField(
-    const QString& text
+    const QString text
 ) {
     if (!hasVehicle()) {
         return;
@@ -210,7 +216,7 @@ void views::VehicleDataView::handleChangeModelField(
 };
 
 void views::VehicleDataView::handleChangepPricePerDayField(
-    const QString& text
+    const QString text
 ) {
     if (!hasVehicle()) {
         return;
@@ -234,12 +240,14 @@ void views::VehicleDataView::handleChangeIsRentedComboBox(
 
 void views::VehicleDataView::handleConfirm() {
 
-    qDebug() << "handleSaveChanges is running";
+    qDebug() << "handleConfirm is running";
 
     if (!hasVehicle()) {
         return;
     };
 
-    emit confirmVehicle(*vehicleData);
+    const std::shared_ptr<const models::VehicleData> vehicleDataImmutable = vehicleData->clone();
+
+    emit confirmVehicle(vehicleDataImmutable);
 
 };

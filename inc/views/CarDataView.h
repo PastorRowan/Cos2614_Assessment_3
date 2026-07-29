@@ -5,6 +5,7 @@
 
 #include <QWidget>
 #include <QObject>
+#include <memory>
 class QFormLayout;
 class QLineEdit;
 
@@ -16,7 +17,7 @@ namespace views {
 
         private:
 
-            models::CarData* carData;
+            std::shared_ptr<models::CarData> carData;
             QFormLayout *carFormLayout;
             QLineEdit *numberOfDoorsField;
             QLineEdit *numberOfSeatsField;
@@ -30,7 +31,7 @@ namespace views {
             );
 
             void setCarData(
-                models::CarData* carDataP
+                std::shared_ptr<models::CarData> carDataP
             );
 
             bool hasCarData() const;
@@ -38,11 +39,11 @@ namespace views {
         // slots:
 
             void handleChangeNumberOfDoorsField(
-                const QString& text
+                const QString text
             );
 
             void handleChangeNumberOfSeatsField(
-                const QString& text
+                const QString text
             );
 
     };

@@ -3,6 +3,7 @@
 #include "models/models.h"
 
 #include <QObject>
+#include <memory>
 #include <QFormLayout>
 #include <QLineEdit>
 
@@ -28,7 +29,7 @@ views::MotorcycleDataView::MotorcycleDataView(
 };
 
 void views::MotorcycleDataView::setMotorcycleData(
-    models::MotorcycleData* motorcycleDataP
+    std::shared_ptr<models::MotorcycleData> motorcycleDataP
 ) {
     motorcycleData = motorcycleDataP;
     refreshFields();
@@ -53,7 +54,7 @@ void views::MotorcycleDataView::refreshFields() {
 };
 
 void views::MotorcycleDataView::handleChangeEngineCapacityCCField(
-    const QString& text
+    const QString text
 ) {
     if (!hasMotorcycleData()) {
         return;

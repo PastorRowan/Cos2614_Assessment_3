@@ -43,6 +43,21 @@ namespace models {
             return QString::number(numberOfSeats);
         };
 
+        bool isValid(QString& message) const override {
+            if (pricePerDay < 0.0) {
+                message = "PRICE_PER_DAY must be greater than or equal to 0";
+                return false;
+            } else if (numberOfDoors <= -1) {
+                message = "NUMBER_OF_DOORS must be greater than or equal to 0";
+                return false;
+            } else if (numberOfSeats <= 0) {
+                message = "NUMBER_OF_SEATS must be greater than or equal to 1";
+                return false;
+            } else {
+                return true;
+            };
+        };
+
         [[nodiscard]]
         std::unique_ptr<VehicleData> clone() const override {
             return std::make_unique<CarData>(*this);

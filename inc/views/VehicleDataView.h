@@ -24,7 +24,7 @@ namespace views {
 
         protected:
 
-            std::unique_ptr<models::VehicleData> vehicleData;
+            std::shared_ptr<models::VehicleData> vehicleData;
             QVBoxLayout *vBoxLayout;
             QWidget *vehicleFormWidget;
             QFormLayout *vehicleFormLayout;
@@ -46,10 +46,10 @@ namespace views {
                 QWidget *parent = nullptr
             );
 
-            std::unique_ptr<models::VehicleData> getVehicleData() const;
+            const std::shared_ptr<const models::VehicleData> getVehicleData() const;
 
             void setVehicleData(
-                const models::VehicleData& vehicleData
+                const std::shared_ptr<const models::VehicleData> vehicleDataP
             );
 
             bool hasVehicle() const;
@@ -59,19 +59,19 @@ namespace views {
         // slots:
 
             void handleVehicleSelected(
-                const models::VehicleData& vehicleData
+                const std::shared_ptr<const models::VehicleData> vehicleDataP
             );
 
             void handleChangeBrandField(
-                const QString& text
+                const QString text
             );
 
             void handleChangeModelField(
-                const QString& text
+                const QString text
             );
 
             void handleChangepPricePerDayField(
-                const QString& text
+                const QString text
             );
 
             void handleChangeIsRentedComboBox(
@@ -83,7 +83,7 @@ namespace views {
         signals:
 
             void confirmVehicle(
-                const models::VehicleData& vehicleData
+                const std::shared_ptr<const models::VehicleData> vehicleData
             );
 
     };

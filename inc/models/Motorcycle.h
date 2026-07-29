@@ -11,7 +11,6 @@ namespace models {
 
     struct MotorcycleData : public VehicleData {
 
-        models::VehicleTypeId vehicleTypeId = models::VehicleTypeId::motorCycle;
         int engineCapacityCC = -1;
 
         MotorcycleData(
@@ -35,6 +34,18 @@ namespace models {
 
         QString getEngineCapacityCCAsQString() {
             return QString::number(engineCapacityCC);
+        };
+
+        bool isValid(QString& message) const override {
+            if (pricePerDay < 0.0) {
+                message = "PRICE_PER_DAY must be greater than or equal to 0";
+                return false;
+            } else if (engineCapacityCC <= -1) {
+                message = "ENGINE_CAPACITY_CC must be greater than or equal to 0";
+                return false;
+            } else {
+                return true;
+            };
         };
 
         [[nodiscard]]

@@ -77,4 +77,11 @@ MainWindow::MainWindow(QWidget *parent) {
         &dialogues::AddVehicleDialogue::open
     );
 
+    QObject::connect(
+        addVehicleDialogue,
+        &dialogues::AddVehicleDialogue::addVehicle,
+        vehicleRepository,
+        &models::VehicleRepository::handleAddVehicle
+    );
+
 };

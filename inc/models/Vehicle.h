@@ -15,22 +15,29 @@ namespace models {
         count
     };
 
+    const VehicleTypeId DEFAULT_VEHICLE_TYPE_ID = VehicleTypeId::count;
+    const long long DEFAULT_VEHICLE_ID = -1;
+    const QString DEFAULT_BRAND = "";
+    const QString DEFAULT_MODEL = "";
+    const double DEFAULT_PRICE_PER_DAY = -1.0;
+    const bool DEFAULT_IS_RENTED = false;
+
     struct VehicleData {
 
-        VehicleTypeId vehicleTypeId = VehicleTypeId::count;
-        long long vehicleId = -1;
-        QString brand = "Not initialised";
-        QString model = "Not initialised";
-        double pricePerDay = -1.0;
-        bool isRented = false;
+        VehicleTypeId vehicleTypeId = DEFAULT_VEHICLE_TYPE_ID;
+        long long vehicleId = DEFAULT_VEHICLE_ID;
+        QString brand = DEFAULT_BRAND;
+        QString model = DEFAULT_MODEL;
+        double pricePerDay = DEFAULT_PRICE_PER_DAY;
+        bool isRented = DEFAULT_IS_RENTED;
 
         VehicleData(
-            VehicleTypeId vehicleTypeIdP = VehicleTypeId::count,
-            long long vehicleIdP = -1,
-            const QString brandP = "Not initialised",
-            const QString modelP = "Not initialised",
-            double pricePerDayP = -1.0,
-            bool isRentedP = false
+            VehicleTypeId vehicleTypeIdP = DEFAULT_VEHICLE_TYPE_ID,
+            long long vehicleIdP = DEFAULT_VEHICLE_ID,
+            const QString brandP = DEFAULT_BRAND,
+            const QString modelP = DEFAULT_MODEL,
+            double pricePerDayP = DEFAULT_PRICE_PER_DAY,
+            bool isRentedP = DEFAULT_IS_RENTED
         ):
             vehicleTypeId(vehicleTypeIdP),
             vehicleId(vehicleIdP),
@@ -60,6 +67,8 @@ namespace models {
         };
 
         virtual ~VehicleData() = default;
+
+        virtual bool isValid(QString& message) const = 0;
 
         virtual std::unique_ptr<VehicleData> clone() const = 0;
 

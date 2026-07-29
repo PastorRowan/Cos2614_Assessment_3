@@ -6,6 +6,7 @@
 
 #include <QDialog>
 #include <QObject>
+#include <memory>
 class QVBoxLayout;
 class QLabel;
 class QComboBox;
@@ -20,8 +21,6 @@ namespace dialogues {
 
         private:
 
-            std::unique_ptr<models::VehicleData> vehicleData;
-
             QVBoxLayout *vBoxLayout;
             QLabel *title;
             QComboBox *vehicleTypeComboBox;
@@ -34,7 +33,7 @@ namespace dialogues {
             );
 
             void handleAddVehicle(
-                const models::VehicleData& vehicleData
+                const std::shared_ptr<const models::VehicleData> vehicleData
             );
 
         public:
@@ -52,7 +51,7 @@ namespace dialogues {
         signals:
 
             void addVehicle(
-                const models::VehicleData& vehicleData
+                const std::shared_ptr<const models::VehicleData> vehicleData
             );
 
     };

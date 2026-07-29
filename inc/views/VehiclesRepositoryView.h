@@ -6,6 +6,7 @@
 
 #include <QWidget>
 #include <QObject>
+#include <memory>
 class QHBoxLayout;
 class QVBoxLayout;
 class QTableWidget;
@@ -23,6 +24,10 @@ namespace views {
             QWidget *content;
             QVBoxLayout *contentVBox;
             QTableWidget *table;
+
+            int searchRowById(
+                const long long vehicleId
+            );
 
         public:
 
@@ -48,7 +53,7 @@ namespace views {
             void handleVehicleUpdated(const long long vehicleId);
 
             void handleUpdateVehicle(
-                const models::VehicleData& data
+                const std::shared_ptr<const models::VehicleData> vehicleData
             );
 
             void handleSelectionChanged();
@@ -56,7 +61,7 @@ namespace views {
         signals:
 
             void vehicleSelected(
-                const models::VehicleData& data
+                const std::shared_ptr<const models::VehicleData> vehicleData
             );
 
     };

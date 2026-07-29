@@ -3,10 +3,12 @@
 #include "views/VehicleDataView.h"
 
 #include <QObject>
+#include <memory>
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QComboBox>
 #include <QWidget>
+#include <QDebug>
 
 dialogues::AddVehicleDialogue::AddVehicleDialogue(
     QWidget *parent
@@ -29,6 +31,7 @@ dialogues::AddVehicleDialogue::AddVehicleDialogue(
     vBoxLayout->addWidget(title);
     vBoxLayout->addWidget(vehicleTypeComboBox);
     vBoxLayout->addWidget(vehicleDataView);
+    vBoxLayout->addStretch();
 
     QObject::connect(
         vehicleTypeComboBox,
@@ -58,25 +61,29 @@ void dialogues::AddVehicleDialogue::handleVehicleTypeChanged(
 
     switch (static_cast<models::VehicleTypeId>(vehicleTypeId)) {
         case models::VehicleTypeId::car:
-            vehicleData = std::make_unique<models::CarData>();
+            vehicleDataView->setVehicleData(
+                std::make_shared<models::CarData>()
+            );
             break;
         case models::VehicleTypeId::motorCycle:
-            vehicleData = std::make_unique<models::MotorcycleData>();
+            vehicleDataView->setVehicleData(
+                std::make_shared<models::MotorcycleData>()
+            );
             break;
         default:
-            vehicleData.reset();
+            vehicleDataView->setVehicleData(
+                nullptr
+            );
             break;
-    };
-
-    if (vehicleData) {
-        vehicleDataView->setVehicleData(*vehicleData);
     };
 
 };
 
 void dialogues::AddVehicleDialogue::handleAddVehicle(
-    const models::VehicleData& vehicleData
+    const std::shared_ptr<const models::VehicleData> vehicleData
 ) {
+
+    qDebug() << "AddVehicleDialogue handleAddVehicle is running with vehicleData.brand: " << vehicleData->brand;
 
     emit addVehicle(vehicleData);
 

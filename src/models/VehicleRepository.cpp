@@ -4,6 +4,7 @@
 #include <QString>
 #include <QCoreApplication>
 #include <QtAlgorithms>
+#include <memory>
 #include <QDebug>
 
 // Constructs a VehicleRepository object and loads persisted vehicle data
@@ -55,6 +56,8 @@ void models::VehicleRepository::addVehicle(
     const models::VehicleData& vehicleData
 ) {
 
+    qDebug() << "VehicleRepository addVehicle is running with vehicleData.brand: " << vehicleData.brand;
+
     models::Vehicle* newVehicle = nullptr;
 
     switch (vehicleData.vehicleTypeId) {
@@ -94,7 +97,7 @@ void models::VehicleRepository::addVehicle(
         return;
     };
 
-    qDebug() << QString("Successfully added vehicle: %1").arg(newVehicle->toQString());
+    qDebug() << QString("Successfully added vehicle '%1'").arg(newVehicle->toQString());
 
     emit vehiclesChanged();
     emit vehicleAdded(newVehicle->getVehicleId());
@@ -109,7 +112,7 @@ void models::VehicleRepository::updateVehicle(
 ) {
 
     qDebug()
-        << "vehicleData:"
+        << "vehicleDataP:"
         << "type =" << static_cast<int>(vehicleData.vehicleTypeId)
         << ", id =" << vehicleData.vehicleId
         << ", brand =" << vehicleData.brand
@@ -317,8 +320,18 @@ void models::VehicleRepository::clear() {
 
 };
 
-void models::VehicleRepository::handleUpdateVehicle(
-    const models::VehicleData& vehicleData
+void models::VehicleRepository::handleAddVehicle(
+    const std::shared_ptr<const models::VehicleData> vehicleData
 ) {
-    updateVehicle(vehicleData);
+
+    qDebug() << "VehicleRepository handleAddVehicle is running with vehicleData->brand: " << vehicleData->brand;
+
+    addVehicle(*vehicleData);
+
+};
+
+void models::VehicleRepository::handleUpdateVehicle(
+    const std::shared_ptr<const models::VehicleData> vehicleData
+) {
+    updateVehicle(*vehicleData);
 };
