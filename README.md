@@ -50,21 +50,25 @@ project-root/
 
 Ensure the following are installed:
 
-- [ ] Qt compatible toolchain with C and C++ compiler (GCC, Clang, MSVC, etc)
-- [ ] Qt 6.11.1 for specific toolchain installed
+- [ ] Qt compatible tool chain with C and C++ compiler (GCC, Clang, MSVC, etc)
+- [ ] Qt 6.11.1 for specific tool chain installed
 - [ ] CMake (3.16+ recommended)
 - [ ] Ninja (Any build tool that CMake supports is fine)
-
-Make sure to uncompress the compressed project files into a folder.
+- [ ] git is optional but recommended to make installing the project easier
 
 ### Build from Terminal using CMake:
 
-1. Traverse to your project root
+1. Open file explorer
+
+2. Uncompress and extract all of the compressed project files into a folder called ```Cos2614_Assessment_3```
+Alternatively, run the command ```git clone ...``` from your terminal
+
+3. Traverse to the project root
 ```
-cd project_root
+cd Cos2614_Assessment_3
 ```
 
-2. Generate Build Files using this command, replace the paths respective to your setup
+4. Generate build Files using this command, replace the path arguments with respect to your setup
 ```
 cmake -S . -B build -G "Build tool name" -DCMAKE_MAKE_PROGRAM="C:\Path\to\build\tool\program.executable_binary" -DCMAKE_C_COMPILER="C:\Path\to\toolchain's\C\compiler.executable_binary" -DCMAKE_CXX_COMPILER="C:\Path\to\toolchain's\C++\compiler.executable_binary" -DCMAKE_PREFIX_PATH="C:\Path\to\Qt\6.11.1\toolChainUsed"
 ```
@@ -79,12 +83,12 @@ cmake -S . -B build ^
 -DCMAKE_PREFIX_PATH="C:\Qt\6.11.1\mingw_64"
 ```
 
-3. Build the Project
+5. Build the Project
 ```
 cmake --build build
 ```
 
-4. Traverse to the build directory
+6. Traverse to the build directory
 ```
 cd build
 ```
@@ -92,7 +96,7 @@ cd build
 All the commands together should look like this
 ![Terminal build](screenshots/Terminal_build_directory.png)
 
-5. If on Windows, run ```windeployqt.exe VehicleRentalSystem.exe``` to copy the dll files for Qt
+6. If on Windows, run ```windeployqt.exe VehicleRentalSystem.exe``` to copy the dll files for Qt
 
 For example, on Windows 11 with the mingw64 toolchain installed you would run
 ```
@@ -101,7 +105,7 @@ For example, on Windows 11 with the mingw64 toolchain installed you would run
 
 ![Terminal build](screenshots/Terminal_ran_windeployqt.png)
 
-6. Run the Application
+7. Run the Application
 ```
 VehicleRentalSystem.exe
 ```
