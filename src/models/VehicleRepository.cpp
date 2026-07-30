@@ -39,6 +39,64 @@ void models::VehicleRepository::destroyVehicles() {
     vehicles.clear();
 };
 
+models::Vehicles::iterator models::VehicleRepository::findVehicleIteratorById(
+    const long long vehicleId
+) {
+
+    for (auto it = vehicles.begin(); it != vehicles.end(); ++it) {
+        auto vehicle = *it;
+        if (vehicle->getVehicleId() == vehicleId) {
+            return it;
+        };
+    };
+
+    return vehicles.end();
+
+};
+
+void models::VehicleRepository::setVehicleIsRented(
+    const long long vehicleId,
+    const bool newIsRented
+) {
+
+    auto vehicle = searchVehicleById(vehicleId);
+
+    if (vehicle == nullptr) {
+        qDebug() << QString("Failed to find vehicle with id '%1' to sent is rented to '%2'").arg(vehicleId, newIsRented);
+        return;
+    };
+
+    if (vehicle->getIsRented() == newIsRented) {
+        qDebug() << QString("Vehicle with id '%1' isRented attribute is already set to '%2'").arg(vehicleId, newIsRented);
+        return;
+    };
+
+    vehicle->setIsRented(newIsRented);
+
+    bool ok;
+
+    vehiclesPersistence.saveVehicles(vehicles, ok);
+
+    if (!ok) {
+        qDebug()
+            << QString("Failed to set isRented to '%1' on vehicle with id '%2' because failed to save vehicles").arg(newIsRented, vehicleId);
+        vehicle->setIsRented(!newIsRented);
+        return;
+    };
+
+    qDebug()
+        << QString("Successfully set isRented to '%1' on vehicle with id '%2'").arg(newIsRented, vehicleId);
+
+    emit vehiclesChanged();
+    emit vehicleUpdated(vehicleId);
+    if (newIsRented) {
+        emit vehicleRented(vehicleId);
+    } else {
+        emit vehicleReturned(vehicleId);
+    };
+
+};
+
 /**
  * Gets the internal vehicle collection
  *
@@ -130,29 +188,14 @@ void models::VehicleRepository::updateVehicle(
     const models::VehicleData& vehicleData
 ) {
 
-    qDebug()
-        << "vehicleDataP:"
-        << "type =" << static_cast<int>(vehicleData.vehicleTypeId)
-        << ", id =" << vehicleData.vehicleId
-        << ", brand =" << vehicleData.brand
-        << ", model =" << vehicleData.model
-        << ", pricePerDay =" << vehicleData.pricePerDay
-        << ", isRented =" << vehicleData.isRented;
-
     Vehicle* vehicle = searchVehicleById(vehicleData.vehicleId);
-
-    qDebug() << "Found Vehicle update: " << vehicle->toQString();
 
     if (vehicle == nullptr) {
         qDebug() << "Vehicle not found";
         return;
     };
 
-    qDebug() << "Vehicle before update: " << vehicle->toQString();
-
     vehicle->setVehicleData(vehicleData);
-
-    qDebug() << "Vehicle after update: " << vehicle->toQString();
 
     bool ok;
     vehiclesPersistence.saveVehicles(vehicles, ok);
@@ -177,20 +220,21 @@ void models::VehicleRepository::updateVehicle(
  *
  * vehicleId - The unique identifier of the vehicle to remove
  */
-void models::VehicleRepository::removeVehicle(
+void models::VehicleRepository::removeVehicleById(
     const long long vehicleId
 ) {
 
-    for (unsigned int i = 0; i < vehicles.size(); ++i) {
-        auto vehicle = vehicles.at(i);
-        if (vehicle->getVehicleId() == vehicleId) {
-            vehicles.remove(i);
-            delete vehicle;
-            return;
-        };
+    auto it = findVehicleIteratorById(vehicleId);
+
+    if (it == vehicles.end()) {
+        qDebug() << "Vehicle to remove was not found in list";
+        return;
     };
 
-    qDebug() << "Vehicle not found in list";
+    auto vehicle = *it;
+
+    vehicles.erase(it);
+    delete vehicle;
 
 };
 
@@ -208,45 +252,7 @@ void models::VehicleRepository::removeVehicle(
 void models::VehicleRepository::rentVehicleById(
     const long long vehicleId
 ) {
-
-    for (unsigned int i = 0; i < vehicles.size(); i++) {
-
-        if (vehicles[i]->getVehicleId() != vehicleId) {
-            continue;
-        };
-
-        if (vehicles[i]->getIsRented()) {
-            qDebug() << QString("Vehicle '%1' is already rented").arg(vehicleId);
-        } else {
-
-            bool newIsRented = true;
-
-            vehicles[i]->setIsRented(newIsRented);
-
-            bool ok;
-
-            vehiclesPersistence.saveVehicles(vehicles, ok);
-
-            if (!ok) {
-                qDebug() << QString("Failed to rent vehicle '%1'").arg(vehicleId);
-                vehicles[i]->setIsRented(!newIsRented);
-                return;
-            };
-
-            qDebug() << QString("Successfully rented vehicle '%1'").arg(vehicleId);
-
-            emit vehiclesChanged();
-            emit vehicleUpdated(vehicleId);
-            emit vehicleRented(vehicleId);
-
-        };
-
-        return;
-
-    };
-
-    qDebug() << QString("Vehicle with id '%1' does not exist").arg(vehicleId);
-
+    setVehicleIsRented(vehicleId, true);
 };
 
 /**
@@ -263,45 +269,7 @@ void models::VehicleRepository::rentVehicleById(
 void models::VehicleRepository::returnVehicleById(
     const long long vehicleId
 ) {
-
-    for (unsigned int i = 0; i < vehicles.size(); i++) {
-
-        if (vehicles[i]->getVehicleId() == vehicleId) {
-
-            if (!vehicles[i]->getIsRented()) {
-                qDebug() << QString("Vehicle '%1' is not rented out").arg(vehicleId);
-            } else {
-
-                bool newIsRented = false;
-
-                vehicles[i]->setIsRented(newIsRented);
-
-                bool ok;
-
-                vehiclesPersistence.saveVehicles(vehicles, ok);
-
-                if (!ok) {
-                    qDebug() << QString("Failed to rent vehicle '%1'").arg(vehicleId);
-                    vehicles[i]->setIsRented(!newIsRented);
-                    return;
-                };
-
-                emit vehiclesChanged();
-                emit vehicleUpdated(vehicleId);
-                emit vehicleReturned(vehicleId);
-
-                qDebug() << QString("Successfully returned vehicle '%1'").arg(vehicleId);
-
-            };
-
-            return;
-
-        };
-
-    };
-
-    qDebug() << "Vehicle with vehicle id does not exist";
-
+    setVehicleIsRented(vehicleId, false);
 };
 
 /**
@@ -315,22 +283,18 @@ void models::VehicleRepository::returnVehicleById(
 models::Vehicle* models::VehicleRepository::searchVehicleById(
     const long long vehicleId
 ) {
-
-    for (unsigned int i = 0; i < vehicles.size(); i++) {
-        if (vehicles[i]->getVehicleId() == vehicleId) {
-            return vehicles[i];
-        };
+    auto it = findVehicleIteratorById(vehicleId);
+    if (it == vehicles.end()) {
+        return nullptr;
     };
-
-    return nullptr;
-
+    return *it;
 };
 
 /**
-  * Removes all vehicles in the collection by:
-  * Emptying the vehicles list
-  * Saving the empty vehicles list
-  */
+ * Removes all vehicles in the collection by:
+ * Emptying the vehicles list
+ * Saving the empty vehicles list
+ */
 void models::VehicleRepository::clear() {
 
     destroyVehicles();
@@ -356,11 +320,7 @@ void models::VehicleRepository::clear() {
 void models::VehicleRepository::handleAddVehicle(
     std::shared_ptr<const models::VehicleData> vehicleData
 ) {
-
-    qDebug() << "VehicleRepository handleAddVehicle is running with vehicleData->brand: " << vehicleData->brand;
-
     addVehicle(*vehicleData);
-
 };
 
 /**

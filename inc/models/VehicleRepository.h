@@ -38,6 +38,15 @@ namespace models {
             // Releases all dynamically allocated vehicle objects
             void destroyVehicles();
 
+            models::Vehicles::iterator findVehicleIteratorById(
+                const long long vehicleId
+            );
+
+            void setVehicleIsRented(
+                const long long vehicleId,
+                const bool newIsRented
+            );
+
         public:
 
             /**
@@ -77,7 +86,7 @@ namespace models {
             /**
             * Removes a vehicle in the collection
             */
-            void removeVehicle(
+            void removeVehicleById(
                 const long long vehicleId
             );
 

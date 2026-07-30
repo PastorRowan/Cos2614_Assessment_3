@@ -33,16 +33,21 @@ The table below maps each assignment requirement from the assignment specificati
 | **4. Qt Containers (15 Marks)** | |
 | Qt container usage | `inc/models/Vehicles.h,` (`QVector`), `inc/models/VehicleRepository.h`, `src/models/VehicleRepository.cpp` (Uses `Vehicles` container defined in `Vehicles.h`) |
 | **5. Qt Iterators (10 Marks)** | |
-| Qt iterator usage | Implemented throughout `VehicleRepository` and `VehiclesPersistence` when traversing vehicle collections. |
+| Qt iterator usage | Implemented throughout `VehicleRepository` and `VehiclesPersistence` when traversing the vehicle collection. |
 | **6. Qt Generics / Templates (10 Marks)** | |
 | Template functions | `inc/helpers/` |
 | **7. File Handling (10 Marks)** | |
 | Persistent storage | `inc/models/VehiclesPersistence.h`, `src/models/VehiclesPersistence.cpp` |
-| Loading and saving data | Uses `QFile` and `QTextStream`. |
+| Loading and saving data | `VehiclesPersistence` uses `QFile` and `QTextStream`. |
 | **8. Business Logic (5 Marks)** | |
-| Prevent duplicate vehicle IDs | `inc/models/VehicleIdGenerator.h`, `src/models/VehicleIdGenerator.h` |
+| Prevent duplicate vehicle IDs | `inc/models/VehicleIdGenerator.h`, `src/models/VehicleIdGenerator.cpp` |
 | Prevent invalid rental operations | `VehicleRepository` |
 | Prevent invalid return operations | `VehicleRepository` |
+
+Need updating
+2
+5
+6
 
 ---
 

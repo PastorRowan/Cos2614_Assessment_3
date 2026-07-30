@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QString>
+#include <limits>
 #include <memory>
 class QTextStream;
 
@@ -29,6 +30,12 @@ namespace models {
 
     // Default daily rental price
     const double DEFAULT_PRICE_PER_DAY = -1.0;
+
+    // Minimum daily rental price
+    const double MINIMUM_PRICE_PER_DAY = 0.0;
+
+    // Maximum daily rental price
+    const double MAXIMUM_PRICE_PER_DAY = std::numeric_limits<double>::max();
 
     // Default rental status
     const bool DEFAULT_IS_RENTED = false;
