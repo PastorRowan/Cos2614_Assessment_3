@@ -3,9 +3,46 @@
 
 > **Important:** For the best viewing experience, it is recommended to read this `README.md` directly on the GitHub repository where all Markdown formatting, screenshots, and rendered content are displayed correctly.
 
+Link to the GitHub repository:
 https://github.com/PastorRowan/Cos2614_Assessment_3
 
 A Qt GUI based vehicle rental management system that allows you to enter cars and motorcycles into the system with persistent state.
+
+## Assignment Requirements
+
+The table below maps each assignment requirement from the assignment specification to its implementation within the project.
+
+| Assignment Requirement | Implementation |
+|------------------------|----------------|
+| **1. Class Design (20 Marks)** | |
+| `Vehicle` base class | `inc/models/Vehicle.h`, `src/models/Vehicle.cpp` |
+| `Car` derived class | `inc/models/Car.h`, `src/models/Car.cpp` |
+| `Motorcycle` derived class | `inc/models/Motorcycle.h`, `src/models/Motorcycle.cpp` |
+| Encapsulation | Implemented throughout the model classes using private data members and public member functions. |
+| Inheritance | `Car` and `Motorcycle` inherit from `Vehicle`. |
+| Polymorphism | Implemented using virtual member functions in `Vehicle` and overridden behaviour in derived classes. |
+| Abstraction | `Vehicle` serves as the abstract base class for all vehicle types. |
+| **2. Qt Widgets User Interface (20 Marks)** | |
+| Qt Widgets | `inc/views/`, `src/views/` |
+| Layout management | `VehicleView`, `VehicleRepositoryView`, `MainWindow` |
+| Add/Search/Display/Rent/Return/Remove functionality | `VehicleRepositoryView`, `VehicleView`, `VehicleRepository` |
+| Summary information | `VehicleRepositoryView` |
+| **3. Signals and Slots (10 Marks)** | |
+| Qt signals and slots | `inc/views/`, `src/views/` |
+| Custom slots | Implemented throughout the view classes to respond to user interaction. |
+| **4. Qt Containers (15 Marks)** | |
+| Qt container usage | `inc/models/Vehicles.h,` (`QVector`), `inc/models/VehicleRepository.h`, `src/models/VehicleRepository.cpp` (Uses `Vehicles` container defined in `Vehicles.h`) |
+| **5. Qt Iterators (10 Marks)** | |
+| Qt iterator usage | Implemented throughout `VehicleRepository` and `VehiclesPersistence` when traversing vehicle collections. |
+| **6. Qt Generics / Templates (10 Marks)** | |
+| Template functions | `inc/helpers/` |
+| **7. File Handling (10 Marks)** | |
+| Persistent storage | `inc/models/VehiclesPersistence.h`, `src/models/VehiclesPersistence.cpp` |
+| Loading and saving data | Uses `QFile` and `QTextStream`. |
+| **8. Business Logic (5 Marks)** | |
+| Prevent duplicate vehicle IDs | `inc/models/VehicleIdGenerator.h`, `src/models/VehicleIdGenerator.h` |
+| Prevent invalid rental operations | `VehicleRepository` |
+| Prevent invalid return operations | `VehicleRepository` |
 
 ---
 

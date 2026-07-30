@@ -1,4 +1,9 @@
 
+/**
+ * Please read README.md before trying to run the application
+ * Also see https://github.com/PastorRowan/Cos2614_Assessment_3.git for the best viewing experience
+ */
+
 // Entry point for the Vehicle Rental Management application
 
 #include "MainWindow.h"
