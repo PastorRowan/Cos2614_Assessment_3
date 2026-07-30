@@ -58,17 +58,15 @@ Ensure the following are installed:
 
 ### Build from Terminal using CMake:
 
-1. Open file explorer
+1. Uncompress and extract all of the compressed project files into a folder called ```Cos2614_Assessment_3```
+Alternatively, run the command ```git clone https://github.com/PastorRowan/Cos2614_Assessment_3.git``` from your terminal
 
-2. Uncompress and extract all of the compressed project files into a folder called ```Cos2614_Assessment_3```
-Alternatively, run the command ```git clone ...``` from your terminal
-
-3. Traverse to the project root
+2. Traverse to the project root
 ```
 cd Cos2614_Assessment_3
 ```
 
-4. Generate build Files using this command, replace the path arguments with respect to your setup
+3. Generate build Files using this command, replace the path arguments with respect to your setup
 ```
 cmake -S . -B build -G "Build tool name" -DCMAKE_MAKE_PROGRAM="C:\Path\to\build\tool\program.executable_binary" -DCMAKE_C_COMPILER="C:\Path\to\toolchain's\C\compiler.executable_binary" -DCMAKE_CXX_COMPILER="C:\Path\to\toolchain's\C++\compiler.executable_binary" -DCMAKE_PREFIX_PATH="C:\Path\to\Qt\6.11.1\toolChainUsed"
 ```
@@ -83,12 +81,12 @@ cmake -S . -B build ^
 -DCMAKE_PREFIX_PATH="C:\Qt\6.11.1\mingw_64"
 ```
 
-5. Build the Project
+4. Build the Project
 ```
 cmake --build build
 ```
 
-6. Traverse to the build directory
+5. Traverse to the build directory
 ```
 cd build
 ```
