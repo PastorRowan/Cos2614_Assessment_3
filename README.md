@@ -80,12 +80,12 @@ cd Cos2614_Assessment_3
 cmake -S . -B build -G "Build tool name" -DCMAKE_MAKE_PROGRAM="C:\Path\to\build\tool\program.executable_binary" -DCMAKE_C_COMPILER="C:\Path\to\toolchain's\C\compiler.executable_binary" -DCMAKE_CXX_COMPILER="C:\Path\to\toolchain's\C++\compiler.executable_binary" -DCMAKE_PREFIX_PATH="C:\Path\to\Qt\6.11.1\toolChainUsed"
 ```
 
-For example, with the Windows 11 operating system with the mingw64 toolchain installed the build command would be:
+For example, with the Windows 11 operating system with the mingw64 tool chain installed the build command would be:
 ```
 cmake -S . -B build -G "Ninja" -DCMAKE_MAKE_PROGRAM="C:\ninja\ninja.exe" -DCMAKE_C_COMPILER="C:\msys64\mingw64\bin\gcc.exe" -DCMAKE_CXX_COMPILER="C:\msys64\mingw64\bin\g++.exe" -DCMAKE_PREFIX_PATH="C:\Qt\6.11.1\mingw_64"
 ```
 
-Your terminal should look similar to this this:
+Your terminal should look similar to this this after running the command:
 ![Terminal generate build](screenshots/terminal_generate_build.png)
 
 4. Build the Project
@@ -101,20 +101,22 @@ cd build
 ![Terminal traverse to build folder](screenshots/terminal_traverse_to_build_folder.png)
 
 6. If on Windows 11, fill in this command with path arguements respective to your setup, then run it to deploy the Qt application
-```"C:\path\to\Qt\6.11.1\toolChainUsed\bin\windeployqt.exe" VehicleRentalSystem.exe```
-(I cannot confirm whether this works on other Windows versions and how to deploy a Qt application on other operating systems)
+```
+"C:\path\to\Qt\6.11.1\toolChainUsed\bin\windeployqt.exe" VehicleRentalSystem.exe
+```
+I cannot confirm whether this works on other Windows versions and how to deploy a Qt application on other operating systems
 
-For example, on Windows 11 with the mingw64 toolchain installed you would run
+For example, on Windows 11 with the mingw64 tool chain installed you would run
 ```
 "C:\Qt\6.11.1\mingw_64\bin\windeployqt.exe" VehicleRentalSystem.exe
 ```
 
-Your terminal should look similar to these screenshots:
+Your terminal should look similar to these screenshots after running the commands:
 
-Start of command
+Start of command logs
 ![Terminal deploy application 1](screenshots/terminal_deploy_application_1.png)
 
-End of command
+End of command logs
 ![Terminal deploy application 2](screenshots/terminal_deploy_application_2.png)
 
 7. Run the Application
@@ -135,5 +137,4 @@ Please watch a video walkthrough by opening ```walkthrough.mp4``` in a compatibl
 - Data is loaded on startup and saved during runtime.
 - File paths are relative to the application working directory.
 - File paths you use for your setup are dependant on your operating system and where the programs are located so I can only give examples.
-
 - I have only tested the program on Windows 11 64 bit, I do not know whether the application will run on other operating systems.
