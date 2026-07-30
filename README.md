@@ -66,48 +66,56 @@ Alternatively, if git is installed, run this command from the terminal:
 ```
 git clone https://github.com/PastorRowan/Cos2614_Assessment_3.git
 ```
+![Terminal git clone](screenshots/terminal_git_clone.png)
 
 2. Traverse to the project root
 ```
 cd Cos2614_Assessment_3
 ```
+![Terminal traverse to project folder](screenshots/terminal_traverse_to_project_folder.png)
+
 
 3. Generate build Files using this command, replace the path arguments with respect to your setup
 ```
 cmake -S . -B build -G "Build tool name" -DCMAKE_MAKE_PROGRAM="C:\Path\to\build\tool\program.executable_binary" -DCMAKE_C_COMPILER="C:\Path\to\toolchain's\C\compiler.executable_binary" -DCMAKE_CXX_COMPILER="C:\Path\to\toolchain's\C++\compiler.executable_binary" -DCMAKE_PREFIX_PATH="C:\Path\to\Qt\6.11.1\toolChainUsed"
 ```
 
-For example, with the Windows 11 operating system with mingw64 toolchain installed the build command would be:
+For example, with the Windows 11 operating system with the mingw64 toolchain installed the build command would be:
 ```
-cmake -S . -B build ^
--G "Ninja" ^
--DCMAKE_MAKE_PROGRAM="C:\ninja\ninja.exe" ^
--DCMAKE_C_COMPILER="C:\msys64\mingw64\bin\gcc.exe" ^
--DCMAKE_CXX_COMPILER="C:\msys64\mingw64\bin\g++.exe" ^
--DCMAKE_PREFIX_PATH="C:\Qt\6.11.1\mingw_64"
+cmake -S . -B build -G "Ninja" -DCMAKE_MAKE_PROGRAM="C:\ninja\ninja.exe" -DCMAKE_C_COMPILER="C:\msys64\mingw64\bin\gcc.exe" -DCMAKE_CXX_COMPILER="C:\msys64\mingw64\bin\g++.exe" -DCMAKE_PREFIX_PATH="C:\Qt\6.11.1\mingw_64"
 ```
+
+Your terminal should look similar to this this:
+![Terminal generate build](screenshots/terminal_generate_build.png)
 
 4. Build the Project
 ```
 cmake --build build
 ```
+![Terminal execute build](screenshots/terminal_execute_build.png)
 
-5. Traverse to the build directory
+5. Traverse to the build folder
 ```
 cd build
 ```
+![Terminal traverse to build folder](screenshots/terminal_traverse_to_build_folder.png)
 
-All the commands together should look like this
-![Terminal build](screenshots/Terminal_build_directory.png)
-
-6. If on Windows, run ```windeployqt.exe VehicleRentalSystem.exe``` to copy the dll files for Qt
+6. If on Windows 11, fill in this command with path arguements respective to your setup, then run it to deploy the Qt application
+```"C:\path\to\Qt\6.11.1\toolChainUsed\bin\windeployqt.exe" VehicleRentalSystem.exe```
+(I cannot confirm whether this works on other Windows versions and how to deploy a Qt application on other operating systems)
 
 For example, on Windows 11 with the mingw64 toolchain installed you would run
 ```
 "C:\Qt\6.11.1\mingw_64\bin\windeployqt.exe" VehicleRentalSystem.exe
 ```
 
-![Terminal build](screenshots/Terminal_ran_windeployqt.png)
+Your terminal should look similar to these screenshots:
+
+Start of command
+![Terminal deploy application 1](screenshots/terminal_deploy_application_1.png)
+
+End of command
+![Terminal deploy application 2](screenshots/terminal_deploy_application_2.png)
 
 7. Run the Application
 ```
@@ -115,7 +123,10 @@ VehicleRentalSystem.exe
 ```
 
 The application should now be running
-![Terminal running app](screenshots/Terminal_running_app.png)
+![Terminal running application](screenshots/terminal_running_application.png)
+
+## Application walk through video:
+Please watch a video walkthrough by opening ```walkthrough.mp4``` in a compatible video player
 
 ---
 
