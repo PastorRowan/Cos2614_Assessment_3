@@ -128,7 +128,7 @@ The application should now be running
 ![Terminal running application](screenshots/terminal_running_application.png)
 
 ## Application walk through video:
-Please watch a video walkthrough by opening ```walkthrough.mp4``` in a compatible video player
+Please watch the walkthrough by opening ```walkthrough.mp4``` in a compatible video player
 
 ---
 
@@ -136,5 +136,6 @@ Please watch a video walkthrough by opening ```walkthrough.mp4``` in a compatibl
 - Please watch the walkthrough video in the project root dir to see all of the functionality.
 - Data is loaded on startup and saved during runtime.
 - File paths are relative to the application working directory.
+- You should see a folder named ```files``` in the build directory with txt files. Those are the files the application uses to store persistent data.
 - File paths you use for your setup are dependant on your operating system and where the programs are located so I can only give examples.
-- I have only tested the program on Windows 11 64 bit, I do not know whether the application will run on other operating systems.
+- I have only tested the program on 64 bit Windows 11, I can not confirm whether the application will build or run on other operating systems with different architectures.
