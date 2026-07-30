@@ -58,8 +58,14 @@ Ensure the following are installed:
 
 ### Build from Terminal using CMake:
 
-1. Uncompress and extract all of the compressed project files into a folder called ```Cos2614_Assessment_3```
-Alternatively, run the command ```git clone https://github.com/PastorRowan/Cos2614_Assessment_3.git``` from your terminal
+1. Uncompress and extract all of the compressed project files into a folder called:
+```
+Cos2614_Assessment_3
+```
+Alternatively, if git is installed, run this command from the terminal:
+```
+git clone https://github.com/PastorRowan/Cos2614_Assessment_3.git
+```
 
 2. Traverse to the project root
 ```
