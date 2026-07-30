@@ -12,14 +12,23 @@
 #include <QComboBox>
 #include <QPushButton>
 #include <QDebug>
+#include <QLocale>
 #include <QDoubleValidator>
 #include <limits>
 
+/**
+ * Constructs a VehicleDataView widget
+ *
+ * Initializes the user interface, creates the controls used to edit common
+ * vehicle properties, creates the car- and motorcycle-specific subviews, and
+ * connects all user interface events to their corresponding slots
+ *
+ * parent The parent widget
+ */
 views::VehicleDataView::VehicleDataView(
     QWidget *parent
 ):
-    QWidget(parent),
-    vehicleData(nullptr) {
+    QWidget(parent) {
 
     vBoxLayout = new QVBoxLayout(this);
 
@@ -35,13 +44,17 @@ views::VehicleDataView::VehicleDataView(
     modelField = new QLineEdit(this);
 
     pricePerDayField = new QLineEdit(this);
-    pricePerDayField->setValidator(
+    auto* pricePerDayFieldValiator =
         new QDoubleValidator(
             0,
             std::numeric_limits<double>::max(),
-            2
-        )
-    );
+            2,
+            this
+        );
+    QLocale locale(QLocale::C);
+    locale.setNumberOptions(QLocale::RejectGroupSeparator);
+    pricePerDayFieldValiator->setLocale(locale);
+    pricePerDayField->setValidator(pricePerDayFieldValiator);
 
     isRentedComboBox = new QComboBox(this);
     isRentedComboBox->addItem("No", false);
@@ -103,8 +116,19 @@ views::VehicleDataView::VehicleDataView(
         &views::VehicleDataView::handleConfirm
     );
 
+    setVehicleData(nullptr);
+
 };
 
+/**
+ * Returns the currently displayed vehicle data
+ *
+ * A deep copy of the internal vehicle data is returned to prevent external
+ * code from modifying the widget's internal state
+ *
+ * Returns a shared pointer to an immutable copy of the current vehicle data,
+ * or nullptr if no vehicle is currently displayed
+ */
 std::shared_ptr<const models::VehicleData> views::VehicleDataView::getVehicleData() const {
     if (!vehicleData) {
         return nullptr;
@@ -112,9 +136,30 @@ std::shared_ptr<const models::VehicleData> views::VehicleDataView::getVehicleDat
     return vehicleData->clone();
 };
 
+/**
+ * Sets the vehicle displayed by the widget
+ *
+ * Creates an internal copy of the supplied vehicle data, displays the
+ * appropriate vehicle-specific editor based on the vehicle type, and updates
+ * all user interface fields
+ *
+ * If an unsupported vehicle type is supplied, the widget is cleared
+ *
+ * vehicleDataP - The vehicle data to display
+ */
 void views::VehicleDataView::setVehicleData(
     std::shared_ptr<const models::VehicleData> vehicleDataP
 ) {
+
+    if (vehicleDataP == nullptr) {
+        vehicleData = nullptr;
+        carDataView->hide();
+        carDataView->setCarData(nullptr);
+        motorcycleDataView->hide();
+        motorcycleDataView->setMotorcycleData(nullptr);
+        refreshFields();
+        return;
+    };
 
     this->vehicleData = vehicleDataP->clone();
 
@@ -145,9 +190,9 @@ void views::VehicleDataView::setVehicleData(
         default: {
             vehicleData = nullptr;
             carDataView->hide();
-            carDataView->setCarData({});
+            carDataView->setCarData(nullptr);
             motorcycleDataView->hide();
-            motorcycleDataView->setMotorcycleData({});
+            motorcycleDataView->setMotorcycleData(nullptr);
             break;
         };
 
@@ -157,19 +202,37 @@ void views::VehicleDataView::setVehicleData(
 
 };
 
+/**
+ * Determines whether the widget currently contains vehicle data
+ *
+ * Returns true if a vehicle is loaded; otherwise false
+ */
 bool views::VehicleDataView::hasVehicle() const {
     return (vehicleData != nullptr);
 };
 
+/**
+ * Sets the text displayed on the confirm button
+ *
+ * text - The new button text
+ */
 void views::VehicleDataView::setConfirmButtonText(const QString text) {
     confirmButton->setText(text);
 };
 
-void views::VehicleDataView::refreshFields() {;
+/**
+ * Refreshes the displayed user interface fields
+ *
+ * Synchronizes the user interface with the current vehicle data
+ * If no vehicle is loaded, all editable fields are cleared and disabled
+ */
+void views::VehicleDataView::refreshFields() {
 
-    vehicleFormWidget->setEnabled(hasVehicle());
+    bool hasVehicleVar = hasVehicle();
 
-    if (!hasVehicle()) {
+    setEnabled(hasVehicleVar);
+
+    if (!hasVehicleVar) {
         vehicleTypeIdLabel->clear();
         vehicleIdLabel->clear();
         brandField->clear();
@@ -190,6 +253,13 @@ void views::VehicleDataView::refreshFields() {;
 
 };
 
+/**
+ * Handles vehicle selection events
+ *
+ * Displays the supplied vehicle within the widget
+ *
+ * vehicleDataP - The selected vehicle data
+ */
 void views::VehicleDataView::handleVehicleSelected(
     std::shared_ptr<const models::VehicleData> vehicleDataP
 ) {
@@ -197,6 +267,13 @@ void views::VehicleDataView::handleVehicleSelected(
     setVehicleData(vehicleDataP);
 };
 
+/**
+ * Handles changes to the brand field
+ *
+ * Updates the internal vehicle data when the brand text changes
+ *
+ * text - The new brand
+ */
 void views::VehicleDataView::handleChangeBrandField(
     const QString text
 ) {
@@ -206,6 +283,13 @@ void views::VehicleDataView::handleChangeBrandField(
     vehicleData->brand = text;
 };
 
+/**
+ * Handles changes to the model field
+ *
+ * Updates the internal vehicle data when the model text changes
+ *
+ * text - The new model
+ */
 void views::VehicleDataView::handleChangeModelField(
     const QString text
 ) {
@@ -215,6 +299,14 @@ void views::VehicleDataView::handleChangeModelField(
     vehicleData->model = text;
 };
 
+/**
+ * Handles changes to the rental price field
+ *
+ * Converts the entered text to a double and updates the internal vehicle data
+ * if the conversion succeeds
+ *
+ * text - The new rental price
+ */
 void views::VehicleDataView::handleChangepPricePerDayField(
     const QString text
 ) {
@@ -222,13 +314,21 @@ void views::VehicleDataView::handleChangepPricePerDayField(
         return;
     };
     bool ok = false;
-    const double value = text.toDouble(&ok);
+    const double value = pricePerDayField->validator()->locale().toDouble(text, &ok);
     if (!ok) {
         return;
     };
     vehicleData->pricePerDay = value;
 };
 
+/**
+ * Handles changes to the rental status
+ *
+ * Updates the rental status using the value associated with the selected
+ * combo box item
+ *
+ * index - The selected combo box index
+ */
 void views::VehicleDataView::handleChangeIsRentedComboBox(
     int index
 ) {
@@ -238,6 +338,13 @@ void views::VehicleDataView::handleChangeIsRentedComboBox(
     vehicleData->isRented = isRentedComboBox->itemData(index).toBool();
 };
 
+/**
+ * Handles confirmation of the edited vehicle data
+ *
+ * Creates an immutable copy of the current vehicle data and emits the
+ * confirmVehicle() signal so that the updated data can be processed by other
+ * application components
+ */
 void views::VehicleDataView::handleConfirm() {
 
     qDebug() << "handleConfirm is running";

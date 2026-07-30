@@ -14,6 +14,27 @@
 #include <QPushButton>
 #include <QObject>
 
+/**
+ * Constructs the application's main window
+ *
+ * Creates and initializes the application's user interface, including the
+ * vehicle repository, repository view, vehicle editor, and add-vehicle
+ * dialog
+ *
+ * All layouts, widgets, and signal-slot connections required for
+ * normal application operation are established during construction
+ *
+ * If the compile-time configuration option
+ * `POPULATE_VEHICLES_FILE` is enabled, the repository is populated with sample vehicle data
+ *
+ * The following interactions are configured:
+ * - Selecting a vehicle updates the vehicle editor
+ * - Confirming edits updates the selected vehicle in the repository
+ * - Clicking the **Add Vehicle** button opens the add-vehicle dialog
+ * - Confirming the dialog adds the new vehicle to the repository
+ *
+ * parent - The parent widget
+ */
 MainWindow::MainWindow(QWidget *parent) {
 
     addVehicleDialogue = new dialogues::AddVehicleDialogue(this);
@@ -45,7 +66,7 @@ MainWindow::MainWindow(QWidget *parent) {
     addVehicleButton->setText("Add Vehicle");
 
     vehicleDataView = new views::VehicleDataView(content);
-    vehicleDataView->setConfirmButtonText("Save changes");
+    vehicleDataView->setConfirmButtonText("Save Changes");
 
     contentVLayout = new QVBoxLayout(content);
     contentVLayout->addWidget(title);

@@ -1,6 +1,6 @@
 
 :: Generates the CMake build files
-:: Uses ninja as the 
+:: Uses ninja as the build generator tool
 
 pushd "%~dp0.."
 

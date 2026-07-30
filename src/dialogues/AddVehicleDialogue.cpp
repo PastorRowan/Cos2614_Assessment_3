@@ -10,6 +10,15 @@
 #include <QWidget>
 #include <QDebug>
 
+/**
+ * Constructs an AddVehicleDialogue
+ *
+ * Creates the dialog's user interface, including the title, vehicle type
+ * selector, and embedded VehicleDataView
+ * Connects the required signals and slots and initializes the dialog to create a car by default
+ *
+ * parent - The parent widget, defaults to nullptr
+ */
 dialogues::AddVehicleDialogue::AddVehicleDialogue(
     QWidget *parent
 ):
@@ -51,17 +60,26 @@ dialogues::AddVehicleDialogue::AddVehicleDialogue(
 
 };
 
+/**
+ * Opens the dialog and prevent interaction with the rest of the GUI
+ *
+ * Displays the dialog and blocks until the user accepts or rejects it
+ */
 void dialogues::AddVehicleDialogue::open() {
     exec();
 };
 
+/**
+ * Handles changes to the selected vehicle type
+ *
+ * Creates a new empty vehicle object of the selected type and assigns it to
+ * the embedded VehicleDataView for editing
+ *
+ *  vehicleTypeId - The selected vehicle type identifier
+ */
 void dialogues::AddVehicleDialogue::handleVehicleTypeChanged(
     int vehicleTypeId
 ) {
-
-    qDebug() 
-        << "dialogues::AddVehicleDialogue::handleVehicleTypeChanged was called with vehicleTypeId: " << vehicleTypeId
-    ;
 
     switch (static_cast<models::VehicleTypeId>(vehicleTypeId)) {
         case models::VehicleTypeId::car:
@@ -87,6 +105,14 @@ void dialogues::AddVehicleDialogue::handleVehicleTypeChanged(
 
 };
 
+/**
+ * Handles confirmation of a new vehicle
+ *
+ * Emits the addVehicle() signal with the completed vehicle data and closes
+ * the dialog with an accepted result
+ *
+ * vehicleData - The vehicle data entered by the user
+ */
 void dialogues::AddVehicleDialogue::handleAddVehicle(
     std::shared_ptr<const models::VehicleData> vehicleData
 ) {

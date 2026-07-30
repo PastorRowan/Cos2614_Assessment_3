@@ -15,7 +15,6 @@ namespace models {
     // Default number of seats for a car
     const int DEFAULT_NUMBER_OF_SEATS = 0;
 
-
     /**
      * CarData
      * struct that stores the data associated with a car

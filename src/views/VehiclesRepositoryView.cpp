@@ -11,6 +11,16 @@
 #include <QHeaderView>
 #include <QDebug>
 
+/**
+ * Constructs a VehiclesRepositoryView widget
+ *
+ * Initializes the table used to display the vehicle repository, configures
+ * its layout and columns, populates it with the current repository contents,
+ * and connects repository and table signals to their corresponding slots
+ *
+ * parent - The parent widget
+ * vehicleRepositoryP - The vehicle repository displayed by this view
+ */
 views::VehiclesRepositoryView::VehiclesRepositoryView(
     QWidget *parent,
     models::VehicleRepository* vehicleRepositoryP
@@ -18,7 +28,6 @@ views::VehiclesRepositoryView::VehiclesRepositoryView(
     QWidget(parent),
     vehicleRepository(vehicleRepositoryP) {
 
-    // QObject::connect();
     centralHBox = new QHBoxLayout(this);
     contentVBox = new QVBoxLayout();
     table = new QTableWidget(this);
@@ -27,6 +36,9 @@ views::VehiclesRepositoryView::VehiclesRepositoryView(
     centralHBox->addLayout(contentVBox);
     centralHBox->addStretch();
 
+    table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    table->setSelectionBehavior(QAbstractItemView::SelectRows);
+    table->setSelectionMode(QAbstractItemView::SingleSelection);
     table->setFixedHeight(300);
     table->setColumnCount(6);
     table->setHorizontalHeaderLabels({
@@ -89,10 +101,15 @@ views::VehiclesRepositoryView::VehiclesRepositoryView(
 
 };
 
-views::VehiclesRepositoryView::~VehiclesRepositoryView() {
-    destroyTable();
-};
-
+/**
+ * Searches the table for a vehicle by its identifier
+ *
+ * Performs a linear search through the table rows and returns the row index
+ * corresponding to the specified vehicle ID
+ *
+ * vehicleId The unique identifier of the vehicle
+ * Returns the matching row index, or -1 if no matching row exists
+ */
 int views::VehiclesRepositoryView::searchRowById(
     const long long vehicleId
 ) {
@@ -118,11 +135,22 @@ int views::VehiclesRepositoryView::searchRowById(
 
 };
 
+/**
+ * Removes all rows from the table
+ *
+ * Clears all table items and resets the row count to zero
+ */
 void views::VehiclesRepositoryView::destroyTable() {
     table->clearContents();
     table->setRowCount(0);
 };
 
+/**
+ * Rebuilds the table from the vehicle repository
+ *
+ * Clears the current table contents and repopulates the table using the
+ * vehicles stored in the associated repository
+ */
 void views::VehiclesRepositoryView::refreshTable() {
 
     destroyTable();
@@ -151,10 +179,24 @@ void views::VehiclesRepositoryView::refreshTable() {
 
 };
 
+/**
+ * Handles repository change notifications
+ *
+ * This slot is invoked whenever the repository emits the
+ * vehiclesChanged() signal
+ */
 void views::VehiclesRepositoryView::handleVehiclesChanged() {
     qDebug() << "handleVehiclesChanged called";
 };
 
+/**
+ * Handles notifications that a vehicle has been added
+ *
+ * Retrieves the newly added vehicle from the repository and appends it to
+ * the table
+ *
+ * vehicleId - The unique identifier of the newly added vehicle
+ */
 void views::VehiclesRepositoryView::handleVehicleAdded(
     const long long vehicleId
 ) {
@@ -180,12 +222,28 @@ void views::VehiclesRepositoryView::handleVehicleAdded(
 
 };
 
+/**
+ * Handles notifications that a vehicle has been removed
+ *
+ * This slot is invoked whenever the repository emits the
+ * vehicleRemoved() signal
+ *
+ * vehicleId - The unique identifier of the removed vehicle
+ */
 void views::VehiclesRepositoryView::handleVehicleRemoved(
     const long long vehicleId
 ) {
     qDebug() << "VehiclesRepositoryView handleVehicleRemoved called with: " << vehicleId;
 };
 
+/**
+ * Handles notifications that a vehicle has been updated
+ *
+ * Retrieves the updated vehicle from the repository and refreshes the
+ * corresponding row in the table
+ *
+ * vehicleId - The unique identifier of the updated vehicle
+ */
 void views::VehiclesRepositoryView::handleVehicleUpdated(
     const long long vehicleId
 ) {
@@ -215,12 +273,25 @@ void views::VehiclesRepositoryView::handleVehicleUpdated(
 
 };
 
+/**
+ * Handles requests to add or update a vehicle
+ *
+ * Forwards the supplied vehicle data to the associated repository
+ *
+ * vehicleData - The vehicle data to process
+ */
 void views::VehiclesRepositoryView::handleUpdateVehicle(
     std::shared_ptr<const models::VehicleData> vehicleData
 ) {
     vehicleRepository->addVehicle(*vehicleData);
 };
 
+/**
+ * Handles changes to the selected table row
+ *
+ * Determines the selected vehicle, creates an immutable snapshot of its
+ * current data, and emits the vehicleSelected() signal
+ */
 void views::VehiclesRepositoryView::handleSelectionChanged() {
 
     int row = table->currentRow();

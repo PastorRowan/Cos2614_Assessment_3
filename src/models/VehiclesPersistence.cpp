@@ -7,6 +7,13 @@
 #include <QObject>
 #include <QTextStream>
 
+/**
+ * Constructs a VehiclesPersistence object
+ *
+ * Initializes the persistence manager with the specified vehicle storage file
+ *
+ * vehiclesFileLocationP - The file used to store serialized vehicle data
+ */
 models::VehiclesPersistence::VehiclesPersistence(
     const QString vehiclesFileLocationP
 ):
@@ -189,6 +196,14 @@ void models::VehiclesPersistence::loadVehicles(
 
 };
 
+/**
+ * Clears all persisted vehicle data
+ *
+ * This function is intended to remove all stored vehicle data from
+ * persistent storage
+ *
+ * This function is currently not implemented
+ */
 void models::VehiclesPersistence::clear() {
     qDebug() << "NOT IMPLEMENTED YET";
 };

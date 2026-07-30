@@ -4,6 +4,19 @@
 
 #include <QDebug>
 
+/**
+ * Populates a vehicle repository with sample data
+ *
+ * Clears the supplied repository, adds a predefined collection of car and
+ * motorcycle records, marks several vehicles as rented, and writes the
+ * updated repository to persistent storage through the repository's normal
+ * operations
+ *
+ * Any exceptions thrown during the population process are caught and logged
+ * using Qt's debugging facilities
+ *
+ * vehicleRepository - Pointer to the VehicleRepository to populate
+ */
 void helpers::populateVehicleRepository(models::VehicleRepository* vehicleRepository) {
 
     try {
@@ -12,7 +25,6 @@ void helpers::populateVehicleRepository(models::VehicleRepository* vehicleReposi
         vehicleRepository->clear();
 
         // Cars
-        /*
         vehicleRepository->addVehicle(models::CarData("Toyota", "Corolla", 450.0, 4, 5));
         vehicleRepository->addVehicle(models::CarData("Volkswagen", "Golf GTI", 680.0, 4, 5));
         vehicleRepository->addVehicle(models::CarData("BMW", "320i", 950.0, 4, 5));
@@ -22,11 +34,9 @@ void helpers::populateVehicleRepository(models::VehicleRepository* vehicleReposi
         vehicleRepository->addVehicle(models::CarData("Mercedes-Benz", "CLK320", 750.0, 4, 5));
         vehicleRepository->addVehicle(models::CarData("Hyundai", "i30", 430.0, 4, 5));
         vehicleRepository->addVehicle(models::CarData("Kia", "Sportage", 690.0, 4, 5));
-        */
         vehicleRepository->addVehicle(models::CarData("Nissan", "Navara", 820.0, 4, 5));
 
         // Motorcycles
-        /*
         vehicleRepository->addVehicle(models::MotorcycleData("Honda", "CBR500R", 350.0, 500));
         vehicleRepository->addVehicle(models::MotorcycleData("Yamaha", "MT-07", 420.0, 689));
         vehicleRepository->addVehicle(models::MotorcycleData("Kawasaki", "Ninja 650", 450.0, 649));
@@ -36,7 +46,6 @@ void helpers::populateVehicleRepository(models::VehicleRepository* vehicleReposi
         vehicleRepository->addVehicle(models::MotorcycleData("KTM", "390 Duke", 320.0, 373));
         vehicleRepository->addVehicle(models::MotorcycleData("Triumph", "Street Triple", 700.0, 765));
         vehicleRepository->addVehicle(models::MotorcycleData("Harley-Davidson", "Iron 883", 650.0, 883));
-        */
         vehicleRepository->addVehicle(models::MotorcycleData("Royal Enfield", "Interceptor 650", 380.0, 648));
 
         // Rent a few vehicles

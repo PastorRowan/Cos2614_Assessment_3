@@ -10,9 +10,15 @@
 #include <QStringList>
 #include <QDebug>
 
-// Constructs a Motorcycle object with full initialization
+/**
+ * Constructs a Motorcycle object
+ *
+ * Initializes the base Vehicle class and stores the provided motorcycle data
+ *
+ * parent - The parent QObject that owns this object
+ * motorcycleDataP - The initial motorcycle data
+ */
 models::Motorcycle::Motorcycle(
-    // QObject parent
     QObject *parent,
     const models::MotorcycleData motorcycleDataP
 ):
@@ -21,14 +27,26 @@ models::Motorcycle::Motorcycle(
 
 };
 
+// Returns a constant reference to the underlying vehicle data
 const models::VehicleData& models::Motorcycle::getVehicleData() const {
     return data;
 };
 
+// Returns a mutable reference to the underlying vehicle data
 models::VehicleData& models::Motorcycle::getVehicleData() {
     return data;
 };
 
+/**
+ * Replaces the vehicle data
+ *
+ * The supplied VehicleData object is expected to actually contain a
+ * models::MotorcycleData instance
+ *
+ * After updating the data, the vehicleUpdated() signal is emitted
+ *
+ * vehicleData - The new vehicle data
+ */
 void models::Motorcycle::setVehicleData(const models::VehicleData& vehicleData) {
     const auto& motorcycleData = static_cast<const models::MotorcycleData&>(vehicleData);
     data = motorcycleData;

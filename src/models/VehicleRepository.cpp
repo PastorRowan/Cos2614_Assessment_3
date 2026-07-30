@@ -7,7 +7,16 @@
 #include <memory>
 #include <QDebug>
 
-// Constructs a VehicleRepository object and loads persisted vehicle data
+/**
+ * Constructs a VehicleRepository
+ *
+ * Initializes the vehicle ID generator and persistence manager using the
+ * application's data files
+ * Space is reserved in the internal vehicle
+ * collection to reduce reallocations as vehicles are added
+ *
+ * parent - The parent QObject that owns this repository
+ */
 models::VehicleRepository::VehicleRepository(
     QObject* parent
 ):
@@ -105,7 +114,17 @@ void models::VehicleRepository::addVehicle(
 };
 
 /**
+ * Updates an existing vehicle
  *
+ * Searches for the vehicle matching the supplied vehicle ID, replaces its
+ * stored data, and saves the updated repository to persistent storage
+ *
+ * If the vehicle cannot be found or the updated repository cannot be saved,
+ * the update is aborted
+ *
+ * On success, the vehiclesChanged() and vehicleUpdated() signals are emitted
+ *
+ * vehicleData - The updated vehicle data
  */
 void models::VehicleRepository::updateVehicle(
     const models::VehicleData& vehicleData
@@ -149,8 +168,15 @@ void models::VehicleRepository::updateVehicle(
 };
 
 /**
-  * Removes a vehicle in the collection
-  */
+ * Removes a vehicle from the repository
+ *
+ * Searches for the specified vehicle, removes it from the collection,
+ * destroys the object, and releases its memory
+ *
+ * If no matching vehicle exists, a debug message is logged
+ *
+ * vehicleId - The unique identifier of the vehicle to remove
+ */
 void models::VehicleRepository::removeVehicle(
     const long long vehicleId
 ) {
@@ -320,6 +346,13 @@ void models::VehicleRepository::clear() {
 
 };
 
+/**
+ * Handles an add-vehicle request
+ *
+ * Convenience slot that forwards a shared VehicleData object to addVehicle()
+ *
+ * vehicleData - Shared pointer containing the vehicle data
+ */
 void models::VehicleRepository::handleAddVehicle(
     std::shared_ptr<const models::VehicleData> vehicleData
 ) {
@@ -330,6 +363,14 @@ void models::VehicleRepository::handleAddVehicle(
 
 };
 
+/**
+ * Handles an update-vehicle request
+ *
+ * Convenience slot that forwards a shared VehicleData object to
+ * updateVehicle()
+ *
+ * vehicleData - Shared pointer containing the updated vehicle data
+ */
 void models::VehicleRepository::handleUpdateVehicle(
     std::shared_ptr<const models::VehicleData> vehicleData
 ) {

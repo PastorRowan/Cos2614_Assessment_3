@@ -7,7 +7,13 @@
 #include <QString>
 #include <QTextStream>
 
-// Constructs a Vehicle object with all base attributes initialized
+/**
+ * Constructs a Vehicle object
+ *
+ * Initializes the QObject base class
+ *
+ * parent - The parent QObject that owns this object
+ */
 models::Vehicle::Vehicle(
     QObject *parent
 ):
@@ -41,6 +47,7 @@ long long models::Vehicle::getVehicleId() const {
     return getVehicleData().vehicleId;
 };
 
+// Returns the vehicle type identifier converted to a QString
 QString models::Vehicle::getVehicleIdAsQString() const {
     return getVehicleData().getVehicleIdAsQString();
 };
@@ -116,6 +123,15 @@ void models::Vehicle::setIsRented(const bool newIsRented) {
     emit vehicleUpdated(getVehicleId());
 };
 
+/**
+ * Converts a rental status string to a boolean
+ *
+ * The string "Yes" is interpreted as true, any other value is
+ * interpreted as false
+ *
+ * isRentedQString - The rental status string
+ * returns true if the string is "Yes", otherwise false
+ */
 bool models::Vehicle::isRentedQStringToBool(const QString& isRentedQString) {
     return isRentedQString == QString("Yes");
 };

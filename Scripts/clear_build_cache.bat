@@ -1,6 +1,6 @@
 
 :: clears CMake build cache
-:: useful for clean builds
+:: useful to do clean builds and runs
 
 pushd "%~dp0.."
 

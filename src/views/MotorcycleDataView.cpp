@@ -7,6 +7,14 @@
 #include <QFormLayout>
 #include <QLineEdit>
 
+/**
+ * Constructs a MotorcycleDataView widget
+ *
+ * Initializes the form layout, creates the input field for the engine
+ * capacity, and connects the field to its corresponding slot
+ *
+ * parent The parent widget
+ */
 views::MotorcycleDataView::MotorcycleDataView(
     QWidget *parent
 ):
@@ -28,6 +36,15 @@ views::MotorcycleDataView::MotorcycleDataView(
 
 };
 
+
+/**
+ * Sets the motorcycle data displayed by the widget
+ *
+ * Stores the supplied motorcycle data object and refreshes the displayed
+ * values
+ *
+ * motorcycleDataP - Shared pointer to the motorcycle data object
+ */
 void views::MotorcycleDataView::setMotorcycleData(
     std::shared_ptr<models::MotorcycleData> motorcycleDataP
 ) {
@@ -35,10 +52,22 @@ void views::MotorcycleDataView::setMotorcycleData(
     refreshFields();
 };
 
+/**
+ * Determines whether the widget currently has motorcycle data
+ *
+ * True if a motorcycle data object has been assigned, otherwise false
+ */
 bool views::MotorcycleDataView::hasMotorcycleData() const {
     return (motorcycleData != nullptr);
 };
 
+/**
+ * Refreshes the widget's input field
+ *
+ * Updates the enabled state of the widget and synchronizes the displayed
+ * engine capacity with the current motorcycle data
+ * If no motorcycle data is assigned, the input field is cleared and the widget is disabled
+ */
 void views::MotorcycleDataView::refreshFields() {
 
     bool hasVehicle = hasMotorcycleData();
@@ -53,6 +82,14 @@ void views::MotorcycleDataView::refreshFields() {
 
 };
 
+/**
+ * Handles changes to the engine capacity field
+ *
+ * Converts the entered text to an integer and updates the underlying
+ * motorcycle data if the conversion succeeds
+ *
+ * text - The new text entered by the user
+ */
 void views::MotorcycleDataView::handleChangeEngineCapacityCCField(
     const QString text
 ) {

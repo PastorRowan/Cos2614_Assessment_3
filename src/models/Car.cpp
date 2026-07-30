@@ -10,9 +10,15 @@
 #include <QStringList>
 #include <QDebug>
 
-// Constructs a Car object with full initialization
+/**
+ * Constructs a Car object
+ *
+ * Initializes the base Vehicle class and stores the provided car data
+ *
+ * parent - The parent QObject that owns this object
+ * carDataP - The initial car data
+ */
 models::Car::Car(
-    // QObject parent
     QObject *parent,
     const models::CarData carDataP
 ):
@@ -21,21 +27,33 @@ models::Car::Car(
     
 };
 
+
+// Returns a constant reference to the underlying vehicle data
 const models::VehicleData& models::Car::getVehicleData() const {
     return data;
 };
 
+// Returns a mutable reference to the underlying vehicle data
 models::VehicleData& models::Car::getVehicleData() {
     return data;
 };
 
+/**
+ * Replaces the vehicle data
+ *
+ * The supplied VehicleData object is expected to actually contain a
+ * models::CarData instance. After updating the data, the
+ * vehicleUpdated() signal is emitted
+ *
+ * vehicleData - The new vehicle data
+ */
 void models::Car::setVehicleData(const models::VehicleData& vehicleData) {
     const auto& carData = static_cast<const models::CarData&>(vehicleData);
     data = carData;
     emit vehicleUpdated(getVehicleId());
 };
 
-// Gets the number of doors
+// Returns the number of doors
 int models::Car::getNumberOfDoors() const {
     return data.numberOfDoors;
 };

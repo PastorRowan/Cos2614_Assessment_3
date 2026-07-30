@@ -1,4 +1,6 @@
 
+// Umbrella header to define the views namespace
+
 #pragma once
 
 #include "CarDataView.h"

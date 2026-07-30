@@ -8,6 +8,17 @@
 #include <QTextStream>
 #include <QDebug>
 
+/**
+ * Constructs a VehicleIdGenerator
+ *
+ * Initializes the generator using the specified file location and loads the
+ * current vehicle ID from persistent storage
+ *
+ * If the current vehicle ID cannot be loaded, the application terminates
+ *
+ * currentVehicleIdFileLocationP - The file used to persist the current
+ * vehicle ID counter
+ */
 models::VehicleIdGenerator::VehicleIdGenerator(
     const QString currentVehicleIdFileLocationP
 ):
@@ -150,6 +161,16 @@ void models::VehicleIdGenerator::loadCurrentVehicleId(bool& ok) {
 
 };
 
+/**
+ * Generates a new unique vehicle ID
+ *
+ * The internal vehicle ID counter is incremented and immediately written to
+ * persistent storage to ensure uniqueness across application restarts
+ *
+ * If the updated counter cannot be saved, the application terminates
+ *
+ * The newly generated unique vehicle ID
+ */
 long long models::VehicleIdGenerator::generateId() {
 
     incrementCurrentVehicleId();
