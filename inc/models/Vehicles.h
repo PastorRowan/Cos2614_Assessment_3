@@ -26,62 +26,97 @@ namespace models {
             };
 
             template<typename Predicate>
-            models::Vehicle* findVehicle(Predicate predicate) {
-                for (auto vehicle : *this) {
+            Vehicles::Iterator findVehicleIterator(Predicate predicate) {
+                for (auto it = begin(); it != end(); ++it) {
+                    auto vehicle = *it;
                     if (predicate(vehicle)) {
-                        return vehicle;
+                        return it;
                     };
                 };
-                return nullptr;
+                return end();
+            };
+
+            template<typename Predicate>
+            Vehicles::ConstIterator findVehicleIterator(Predicate predicate) const {
+                for (auto it = cbegin(); it != cend(); ++it) {
+                    auto vehicle = *it;
+                    if (predicate(vehicle)) {
+                        return it;
+                    };
+                };
+                return end();
+            };
+
+            template<typename Predicate>
+            models::Vehicle* findVehicle(Predicate predicate) {
+                Vehicles::Iterator it = findVehicleIterator(predicate);
+                return it != end() ? *it : nullptr;
+            };
+
+            Vehicles::Iterator findVehicleIteratorById(const long long vehicleId) {
+                return findVehicleIterator(
+                    [&](models::Vehicle* vehicle) {
+                        return vehicle->getVehicleId() == vehicleId;
+                    }
+                );
             };
 
             models::Vehicle* findVehicleById(const long long vehicleId) {
                 return findVehicle(
-                    [&](Vehicle* vehicle) {
+                    [&](models::Vehicle* vehicle) {
                         return vehicle->getVehicleId() == vehicleId;
                     }
                 );
             };
 
             template<typename Predicate>
-            VehiclesQVector findVehicles(Predicate predicate) {
-                VehiclesQVector foundVehicles = {};
-                for (auto vehicle : *this) {
+            Vehicles findVehicles(Predicate predicate) {
+                Vehicles foundVehicles;
+                for (auto cit = cbegin(); cit != cend(); ++cit) {
+                    auto vehicle = *cit;
                     if (predicate(vehicle)) {
-                        foundVehicles.push_back(vehicle);
+                        foundVehicles.push_back(vehicle->clone());
                     };
                 };
                 return foundVehicles;
             };
 
-            VehiclesQVector findVehiclesByTypeId(const models::VehicleTypeId typeId) {
+            Vehicles findVehiclesByTypeId(const models::VehicleTypeId typeId) {
                 return findVehicles(
-                    [&](Vehicle* vehicle) {
+                    [&](models::Vehicle* vehicle) {
                         return vehicle->getVehicleTypeId() == typeId;
                     }
                 );
             };
 
-            VehiclesQVector findVehiclesByBrand(const QString brand) {
+            Vehicles findVehiclesByBrand(const QString brand) {
                 return findVehicles(
-                    [&](Vehicle* vehicle) {
+                    [&](models::Vehicle* vehicle) {
                         return vehicle->getBrand() == brand;
                     }
                 );
             };
 
-            VehiclesQVector findVehiclesByModel(const QString model) {
+            Vehicles findVehiclesByModel(const QString model) {
                 return findVehicles(
-                    [&](Vehicle* vehicle) {
+                    [&](models::Vehicle* vehicle) {
                         return vehicle->getModel() == model;
                     }
                 );
             };
 
-            VehiclesQVector findVehiclesByPricePerDay(const QString model) {
+            Vehicles findVehiclesByPricePerDay(const QString model) {
                 return findVehicles(
-                    [&](Vehicle* vehicle) {
+                    [&](models::Vehicle* vehicle) {
                         return vehicle->getModel() == model;
+                    }
+                );
+            };
+
+            Vehicles findVehiclesByIsRented(const bool isRented) {
+                return findVehicles(
+                    [&](models::Vehicle* vehicle) {
+                        return vehicle->getIsRented() == isRented;
                     }
                 );
             };

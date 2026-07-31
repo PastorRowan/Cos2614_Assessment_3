@@ -109,7 +109,7 @@ namespace models {
             // Marks a rented vehicle as returned (not rented)
             void returnVehicleById(const long long vehicleId);
 
-        // slots:
+        // public slots:
 
             /**
              * Handles requests to add a vehicle
@@ -118,6 +118,15 @@ namespace models {
              */
             void handleAddVehicle(
                 std::shared_ptr<const models::VehicleData> vehicleData
+            );
+
+            /**
+             * Handles requests to delete a vehicle
+             *
+             * vehicleData - Shared pointer to the vehicle data to delete
+             */
+            void handleDeleteVehicle(
+                const long long vehicleId
             );
 
             /**

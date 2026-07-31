@@ -42,16 +42,7 @@ void models::VehicleRepository::destroyVehicles() {
 models::Vehicles::iterator models::VehicleRepository::findVehicleIteratorById(
     const long long vehicleId
 ) {
-
-    for (auto it = vehicles.begin(); it != vehicles.end(); ++it) {
-        auto vehicle = *it;
-        if (vehicle->getVehicleId() == vehicleId) {
-            return it;
-        };
-    };
-
-    return vehicles.end();
-
+    return vehicles.findVehicleIteratorById(vehicleId);
 };
 
 void models::VehicleRepository::setVehicleIsRented(
@@ -127,12 +118,15 @@ void models::VehicleRepository::addVehicle(
 
     models::Vehicle* newVehicle = nullptr;
 
+    long long vehicleId = -1;
+
     switch (vehicleData.vehicleTypeId) {
 
         case models::VehicleTypeId::car: {
             auto carData = static_cast<const models::CarData&>(vehicleData);
             models::CarData copy = carData;
-            copy.vehicleId = vehicleIdGenerator.generateId();
+            vehicleId = vehicleIdGenerator.generateId();
+            copy.vehicleId = vehicleId;
             newVehicle = new models::Car(this, copy);
             break;
         };
@@ -140,7 +134,8 @@ void models::VehicleRepository::addVehicle(
         case models::VehicleTypeId::motorCycle: {
             auto motorcycleData = static_cast<const models::MotorcycleData&>(vehicleData);
             models::MotorcycleData copy = motorcycleData;
-            copy.vehicleId = vehicleIdGenerator.generateId();
+            vehicleId = vehicleIdGenerator.generateId();
+            copy.vehicleId = vehicleId;
             newVehicle = new models::Motorcycle(this, copy);
             break;
         };
@@ -164,10 +159,10 @@ void models::VehicleRepository::addVehicle(
         return;
     };
 
-    qDebug() << QString("Successfully added vehicle '%1'").arg(newVehicle->toQString());
+    qDebug() << QString("models::VehicleRepository Successfully added vehicle '%1'").arg(newVehicle->toQString());
 
     emit vehiclesChanged();
-    emit vehicleAdded(newVehicle->getVehicleId());
+    emit vehicleAdded(vehicleId);
 
 };
 
@@ -235,6 +230,9 @@ void models::VehicleRepository::removeVehicleById(
 
     vehicles.erase(it);
     delete vehicle;
+
+    emit vehiclesChanged();
+    emit vehicleRemoved(vehicleId);
 
 };
 
@@ -321,6 +319,12 @@ void models::VehicleRepository::handleAddVehicle(
     std::shared_ptr<const models::VehicleData> vehicleData
 ) {
     addVehicle(*vehicleData);
+};
+
+void models::VehicleRepository::handleDeleteVehicle(
+    const long long vehicleId
+) {
+    removeVehicleById(vehicleId);
 };
 
 /**

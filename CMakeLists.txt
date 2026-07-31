@@ -3,13 +3,6 @@ cmake_minimum_required(VERSION 3.16...3.27)
 
 project(VehicleRentalSystem)
 
-option(POPULATE_VEHICLES_FILE "Populate vehicles with mock data" ON)
-
-configure_file(
-    Config.h.in
-    ${CMAKE_CURRENT_BINARY_DIR}/Config.h
-)
-
 set(CMAKE_AUTOMOC ON)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -19,6 +12,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(HEADERS
 
     inc/dialogues/AddVehicleDialogue.h
+    inc/dialogues/DeleteVehicleDialogue.h
     inc/dialogues/dialogues.h
 
     inc/helpers/ensurePathAndFileExist.h
@@ -46,6 +40,7 @@ set(HEADERS
 set(SOURCES
 
     src/dialogues/AddVehicleDialogue.cpp
+    src/dialogues/DeleteVehicleDialogue.cpp
 
     src/helpers/ensurePathAndFileExist.cpp
     src/helpers/populateVehicleRepository.cpp

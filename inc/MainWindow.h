@@ -2,6 +2,7 @@
 #pragma once
 
 #include "models/VehicleRepository.h"
+#include "models/Vehicle.h"
 #include "views/views.h"
 #include "dialogues/dialogues.h"
 
@@ -11,6 +12,7 @@ class QHBoxLayout;
 class QVBoxLayout;
 class QLabel;
 class QPushButton;
+#include <memory>
 
 /**
  * The main application window for the Vehicle Rental Management System
@@ -25,8 +27,14 @@ class MainWindow : public QMainWindow {
 
     private:
 
+        // Repository containing all vehicle records
+        models::VehicleRepository* vehicleRepository;
+
         // Dialog used to add new vehicles to the repository
         dialogues::AddVehicleDialogue *addVehicleDialogue;
+
+        // Dialog used to delete vehicles in the repository
+        dialogues::DeleteVehicleDialogue *deleteVehicleDialogue;
 
         // The central widget of the main window
         QWidget* central;
@@ -43,14 +51,18 @@ class MainWindow : public QMainWindow {
         // Label displaying the application title
         QLabel* title;
 
+        // View displaying the repository of vehicles
+        views::VehiclesRepositoryView* vehiclesRepositoryView;
+
+        QWidget* buttonBarWidget;
+
+        QHBoxLayout* buttonBarHBox;
+
         // Button used to open the Add Vehicle dialog
         QPushButton* addVehicleButton;
 
-        // Repository containing all vehicle records
-        models::VehicleRepository* vehicleRepository;
-
-        // View displaying the repository of vehicles
-        views::VehiclesRepositoryView* vehiclesRepositoryView;
+        // Button used to delete the selected Vehicle
+        QPushButton* deleteVehicleButton;
 
         // View displaying and editing the selected vehicle
         views::VehicleDataView* vehicleDataView;
@@ -70,5 +82,11 @@ class MainWindow : public QMainWindow {
 
         // Destroys the MainWindow
         ~MainWindow() = default;
+
+    // public slots:
+
+        void handleVehicleSelected(
+            std::shared_ptr<const models::VehicleData> vehicleData
+        );
 
 };

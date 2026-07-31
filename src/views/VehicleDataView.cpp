@@ -73,7 +73,7 @@ views::VehicleDataView::VehicleDataView(
     vehicleFormLayout->addRow("VEHICLE_ID: ", vehicleIdLabel);
     vehicleFormLayout->addRow("BRAND: ", brandField);
     vehicleFormLayout->addRow("MODEL: ", modelField);
-    vehicleFormLayout->addRow("PRICE_PER_DAY: ", pricePerDayField);
+    vehicleFormLayout->addRow("PRICE_PER_DAY: R", pricePerDayField);
     vehicleFormLayout->addRow("IS_RENTED: ", isRentedComboBox);
 
     vBoxLayout->addWidget(vehicleFormWidget);

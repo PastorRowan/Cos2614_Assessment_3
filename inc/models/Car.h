@@ -83,7 +83,7 @@ namespace models {
          * Returns True if the data is valid, otherwise false
          */
         bool isValid(QString& message) const override {
-            if (pricePerDay < 0.0) {
+            if (pricePerDay < models::MINIMUM_PRICE_PER_DAY || pricePerDay > models::MAXIMUM_PRICE_PER_DAY) {
                 message = "PRICE_PER_DAY must be greater than or equal to 0";
                 return false;
             } else if (numberOfDoors <= -1) {

@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QString>
 #include <QTextStream>
+#include <QDebug>
 
 /**
  * Constructs a Vehicle object
@@ -29,6 +30,20 @@ models::VehicleTypeId models::Vehicle::getVehicleTypeId() const {
 // Converts the vehicle type ID to a QString
 QString models::Vehicle::getVehicleTypeIdAsQString() const {
     return getVehicleData().getVehicleTypeIdAsQString();
+};
+
+QString models::vehicleTypeIdToPrettyQString(models::VehicleTypeId vehicleTypeId) {
+    switch (vehicleTypeId) {
+        case models::VehicleTypeId::car:
+            return "Car";
+        case models::VehicleTypeId::motorCycle:
+            return "Motorcycle";
+        default:
+            qFatal() << QString("Unknown VehicleTypeId '%1'").arg(static_cast<int>(vehicleTypeId));
+            break;
+            return "";
+    };
+    return "";
 };
 
 // Sets the vehicle type identifier

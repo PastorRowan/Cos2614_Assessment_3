@@ -200,7 +200,7 @@ void views::VehiclesRepositoryView::handleVehiclesChanged() {
 void views::VehiclesRepositoryView::handleVehicleAdded(
     const long long vehicleId
 ) {
-    qDebug() << "VehiclesRepositoryView handleVehicleAdded called with: " << vehicleId;
+    qDebug() << "views::VehiclesRepositoryView::handleVehicleAdded called with: " << vehicleId;
 
     models::Vehicle* vehicle = vehicleRepository->searchVehicleById(vehicleId);
 
@@ -233,7 +233,16 @@ void views::VehiclesRepositoryView::handleVehicleAdded(
 void views::VehiclesRepositoryView::handleVehicleRemoved(
     const long long vehicleId
 ) {
-    qDebug() << "VehiclesRepositoryView handleVehicleRemoved called with: " << vehicleId;
+
+    auto index = searchRowById(vehicleId);
+
+    if (index <= -1) {
+        qDebug() << QString("Failed to find vehicle in table with id '%1' to remove").arg(vehicleId);
+        return;
+    };
+
+    table->removeRow(index);
+
 };
 
 /**

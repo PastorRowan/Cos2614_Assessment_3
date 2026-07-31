@@ -16,6 +16,9 @@ namespace models {
         count
     };
 
+    // Converts the type identifier to a QString
+    QString vehicleTypeIdToPrettyQString(VehicleTypeId vehicleTypeId);
+
     // Default vehicle type identifier
     const VehicleTypeId DEFAULT_VEHICLE_TYPE_ID = VehicleTypeId::count;
 

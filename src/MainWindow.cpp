@@ -1,6 +1,4 @@
 
-#include "Config.h"
-
 #include "MainWindow.h"
 #include "models/VehicleRepository.h"
 #include "helpers/populateVehicleRepository.h"
@@ -37,7 +35,13 @@
  */
 MainWindow::MainWindow(QWidget *parent) {
 
+    vehicleRepository = new models::VehicleRepository(this);
+
+    // uncomment to clear and then fill vehicle repository with sample data
+    // helpers::populateVehicleRepository(vehicleRepository);
+
     addVehicleDialogue = new dialogues::AddVehicleDialogue(this);
+    deleteVehicleDialogue = new dialogues::DeleteVehicleDialogue(this);
 
     central = new QWidget(this);
     central->setContentsMargins(10, 10, 10, 10);
@@ -54,16 +58,19 @@ MainWindow::MainWindow(QWidget *parent) {
     title->setText("Vehicle Rental System");
     title->setAlignment(Qt::AlignCenter);
 
-    vehicleRepository = new models::VehicleRepository(this);
-
-    #if POPULATE_VEHICLES_FILE
-        helpers::populateVehicleRepository(vehicleRepository);
-    #endif
-
     vehiclesRepositoryView = new views::VehiclesRepositoryView(content, vehicleRepository);
+
+    buttonBarWidget = new QWidget(content);
+    buttonBarHBox = new QHBoxLayout(buttonBarWidget);
 
     addVehicleButton = new QPushButton(this);
     addVehicleButton->setText("Add Vehicle");
+
+    deleteVehicleButton = new QPushButton(this);
+    deleteVehicleButton->setText("Delete Vehicle");
+
+    buttonBarHBox->addWidget(addVehicleButton);
+    buttonBarHBox->addWidget(deleteVehicleButton);
 
     vehicleDataView = new views::VehicleDataView(content);
     vehicleDataView->setConfirmButtonText("Save Changes");
@@ -71,7 +78,7 @@ MainWindow::MainWindow(QWidget *parent) {
     contentVLayout = new QVBoxLayout(content);
     contentVLayout->addWidget(title);
     contentVLayout->addWidget(vehiclesRepositoryView);
-    contentVLayout->addWidget(addVehicleButton);
+    contentVLayout->addWidget(buttonBarWidget);
     contentVLayout->addWidget(vehicleDataView);
     contentVLayout->addStretch();
 
@@ -80,8 +87,8 @@ MainWindow::MainWindow(QWidget *parent) {
     QObject::connect(
         vehiclesRepositoryView,
         &views::VehiclesRepositoryView::vehicleSelected,
-        vehicleDataView,
-        &views::VehicleDataView::handleVehicleSelected
+        this,
+        &MainWindow::handleVehicleSelected
     );
 
     QObject::connect(
@@ -105,4 +112,25 @@ MainWindow::MainWindow(QWidget *parent) {
         &models::VehicleRepository::handleAddVehicle
     );
 
+    QObject::connect(
+        deleteVehicleButton,
+        &QPushButton::clicked,
+        deleteVehicleDialogue,
+        &dialogues::DeleteVehicleDialogue::open
+    );
+
+    QObject::connect(
+        deleteVehicleDialogue,
+        &dialogues::DeleteVehicleDialogue::deleteVehicle,
+        vehicleRepository,
+        &models::VehicleRepository::handleDeleteVehicle
+    );
+
+};
+
+void MainWindow::handleVehicleSelected(
+    std::shared_ptr<const models::VehicleData> vehicleData
+) {
+    vehicleDataView->setVehicleData(vehicleData);
+    deleteVehicleDialogue->setVehicleData(vehicleData);
 };

@@ -1,4 +1,0 @@
-
-#pragma once
-
-#cmakedefine POPULATE_VEHICLES_FILE 0
