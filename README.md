@@ -25,38 +25,35 @@ The table below maps each assignment requirement from the assignment specificati
 | **2. Qt Widgets User Interface (20 Marks)** | |
 | Qt Widgets | `inc/views/`, `src/views/` |
 | Layout management | `VehicleView`, `VehicleRepositoryView`, `MainWindow` |
-| Add/Search/Display/Rent/Return/Remove functionality | `VehicleRepositoryView`, `VehicleView`, `VehicleRepository` |
+| Add/Search/Display/Rent/Return/Remove functionality | `AddVehicleDialogue` `DeleteVehicleDialogue` `VehicleRepositoryView`, `VehicleView`, `VehicleRepository` All of this functioality is coorindated in `MainWindow.cpp` |
 | Summary information | `VehicleRepositoryView` |
 | **3. Signals and Slots (10 Marks)** | |
 | Qt signals and slots | `inc/views/`, `src/views/` |
 | Custom slots | Implemented throughout the view classes to respond to user interaction. |
 | **4. Qt Containers (15 Marks)** | |
-| Qt container usage | `inc/models/Vehicles.h,` (`QVector`), `inc/models/VehicleRepository.h`, `src/models/VehicleRepository.cpp` (Uses `Vehicles` container defined in `Vehicles.h`) |
+| Qt container usage | `inc/models/Vehicles.h,` (custom `QVector`), `inc/models/VehicleRepository.h`, `src/models/VehicleRepository.cpp` (Uses `Vehicles` container defined in `Vehicles.h`) |
 | **5. Qt Iterators (10 Marks)** | |
-| Qt iterator usage | Implemented throughout `VehicleRepository` and `VehiclesPersistence` when traversing the vehicle collection. |
+| Qt iterator usage | Implemented throughout `VehicleRepository` and `Vehicles` when traversing the vehicle collection. |
 | **6. Qt Generics / Templates (10 Marks)** | |
-| Template functions | `inc/helpers/` |
+| Template functions | `inc/models/Vehicles.h` (I did not really use the template functions within the system but I did implement them here) |
 | **7. File Handling (10 Marks)** | |
 | Persistent storage | `inc/models/VehiclesPersistence.h`, `src/models/VehiclesPersistence.cpp` |
 | Loading and saving data | `VehiclesPersistence` uses `QFile` and `QTextStream`. |
 | **8. Business Logic (5 Marks)** | |
 | Prevent duplicate vehicle IDs | `inc/models/VehicleIdGenerator.h`, `src/models/VehicleIdGenerator.cpp` |
-| Prevent invalid rental operations | `VehicleRepository` |
-| Prevent invalid return operations | `VehicleRepository` |
+| Prevent invalid rental operations | `VehicleRepository::rentVehicleById` |
+| Prevent invalid return operations | `VehicleRepository::returnVehicleById` |
 
-Need updating
-2
-5
-6
+I did run out of time to add search functionality but it is still possible to see all vehicles within the system by scrolling through the table. I should of added filtering to the table but I need to get studying for the upcoming exams.
 
 ---
 
 ## Features
 
 - Add vehicle (Car or Motorcycle)
-- Search vehicle by ID
+- Search vehicle by ID x
 - Display all vehicles
-- Display available vehicles only
+- Display available vehicles only x
 - Rent vehicle
 - Return vehicle
 - Persists application state between program runs
